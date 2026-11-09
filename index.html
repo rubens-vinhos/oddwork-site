@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oddwork · Site, Google e WhatsApp para pequenos negócios</title>
+  <meta name="description" content="Site, perfil no Google, conteúdo, edição de vídeo e bot de WhatsApp para pequenos negócios, numa só assinatura mensal. 1.º mês grátis.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Oddwork · A lógica é outra.">
+  <meta property="og:description" content="Site, perfil no Google, conteúdo e bot de WhatsApp para pequenos negócios. Uma assinatura mensal, 1.º mês grátis.">
+  <meta property="og:image" content="https://theoddwork.com/assets/perfil-3d.png">
+  <meta property="og:locale" content="pt_PT">
+  <meta name="theme-color" content="#EEE9DF">
+  <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <!-- Peça de uma pá, reutilizada no símbolo 2D e na vista explodida -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa-espinha">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+      </g>
+      <g id="pa-aletas">
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo">
+        <g><use href="#pa-espinha"/><use href="#pa-aletas"/></g>
+        <g transform="rotate(120)"><use href="#pa-espinha"/><use href="#pa-aletas"/></g>
+        <g transform="rotate(240)"><use href="#pa-espinha"/><use href="#pa-aletas"/></g>
+        <circle r="48" fill="#F45127"/>
+      </g>
+    </defs>
+  </svg>
+
+  <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+
+  <header class="topo">
+    <a class="marca" href="#" aria-label="Oddwork, início">the<span>odd</span>work</a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#sobre">Sobre</a>
+      <a href="#fundadores">Fundadores</a>
+      <a href="#planos">Planos</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="botao botao--pequeno" href="#planos">Começar grátis</a>
+  </header>
+
+  <main id="conteudo">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__texto">
+        <h1 class="hero__titulo">A lógica é&nbsp;outra.</h1>
+        <p class="hero__sub">Site, Google, conteúdo e um bot de WhatsApp que marca horários. Tudo numa só assinatura mensal, feita por duas pessoas que respondem quando escreves.</p>
+        <div class="hero__acoes">
+          <a class="botao" href="#planos">Experimentar um mês grátis</a>
+          <a class="ligacao" href="#pecas">Ver o que está incluído</a>
+        </div>
+        <p class="hero__vagas"><span class="ponto" aria-hidden="true"></span><span data-vagas-frase>Restam 8 vagas este mês.</span> Não pagas nada no primeiro mês.</p>
+      </div>
+
+      <figure class="hero__maquina" aria-label="Símbolo da Oddwork em 3D">
+        <div class="palco" id="palco">
+          <svg class="palco__fallback" viewBox="-450 -450 900 900" aria-hidden="true"><use href="#simbolo" fill="#111111"/></svg>
+        </div>
+        <figcaption class="placa-mini">
+          <span>Modelo OW-3</span>
+          <span>3 pás, 1 centro</span>
+          <span class="placa-mini__dica">Arrasta para rodar</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- Proposta -->
+    <section class="proposta" aria-labelledby="proposta-titulo">
+      <h2 id="proposta-titulo" class="proposta__titulo">Uma agência cobra-te por peça. Nós montamos a máquina inteira e ela fica a trabalhar todos os meses.</h2>
+      <div class="proposta__colunas">
+        <p>A maior parte dos pequenos negócios tem um Instagram parado, um site de 2019 e um WhatsApp que só responde quando o dono tem tempo. Contratar cada coisa à parte sai caro e ninguém fala com ninguém.</p>
+        <p>Na Oddwork é uma equipa, uma mensalidade e um plano que liga tudo: quem te procura no Google encontra-te, o site leva ao WhatsApp, os posts levam ao site e os vídeos que gravas ganham outra cara. Tu tratas do negócio.</p>
+      </div>
+    </section>
+
+    <!-- Serviços como vista explodida -->
+    <section class="pecas" id="pecas" aria-labelledby="pecas-titulo">
+      <div class="pecas__cabeca">
+        <h2 id="pecas-titulo">O que vem na caixa</h2>
+        <p>Seis peças à volta de um centro. O centro é o teu negócio.</p>
+      </div>
+
+      <div class="pecas__corpo">
+        <svg class="explodida" viewBox="-470 -470 940 940" role="img" aria-label="Vista explodida do símbolo, com cada pá correspondente a um serviço">
+          <g class="explodida__pa" transform="rotate(0)">
+            <use class="parte" data-peca="site" href="#pa-espinha" transform="translate(0 -40)"/>
+            <use class="parte" data-peca="google" href="#pa-aletas" transform="translate(0 -40) scale(1.18 1.06)"/>
+          </g>
+          <g class="explodida__pa" transform="rotate(120)">
+            <use class="parte" data-peca="posts" href="#pa-espinha" transform="translate(0 -40)"/>
+            <use class="parte" data-peca="planeamento" href="#pa-aletas" transform="translate(0 -40) scale(1.18 1.06)"/>
+          </g>
+          <g class="explodida__pa" transform="rotate(240)">
+            <use class="parte" data-peca="video" href="#pa-espinha" transform="translate(0 -40)"/>
+            <use class="parte" data-peca="bot" href="#pa-aletas" transform="translate(0 -40) scale(1.18 1.06)"/>
+          </g>
+          <circle class="explodida__centro" r="48"/>
+          <circle class="explodida__eixo" r="62"/>
+        </svg>
+
+        <ol class="lista-pecas">
+          <li data-peca="site" tabindex="0">
+            <h3>Site</h3>
+            <p>Feito à medida, rápido no telemóvel, com o teu domínio. Fica no ar enquanto a assinatura estiver ativa.</p>
+          </li>
+          <li data-peca="google" tabindex="0">
+            <h3>Perfil no Google</h3>
+            <p>A tua ficha no Google Maps afinada: fotos, horários, serviços e novidades. Respondemos às avaliações e damos-te um QR para pedires mais.</p>
+          </li>
+          <li data-peca="posts" tabindex="0">
+            <h3>Posts</h3>
+            <p>Design e texto para as tuas redes, com a tua cara e não com a de um modelo pronto.</p>
+          </li>
+          <li data-peca="planeamento" tabindex="0">
+            <h3>Planeamento de conteúdo</h3>
+            <p>Um calendário por mês: o que publicar, quando e porquê, incluindo o que gravar.</p>
+          </li>
+          <li data-peca="video" tabindex="0">
+            <h3>Edição de vídeo</h3>
+            <p>Tu gravas com o telemóvel, nós editamos. O que gravar já vem no planeamento do mês.</p>
+          </li>
+          <li data-peca="bot" tabindex="0">
+            <h3>Bot de WhatsApp</h3>
+            <p>Responde a perguntas, mostra preços e marca horários sozinho, a qualquer hora. Passa-te a conversa quando é a sério.</p>
+          </li>
+        </ol>
+      </div>
+      <p class="pecas__extra"><strong>À parte, se fizer sentido:</strong> anúncios pagos, logótipo e identidade, sessão de fotos e menu digital com QR. Orçamentamos antes, nunca entra na mensalidade sem dizeres que sim.</p>
+    </section>
+
+    <!-- Sobre -->
+    <section class="sobre" id="sobre" aria-labelledby="sobre-titulo">
+      <h2 id="sobre-titulo">Um laboratório de soluções improváveis</h2>
+      <div class="sobre__texto">
+        <p>A Oddwork nasceu de uma coisa que víamos sempre: pequenos negócios bons, com produto bom, que ninguém encontrava. Não por falta de vontade, mas porque o marketing que lhes vendiam era feito para empresas grandes.</p>
+        <p>Por isso juntámos estratégia e tecnologia na mesma bancada. Quando um problema não tem solução de catálogo, inventamos uma. Às vezes é um site, às vezes é um bot, às vezes é só uma pergunta melhor feita aos teus clientes.</p>
+      </div>
+      <dl class="sobre__principios">
+        <div>
+          <dt>Primeiro percebemos</dt>
+          <dd>Na primeira semana fazemos um diagnóstico: quem te compra, onde está, o que procura e o que a concorrência ao lado faz.</dd>
+        </div>
+        <div>
+          <dt>Depois montamos</dt>
+          <dd>Cada peça é feita para encaixar nas outras. Nada de serviços soltos.</dd>
+        </div>
+        <div>
+          <dt>E afinamos todos os meses</dt>
+          <dd>Todos os meses recebes um relatório curto: conversas no bot, visitas ao site, cliques para o WhatsApp e avaliações novas. O que não resulta sai.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Fundadores -->
+    <section class="fundadores" id="fundadores" aria-labelledby="fundadores-titulo">
+      <h2 id="fundadores-titulo">Quem está na bancada</h2>
+      <div class="crachas">
+        <article class="cracha">
+          <div class="cracha__foto" role="img" aria-label="Foto do Rubens, em breve">R</div>
+          <div class="cracha__info">
+            <h3>Rubens</h3>
+            <p class="cracha__funcao">Estratégia e direção</p>
+            <p>Decide o que dizer, a quem e onde. Lê números e pessoas com a mesma atenção.</p>
+          </div>
+        </article>
+        <article class="cracha cracha--b">
+          <div class="cracha__foto" role="img" aria-label="Foto do Miguel, em breve">M</div>
+          <div class="cracha__info">
+            <h3>Miguel</h3>
+            <p class="cracha__funcao">Tecnologia e desenvolvimento</p>
+            <p>Constrói os sites, os bots e as ferramentas. Se dá para automatizar, automatiza.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Planos -->
+    <section class="planos" id="planos" aria-labelledby="planos-titulo">
+      <div class="planos__intro">
+        <h2 id="planos-titulo">Uma assinatura. Tudo dentro.</h2>
+        <p>Escolhe onde está o teu negócio para veres o preço na tua moeda.</p>
+        <div class="mercado" role="group" aria-label="Mercado">
+          <button type="button" data-mercado="pt" aria-pressed="true">Portugal</button>
+          <button type="button" data-mercado="br" aria-pressed="false">Brasil</button>
+        </div>
+      </div>
+
+      <div class="placa" aria-live="polite">
+        <span class="placa__parafuso placa__parafuso--1" aria-hidden="true"></span>
+        <span class="placa__parafuso placa__parafuso--2" aria-hidden="true"></span>
+        <span class="placa__parafuso placa__parafuso--3" aria-hidden="true"></span>
+        <span class="placa__parafuso placa__parafuso--4" aria-hidden="true"></span>
+
+        <p class="placa__modelo">Assinatura Oddwork</p>
+        <p class="placa__preco"><span id="preco">69 €</span><small>/mês</small></p>
+        <p class="placa__nota" id="preco-nota">IVA incluído</p>
+
+        <div class="vagas">
+          <p class="vagas__texto"><strong data-vagas-frase>Restam 8 vagas este mês.</strong></p>
+          <div class="vagas__medidor" id="vagas-medidor" aria-hidden="true"></div>
+          <p class="vagas__porque">Somos dois. Para cada negócio ter atenção a sério, aceitamos poucos clientes por mês. Quando o mês enche, abre a lista de espera para o seguinte.</p>
+        </div>
+
+        <ul class="placa__lista">
+          <li>Site com domínio próprio</li>
+          <li>Perfil no Google e avaliações</li>
+          <li>Posts e planeamento mensal</li>
+          <li>Edição de vídeo</li>
+          <li>Bot de WhatsApp com marcações</li>
+          <li>Diagnóstico inicial e relatório mensal</li>
+        </ul>
+
+        <a class="botao botao--escuro" href="#contacto" id="botao-assinar" data-vagas-botao>Garantir a minha vaga</a>
+        <p class="placa__risco">Os primeiros 30 dias são por nossa conta: pões o cartão, mas não é cobrado nada. Se cancelares antes do dia 31, não pagas um cêntimo.</p>
+        <p class="placa__seguro">Pagamento seguro pelo Stripe. Nós nunca vemos os dados do teu cartão.</p>
+        <span class="autocolante" aria-hidden="true">1.º mês<br>grátis</span>
+      </div>
+
+      <ol class="condicoes" aria-label="Como funciona a cobrança">
+        <li><strong>Dia 1</strong> Ativas a assinatura com o cartão, sem cobrança. Falamos contigo nesse dia e começamos pelo diagnóstico.</li>
+        <li><strong>Dia 30</strong> Recebes um aviso antes da primeira cobrança. Se não quiseres continuar, cancelas e fica por aqui.</li>
+        <li><strong>Dia 31 em diante</strong> A mensalidade é cobrada todos os meses. Cancelas quando quiseres e deixa de ser cobrada no mês seguinte.</li>
+      </ol>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
+      <div class="contacto__info">
+        <h2 id="contacto-titulo">Fala connosco</h2>
+        <p>Respondemos em dias úteis, normalmente no próprio dia.</p>
+        <dl class="canais">
+          <div><dt>Email</dt><dd><a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></dd></div>
+          <div><dt>Clientes</dt><dd>O suporte é feito no grupo de WhatsApp do teu projeto.</dd></div>
+        </dl>
+      </div>
+
+      <form class="formulario" id="formulario" novalidate>
+        <label>
+          <span>Nome</span>
+          <input name="nome" autocomplete="name" required>
+        </label>
+        <label>
+          <span>Negócio</span>
+          <input name="negocio" autocomplete="organization" required>
+        </label>
+        <label>
+          <span>O que precisas?</span>
+          <textarea name="mensagem" rows="4"></textarea>
+        </label>
+        <p class="formulario__erro" id="formulario-erro" role="alert" hidden></p>
+        <button class="botao" type="submit">Enviar por email</button>
+        <p class="formulario__nota">Abre o teu email com a mensagem já escrita para geral@theoddwork.com. Nada fica guardado neste site.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <a class="marca marca--grande" href="#" aria-label="Oddwork, voltar ao início">the<span>odd</span>work</a>
+    <p class="rodape__slogan">A lógica é outra.</p>
+    <nav class="rodape__nav" aria-label="Rodapé">
+      <a href="#sobre">Sobre</a>
+      <a href="#planos">Planos</a>
+      <a href="#contacto">Contacto</a>
+      <a href="privacidade.html">Aviso de privacidade</a>
+      <a href="termos.html">Termos</a>
+      <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações</a>
+    </nav>
+    <p class="rodape__legal">© <span id="ano">2026</span> Oddwork</p>
+  </footer>
+
+  <!-- Barra fixa no telemóvel: aparece depois do hero, desaparece nos planos e no contacto -->
+  <div class="barra-fixa" id="barra-fixa" aria-hidden="true">
+    <p><strong data-vagas-curta>8 vagas</strong> para <span data-vagas-mes>este mês</span></p>
+    <a class="botao botao--pequeno" href="#planos" tabindex="-1" data-vagas-botao>Garantir vaga</a>
+  </div>
+
+  <script src="main.js" defer></script>
+  <script type="module" src="logo3d.js"></script>
+</body>
+</html>
