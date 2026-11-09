@@ -224,6 +224,7 @@ img, svg { display: block; }
 .sobre h2,
 .fundadores h2,
 .planos h2,
+.perguntas h2,
 .contacto h2 {
   font-weight: 800;
   font-variation-settings: "wdth" 120;
@@ -499,6 +500,43 @@ img, svg { display: block; }
   font-size: 1.2rem;
   color: var(--preto);
 }
+
+/* ---------- Perguntas ---------- */
+.perguntas {
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 8rem) var(--margem) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 2rem clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+.perguntas__lista { border-top: 2px solid var(--preto); }
+.perguntas details { border-bottom: 1px solid var(--linha); }
+.perguntas summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 1.15rem;
+}
+.perguntas summary::-webkit-details-marker { display: none; }
+.perguntas summary::after {
+  content: "+";
+  flex: none;
+  font-weight: 400;
+  color: var(--laranja);
+  transition: transform 0.2s ease;
+}
+.perguntas details[open] summary::after { transform: rotate(45deg); }
+.perguntas summary:focus-visible { outline: 2px solid var(--laranja); outline-offset: 4px; }
+.perguntas details p { padding-bottom: 1.2rem; max-width: 38rem; color: var(--grafite); line-height: 1.6; }
+@media (max-width: 760px) { .perguntas { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .perguntas summary::after { transition: none; } }
 
 /* ---------- Contacto ---------- */
 .contacto {
