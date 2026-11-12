@@ -1,63 +1,112 @@
 <!doctype html>
-<html lang="pt">
+<html lang="pt-PT" data-mercado="pt">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Termos · Oddwork</title>
-  <meta name="description" content="Como funciona a assinatura da Oddwork: período grátis, cobrança, cancelamento e o que acontece ao site.">
-  <meta name="theme-color" content="#EEE9DF">
+  <meta name="description" content="Como funciona a assinatura da Oddwork: planos, mês grátis, cobrança, cancelamento e o que acontece ao site.">
+  <meta name="theme-color" content="#F2F0E9">
   <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+  <script src="mercado.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topo">
     <a class="marca" href="index.html" aria-label="Oddwork, início">the<span>odd</span>work</a>
+    <div class="mercado mercado--topo" role="group" aria-label="País">
+      <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
+      <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
+    </div>
     <a class="botao botao--pequeno" href="index.html#planos">Ver planos</a>
   </header>
 
-  <main class="legal">
+  <!-- Portugal -->
+  <main class="legal" data-m="pt">
     <h1>Termos da assinatura</h1>
-    <p class="legal__data">Última atualização: 9 de novembro de 2026</p>
+    <p class="legal__data">Última atualização: 12 de novembro de 2026</p>
 
     <p>Estes termos aplicam-se a quem assina o serviço da Oddwork. Se tiveres dúvidas, escreve para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a> antes de assinar.</p>
 
-    <h2>O que está incluído</h2>
-    <p>Site com domínio próprio, perfil no Google e avaliações, posts e planeamento mensal de conteúdo, edição dos vídeos que gravares, bot de WhatsApp com marcações, diagnóstico inicial e relatório mensal. Anúncios pagos, logótipo e identidade, sessões de fotos e menu digital são orçamentados à parte e só avançam se disseres que sim.</p>
+    <h2>Planos</h2>
+    <p><strong>Essencial:</strong> site de 1 página (serviços, preços, botão de marcação e mapa) com alojamento incluído e até 2 alterações por mês; o domínio fica em nome do cliente e é pago por ele. Perfil Google com otimização inicial, 4 publicações por mês e resposta a avaliações. 8 posts por mês para o feed. 4 Reels por mês (até 60 s), editados a partir do material do cliente ou criados com IA, à escolha do cliente. Calendário do mês enviado até dia 25 do mês anterior. WhatsApp com mensagem de boas-vindas, ausência e respostas rápidas, com link de marcação. Relatório mensal de 1 página, até dia 5, por WhatsApp.</p>
+    <p><strong>Pro (em breve):</strong> tudo do Essencial, mais automação pela API oficial da Meta, com a marcação feita dentro do WhatsApp. Por agora existe apenas lista de espera.</p>
+
+    <h2>Como trabalhamos</h2>
+    <ul>
+      <li>Cada peça tem 1 ronda de revisão.</li>
+      <li>O cliente aprova em 3 dias úteis. O que não for aprovado não é publicado e não acumula.</li>
+      <li>O cliente envia fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
+      <li>Não incluído: Stories, anúncios e sessões fotográficas. Alguns existem como extras, orçamentados à parte.</li>
+    </ul>
 
     <h2>Preço</h2>
-    <p>69 € por mês em Portugal, IVA incluído. R$ 450 por mês no Brasil. A cobrança é mensal e automática no cartão que indicares, através do Stripe.</p>
+    <p>Essencial: 69 €/mês (preço de fundador) ou 99 €/mês (preço normal). Pro: 89 €/mês (fundador) ou 129 €/mês (normal). Preço final, sem IVA (regime de isenção, art. 53.º CIVA).</p>
+    <p>O preço de fundador é para os 10 primeiros clientes (Portugal e Brasil juntos) e mantém-se enquanto a assinatura estiver ativa. Se cancelares e voltares, entras pelo preço normal.</p>
+    <p>A cobrança é mensal e automática através do Stripe. A Oddwork não vê os dados do teu cartão.</p>
 
-    <h2>Os primeiros 30 dias</h2>
-    <p>Ao assinar pões o cartão, mas não é cobrado nada durante 30 dias. Avisamos-te antes da primeira cobrança. Se cancelares antes do fim desse período, não pagas nada.</p>
+    <h2>Mês grátis</h2>
+    <p>O mês grátis é por candidatura e vale uma vez por negócio. Depois da aprovação dás os dados de pagamento, mas a primeira cobrança só acontece no dia 31. Enviamos um lembrete no dia 25. Inclui o plano completo.</p>
+    <p>Durante o mês grátis o site fica no domínio e alojamento da Oddwork. Se cancelares, o site sai do ar, ou podes comprá-lo por 150 €.</p>
 
     <h2>Cancelar</h2>
-    <p>Não há fidelização. Podes cancelar a qualquer momento com uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>. O cancelamento conta a partir do fim do mês já pago e não há reembolso de meses parciais.</p>
-
-    <h2>O site e o domínio</h2>
-    <p>O site fica no ar enquanto a assinatura estiver ativa. Se cancelares, o site deixa de estar publicado. Os textos e fotos que nos deste continuam a ser teus e enviamos-tos se pedires.</p>
-
-    <h2>O que precisamos de ti</h2>
-    <p>Informação correta sobre o negócio, os vídeos gravados no telemóvel quando os planearmos e respostas em tempo útil. Se algo atrasar do teu lado, o que depende disso atrasa também.</p>
-
-    <h2>Vagas</h2>
-    <p>Aceitamos um número limitado de clientes novos por mês para conseguirmos responder a todos. Quando as vagas do mês acabam, a assinatura abre no mês seguinte.</p>
+    <p>Sem fidelização. Cancelas quando quiseres: o serviço continua até ao fim do mês já pago e não há nova cobrança. Basta uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+    <ul>
+      <li>Não há reembolso de meses já pagos.</li>
+      <li>Perfil Google, Instagram e WhatsApp ficam sempre em nome do cliente; a Oddwork tem só acesso de gestão.</li>
+      <li>O conteúdo publicado continua do cliente. A automação de WhatsApp é desligada no fim do mês.</li>
+      <li>Site: depois de 6 meses pagos, passa para o cliente sem custo. Antes disso, sai do ar ou pode ser comprado por 150 €.</li>
+      <li>Ao cancelar perde-se o preço de fundador.</li>
+    </ul>
 
     <h2>Reclamações</h2>
     <p>Fala connosco primeiro: resolvemos quase tudo por email. Podes também usar o <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações Eletrónico</a>. Em caso de litígio, podes recorrer a uma entidade de resolução alternativa de litígios de consumo, cuja lista está no <a href="https://www.consumidor.gov.pt/" rel="noopener">Portal do Consumidor</a>.</p>
   </main>
 
-  <footer class="rodape">
-    <a class="marca marca--grande" href="index.html" aria-label="Oddwork, voltar ao início">the<span>odd</span>work</a>
-    <p class="rodape__slogan">A lógica é outra.</p>
-    <nav class="rodape__nav" aria-label="Rodapé">
-      <a href="index.html">Início</a>
-      <a href="privacidade.html">Aviso de privacidade</a>
-      <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações</a>
-    </nav>
-    <p class="rodape__legal">© 2026 Oddwork</p>
+  <!-- Brasil -->
+  <main class="legal" data-m="br">
+    <h1>Termos da assinatura</h1>
+    <p class="legal__data">Última atualização: 12 de novembro de 2026</p>
+
+    <p>Estes termos valem para quem assina o serviço da Oddwork. Se tiver dúvidas, escreva para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a> antes de assinar.</p>
+
+    <h2>Planos</h2>
+    <p><strong>Essencial:</strong> site de 1 página (serviços, preços, botão de agendamento e mapa) com hospedagem incluída e até 2 alterações por mês; o domínio fica no nome do cliente e é pago por ele. Perfil Google com otimização inicial, 4 publicações por mês e resposta às avaliações. 8 posts por mês para o feed. 4 Reels por mês (até 60 s), editados a partir do material do cliente ou criados com IA, à escolha do cliente. Calendário do mês enviado até o dia 25 do mês anterior. WhatsApp com mensagem de boas-vindas, ausência e respostas rápidas, com link de agendamento. Relatório mensal de 1 página, até o dia 5, por WhatsApp.</p>
+    <p><strong>Pro (em breve):</strong> tudo do Essencial, mais automação pela API oficial da Meta, com o agendamento feito dentro do WhatsApp. Por enquanto existe apenas lista de espera.</p>
+
+    <h2>Como trabalhamos</h2>
+    <ul>
+      <li>Cada peça tem 1 rodada de revisão.</li>
+      <li>O cliente aprova em 3 dias úteis. O que não for aprovado não é publicado e não acumula.</li>
+      <li>O cliente envia fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
+      <li>Não incluído: Stories, anúncios e sessões de fotos. Alguns existem como extras, orçados à parte.</li>
+    </ul>
+
+    <h2>Preço</h2>
+    <p>Essencial: R$ 450/mês (preço de fundador) ou R$ 650/mês (preço normal). Pro: R$ 580/mês (fundador) ou R$ 840/mês (normal). <span class="a-definir">[A DEFINIR: menção fiscal BR, a confirmar com contador]</span></p>
+    <p>O preço de fundador é para os 10 primeiros clientes (Portugal e Brasil juntos) e continua valendo enquanto a assinatura estiver ativa. Se cancelar e voltar, você entra pelo preço normal.</p>
+    <p>A cobrança é mensal e automática pelo Stripe. A Oddwork não vê os dados do seu cartão.</p>
+
+    <h2>Mês grátis</h2>
+    <p>O mês grátis é por candidatura e vale uma vez por negócio. Depois da aprovação você informa os dados de pagamento, mas a primeira cobrança só acontece no dia 31. Enviamos um lembrete no dia 25. Inclui o plano completo.</p>
+    <p>Durante o mês grátis o site fica no domínio e na hospedagem da Oddwork. Se cancelar, o site sai do ar, ou você pode comprá-lo por R$ 950.</p>
+
+    <h2>Cancelar</h2>
+    <p>Sem fidelidade. Você cancela quando quiser: o serviço continua até o fim do mês já pago e não há nova cobrança. Basta uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+    <ul>
+      <li>Não há reembolso de meses já pagos.</li>
+      <li>Perfil Google, Instagram e WhatsApp ficam sempre no nome do cliente; a Oddwork tem só acesso de gestão.</li>
+      <li>O conteúdo publicado continua do cliente. A automação de WhatsApp é desligada no fim do mês.</li>
+      <li>Site: depois de 6 meses pagos, passa para o cliente sem custo. Antes disso, sai do ar ou pode ser comprado por R$ 950.</li>
+      <li>Ao cancelar, perde-se o preço de fundador.</li>
+    </ul>
+
+    <h2>Reclamações</h2>
+    <p>Fale com a gente primeiro: resolvemos quase tudo por email.</p>
+  </main>
+
+  <footer class="rodape rodape--legal">
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal · <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
   </footer>
+  <script src="legal.js" defer></script>
 </body>
 </html>

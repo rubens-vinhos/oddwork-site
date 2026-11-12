@@ -1,44 +1,30 @@
-// ---------- Configuração (confirmar antes de publicar) ----------
-const EMAIL = "geral@theoddwork.com";
-// Payment Links do Stripe (assinatura mensal com 30 dias grátis). Vazio = o botão leva ao contacto.
-const PAGAMENTO = { pt: "", br: "" };
-const MERCADOS = {
-  pt: { preco: "69 €", nota: "IVA incluído", rotulo: "Portugal" },
-  br: { preco: "R$ 450", nota: "Valor em reais, sem conversão", rotulo: "Brasil" },
-};
+// ---------- Configuração (o único sítio a editar à mão) ----------
+// Vagas de fundador: 10 no total, partilhadas entre Portugal e Brasil.
+// Atualizar "restam" sempre que entra um cliente fundador. Nunca mostrar números inventados.
+const VAGAS_FUNDADOR = { total: 10, restam: 10 };
 
-// Vagas por mês: 8 no total. Atualizar "ocupadas" à mão sempre que entra um cliente.
-// Nunca mostrar números inventados.
-const VAGAS = { total: 8, ocupadas: 0 };
+// Endereço que recebe as candidaturas (Google Apps Script ligado a uma folha no geral@).
+// Ver scripts/candidaturas.gs.
+const CANDIDATURAS_URL = "";
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
-// ---------- Vagas do mês ----------
-const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
-  "agosto", "setembro", "outubro", "novembro", "dezembro"];
-const hoje = new Date();
-const mesAtual = MESES[hoje.getMonth()];
-const mesSeguinte = MESES[(hoje.getMonth() + 1) % 12];
-const restam = Math.max(0, VAGAS.total - VAGAS.ocupadas);
-const cheio = restam === 0;
-
-const frase = cheio
-  ? `${mesAtual[0].toUpperCase()}${mesAtual.slice(1)} está completo. A lista de ${mesSeguinte} está aberta.`
-  : `${restam === 1 ? "Resta 1 vaga" : `Restam ${restam} vagas`} para ${mesAtual}.`;
+// ---------- Vagas de fundador ----------
+const restam = Math.max(0, Math.min(VAGAS_FUNDADOR.total, VAGAS_FUNDADOR.restam));
+const esgotado = restam === 0;
+const frase = esgotado
+  ? `As ${VAGAS_FUNDADOR.total} vagas de fundador estão preenchidas.`
+  : `${restam === 1 ? "Resta" : "Restam"} ${restam} de ${VAGAS_FUNDADOR.total} vagas de fundador.`;
 
 document.querySelectorAll("[data-vagas-frase]").forEach((el) => (el.textContent = frase));
 document.querySelectorAll("[data-vagas-curta]").forEach((el) => {
-  el.textContent = cheio ? "Lista de espera" : restam === 1 ? "1 vaga" : `${restam} vagas`;
-});
-document.querySelectorAll("[data-vagas-mes]").forEach((el) => (el.textContent = cheio ? mesSeguinte : mesAtual));
-document.querySelectorAll("[data-vagas-botao]").forEach((el) => {
-  if (cheio) el.textContent = el.closest(".barra-fixa") ? "Entrar na lista" : `Entrar na lista de ${mesSeguinte}`;
+  el.textContent = esgotado ? "Sem" : `${restam} de ${VAGAS_FUNDADOR.total}`;
 });
 
 const medidor = document.getElementById("vagas-medidor");
-for (let i = 0; i < VAGAS.total; i++) {
+for (let i = 0; i < VAGAS_FUNDADOR.total; i++) {
   const seg = document.createElement("span");
-  if (i < VAGAS.ocupadas) seg.className = "ocupada";
+  if (i >= restam) seg.className = "ocupada";
   medidor.appendChild(seg);
 }
 
@@ -50,7 +36,7 @@ const observarBarra = new IntersectionObserver((entradas) => {
   const esconder = [...zonasSemBarra.values()].some(Boolean);
   barra.classList.toggle("visivel", !esconder);
 });
-document.querySelectorAll(".hero, #planos, #contacto, .rodape").forEach((el) => observarBarra.observe(el));
+document.querySelectorAll(".hero, #planos, #candidatura, .rodape").forEach((el) => observarBarra.observe(el));
 
 // ---------- Linha por baixo do topo quando se faz scroll ----------
 const topo = document.querySelector(".topo");
@@ -58,32 +44,19 @@ const marcarTopo = () => topo.classList.toggle("com-linha", window.scrollY > 8);
 window.addEventListener("scroll", marcarTopo, { passive: true });
 marcarTopo();
 
-// ---------- Mercado e preço ----------
-function lerMercadoGuardado() {
-  try { return localStorage.getItem("oddwork-mercado"); } catch { return null; }
-}
-function guardarMercado(m) {
-  try { localStorage.setItem("oddwork-mercado", m); } catch { /* sem armazenamento */ }
-}
-function mercadoInicial() {
-  const guardado = lerMercadoGuardado();
-  if (guardado && MERCADOS[guardado]) return guardado;
-  const linguas = navigator.languages || [navigator.language || ""];
-  return linguas.some((l) => /^pt-br/i.test(l)) ? "br" : "pt";
-}
-
-let mercado = mercadoInicial();
+// ---------- Mercado (PT/BR): textos, preços e formulário ----------
+// O mercado inicial é escolhido em mercado.js, antes de a página aparecer.
+const formulario = document.getElementById("formulario");
 const botoesMercado = document.querySelectorAll("[data-mercado]");
 
 function aplicarMercado(m) {
-  mercado = m;
-  document.getElementById("preco").textContent = MERCADOS[m].preco;
-  document.getElementById("preco-nota").textContent = MERCADOS[m].nota;
+  document.documentElement.dataset.mercado = m;
+  document.documentElement.lang = m === "br" ? "pt-BR" : "pt-PT";
   botoesMercado.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mercado === m)));
-  const ligacao = PAGAMENTO[m];
-  document.querySelectorAll("[data-vagas-botao]").forEach((el) => {
-    el.href = ligacao && !cheio ? ligacao : el.closest(".barra-fixa") ? "#planos" : "#contacto";
-  });
+  formulario.querySelector(`input[name="pais"][value="${m === "br" ? "Brasil" : "Portugal"}"]`).checked = true;
+}
+function guardarMercado(m) {
+  try { localStorage.setItem("oddwork-mercado", m); } catch { /* sem armazenamento */ }
 }
 botoesMercado.forEach((b) =>
   b.addEventListener("click", () => {
@@ -91,40 +64,113 @@ botoesMercado.forEach((b) =>
     guardarMercado(b.dataset.mercado);
   })
 );
-aplicarMercado(mercado);
+// Escolher o país no formulário também muda o mercado da página
+formulario.querySelectorAll('input[name="pais"]').forEach((r) =>
+  r.addEventListener("change", () => {
+    const m = r.value === "Brasil" ? "br" : "pt";
+    aplicarMercado(m);
+    guardarMercado(m);
+  })
+);
+aplicarMercado(document.documentElement.dataset.mercado === "br" ? "br" : "pt");
 
-// ---------- Formulário de contacto (abre o email) ----------
-const formulario = document.getElementById("formulario");
+// ---------- Botões de plano preenchem o formulário ----------
+document.querySelectorAll("[data-plano]").forEach((el) =>
+  el.addEventListener("click", () => {
+    const valor = el.dataset.plano === "pro" ? "Pro (lista de espera)" : "Essencial";
+    formulario.querySelector(`input[name="plano"][value="${valor}"]`).checked = true;
+  })
+);
+
+// ---------- Formulário de candidatura ----------
 const erro = document.getElementById("formulario-erro");
+const botaoEnviar = document.getElementById("formulario-botao");
+const sucesso = document.getElementById("formulario-sucesso");
 
-formulario.addEventListener("submit", (e) => {
+const TEXTOS = {
+  pt: {
+    falta: "Falta preencher: ",
+    email: "O email não parece válido.",
+    consentimento: "Para enviarmos a candidatura precisamos da tua autorização (primeira caixa).",
+    falhou: "Não conseguimos enviar agora. Tenta de novo ou escreve para geral@theoddwork.com.",
+    aEnviar: "A enviar…",
+  },
+  br: {
+    falta: "Falta preencher: ",
+    email: "O email não parece válido.",
+    consentimento: "Para enviar a candidatura precisamos da sua autorização (primeira caixa).",
+    falhou: "Não conseguimos enviar agora. Tente de novo ou escreva para geral@theoddwork.com.",
+    aEnviar: "Enviando…",
+  },
+};
+
+function nomeDoCampo(campo) {
+  const legenda = campo.closest("fieldset")?.querySelector("legend");
+  if (legenda) return legenda.textContent.trim();
+  const rotulo = campo.closest("label")?.querySelector(":scope > span");
+  const visivel = rotulo && [...rotulo.querySelectorAll("[data-m]")].find((s) => s.offsetParent !== null);
+  return (visivel || rotulo)?.textContent.replace("(opcional)", "").replace(/\?$/, "").trim() || campo.name;
+}
+
+function mostrarErro(texto, foco) {
+  erro.textContent = texto;
+  erro.hidden = false;
+  foco?.focus();
+}
+
+formulario.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const dados = new FormData(formulario);
-  const nome = String(dados.get("nome") || "").trim();
-  const negocio = String(dados.get("negocio") || "").trim();
-  const mensagem = String(dados.get("mensagem") || "").trim();
+  const t = TEXTOS[document.documentElement.dataset.mercado === "br" ? "br" : "pt"];
 
+  const obrigatorios = [...formulario.querySelectorAll("[required]")].filter((c) => c.name !== "consentimento");
+  const vistos = new Set();
   const emFalta = [];
-  formulario.nome.setAttribute("aria-invalid", String(!nome));
-  formulario.negocio.setAttribute("aria-invalid", String(!negocio));
-  if (!nome) emFalta.push("o teu nome");
-  if (!negocio) emFalta.push("o nome do negócio");
-
+  obrigatorios.forEach((c) => {
+    if (vistos.has(c.name)) return;
+    vistos.add(c.name);
+    const vazio = c.type === "radio"
+      ? !formulario.querySelector(`input[name="${c.name}"]:checked`)
+      : !String(c.value).trim();
+    if (c.type !== "radio") c.setAttribute("aria-invalid", String(vazio));
+    if (vazio) emFalta.push(c);
+  });
   if (emFalta.length) {
-    erro.textContent = `Falta ${emFalta.join(" e ")}.`;
-    erro.hidden = false;
-    (nome ? formulario.negocio : formulario.nome).focus();
-    return;
+    return mostrarErro(t.falta + emFalta.map(nomeDoCampo).join(", ") + ".", emFalta[0]);
+  }
+  const email = formulario.email;
+  if (!email.checkValidity()) {
+    email.setAttribute("aria-invalid", "true");
+    return mostrarErro(t.email, email);
+  }
+  if (!formulario.consentimento.checked) {
+    return mostrarErro(t.consentimento, formulario.consentimento);
   }
   erro.hidden = true;
 
-  const texto = [
-    `Olá! Sou ${nome}, do negócio ${negocio}.`,
-    `Mercado: ${MERCADOS[mercado].rotulo}.`,
-    mensagem && `\n${mensagem}`,
-  ].filter(Boolean).join("\n");
-  const assunto = `Oddwork: ${negocio}`;
-  location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(texto)}`;
+  const dados = new URLSearchParams(new FormData(formulario));
+  dados.set("novidades", formulario.novidades.checked ? "sim" : "não");
+  dados.set("mercado", document.documentElement.dataset.mercado);
+  dados.set("pagina", location.href);
+
+  const textoBotao = botaoEnviar.innerHTML;
+  botaoEnviar.disabled = true;
+  botaoEnviar.textContent = t.aEnviar;
+  try {
+    if (!CANDIDATURAS_URL) throw new Error("sem destino configurado");
+    // Pedido simples (sem cabeçalhos próprios) para o Apps Script aceitar sem pré-verificação CORS
+    const resposta = await fetch(CANDIDATURAS_URL, { method: "POST", body: dados });
+    const json = await resposta.json().catch(() => ({}));
+    if (!resposta.ok || json.ok !== true) throw new Error(json.erro || `HTTP ${resposta.status}`);
+    formulario.hidden = true;
+    sucesso.hidden = false;
+    sucesso.focus();
+  } catch (falha) {
+    console.error("Candidatura não enviada:", falha);
+    mostrarErro(t.falhou);
+  } finally {
+    botaoEnviar.disabled = false;
+    botaoEnviar.innerHTML = textoBotao;
+  }
 });
 
 // ---------- Vista explodida: lista e peças acendem em conjunto ----------

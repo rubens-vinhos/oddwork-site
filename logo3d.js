@@ -75,9 +75,9 @@ function iniciar() {
   parede.receiveShadow = true;
   cena.add(parede);
 
-  const aco = new THREE.MeshStandardMaterial({ color: "#111111", roughness: 0.36, metalness: 0.55 });
-  const acoAleta = new THREE.MeshStandardMaterial({ color: "#161616", roughness: 0.5, metalness: 0.45 });
-  const laranja = new THREE.MeshStandardMaterial({ color: "#F45127", roughness: 0.6, metalness: 0, envMapIntensity: 0.25, emissive: "#F45127", emissiveIntensity: 0.12 });
+  const aco = new THREE.MeshStandardMaterial({ color: "#242424", roughness: 0.36, metalness: 0.55 });
+  const acoAleta = new THREE.MeshStandardMaterial({ color: "#2A2A2A", roughness: 0.5, metalness: 0.45 });
+  const laranja = new THREE.MeshStandardMaterial({ color: "#F26A21", roughness: 0.6, metalness: 0, envMapIntensity: 0.25, emissive: "#F26A21", emissiveIntensity: 0.12 });
 
   const geoEspinhaD = extrudir(ESPINHA, false, 0.42);
   const geoEspinhaE = extrudir(ESPINHA, true, 0.42);
