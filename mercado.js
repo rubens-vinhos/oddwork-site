@@ -12,6 +12,7 @@
     else if (/^America\/(Sao_Paulo|Fortaleza|Recife|Bahia|Belem|Manaus|Cuiaba|Campo_Grande|Porto_Velho|Boa_Vista|Rio_Branco|Araguaina|Maceio|Santarem|Noronha|Eirunepe)$/.test(fuso)) m = "br";
     else m = "pt";
   }
+  document.documentElement.classList.add("js");
   document.documentElement.dataset.mercado = m;
   document.documentElement.lang = m === "br" ? "pt-BR" : "pt-PT";
 })();

@@ -26,42 +26,84 @@ for (let i = 0; i < VAGAS_FUNDADOR.total; i++) {
   medidor.appendChild(seg);
 }
 
-// ---------- Topo: linha ao fazer scroll, menu no telemóvel, secção ativa ----------
-const topo = document.querySelector(".topo");
-const marcarTopo = () => topo.classList.toggle("com-linha", window.scrollY > 8);
-window.addEventListener("scroll", marcarTopo, { passive: true });
-marcarTopo();
+// ---------- Navegação por ecrãs: o início escolhe, cada secção abre por cima ----------
+const raiz = document.documentElement;
+const vistas = [...document.querySelectorAll(".vista")];
+const corpoVistas = document.getElementById("vistas-corpo");
+const ligacaoSeguinte = document.getElementById("vista-seguinte");
+const ctaFim = document.getElementById("vista-cta");
+const navVistas = [...document.querySelectorAll(".vistas__nav a")];
+const NOMES = {
+  servicos: "O que fazemos", precos: "Preços", "como-funciona": "Como funciona",
+  "quem-somos": "Quem somos", perguntas: "Perguntas", candidatura: "Candidatura",
+};
+// Endereços antigos e atalhos continuam a funcionar
+const ALIAS = { pecas: "servicos", planos: "precos", fundadores: "quem-somos", contacto: "candidatura" };
+const SEPARADORES_FUNCIONA = ["mes-gratis", "cancelar", "trabalho", "relatorio", "extras"];
+let ultimaPlaca = null;
 
-const botaoMenu = document.querySelector(".menu");
-const nav = document.getElementById("nav");
-function abrirMenu(aberto) {
-  topo.classList.toggle("menu-aberto", aberto);
-  botaoMenu.setAttribute("aria-expanded", String(aberto));
+function rota() {
+  let id = decodeURIComponent(location.hash.slice(1));
+  let separador = null;
+  if (SEPARADORES_FUNCIONA.includes(id)) { separador = id; id = "como-funciona"; }
+  id = ALIAS[id] || id;
+  const vista = vistas.find((v) => v.id === id);
+
+  if (!vista) {
+    raiz.classList.remove("vista-aberta");
+    vistas.forEach((v) => v.classList.remove("ativa"));
+    if (ultimaPlaca) { ultimaPlaca.focus({ preventScroll: true }); ultimaPlaca = null; }
+    return;
+  }
+  const jaAberta = raiz.classList.contains("vista-aberta");
+  vistas.forEach((v) => v.classList.toggle("ativa", v === vista));
+  raiz.classList.add("vista-aberta");
+  navVistas.forEach((a) => a.toggleAttribute("aria-current", a.getAttribute("href") === `#${id}`));
+  navVistas.find((a) => a.hasAttribute("aria-current"))?.scrollIntoView({ block: "nearest", inline: "center" });
+
+  // Fim do ecrã: o próximo passo
+  const i = vistas.indexOf(vista);
+  const seguinte = vistas[i + 1];
+  ligacaoSeguinte.hidden = !seguinte;
+  if (seguinte) {
+    ligacaoSeguinte.href = `#${seguinte.id}`;
+    ligacaoSeguinte.querySelector("strong").textContent = NOMES[seguinte.id];
+  }
+  ctaFim.hidden = id === "candidatura";
+
+  if (separador) abrirSeparador(document.querySelector(`[aria-controls="${separador}"]`));
+  corpoVistas.scrollTop = 0;
+  corpoVistas.classList.remove("entrar");
+  void corpoVistas.offsetWidth; // reinicia a animação
+  if (!semMovimento) corpoVistas.classList.add(jaAberta ? "trocar" : "entrar");
+  vista.querySelector("h2")?.focus({ preventScroll: true });
 }
-botaoMenu.addEventListener("click", () => abrirMenu(botaoMenu.getAttribute("aria-expanded") !== "true"));
-nav.addEventListener("click", (e) => { if (e.target.closest("a")) abrirMenu(false); });
+
+function irInicio(e) {
+  e?.preventDefault();
+  history.pushState(null, "", location.pathname + location.search);
+  rota();
+}
+document.querySelectorAll("[data-ir-inicio]").forEach((a) => a.addEventListener("click", irInicio));
+document.querySelectorAll(".painel a").forEach((a) => a.addEventListener("click", () => (ultimaPlaca = a)));
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && topo.classList.contains("menu-aberto")) { abrirMenu(false); botaoMenu.focus(); }
+  if (e.key === "Escape" && raiz.classList.contains("vista-aberta")) irInicio(e);
 });
+window.addEventListener("hashchange", rota);
 
-const ligacoesNav = [...nav.querySelectorAll('a[href^="#"]:not(.nav__cta)')];
-const seccoesNav = ligacoesNav.map((a) => document.querySelector(a.getAttribute("href")));
-const observarSeccoes = new IntersectionObserver((entradas) => {
-  entradas.forEach((e) => {
-    if (!e.isIntersecting) return;
-    ligacoesNav.forEach((a) => a.toggleAttribute("aria-current", a.getAttribute("href") === `#${e.target.id}`));
-  });
-}, { rootMargin: "-45% 0px -50% 0px" });
-seccoesNav.forEach((s) => s && observarSeccoes.observe(s));
-
-// ---------- Barra fixa no telemóvel ----------
-const barra = document.getElementById("barra-fixa");
-const zonasSemBarra = new Map();
-const observarBarra = new IntersectionObserver((entradas) => {
-  entradas.forEach((e) => zonasSemBarra.set(e.target, e.isIntersecting));
-  barra.classList.toggle("visivel", ![...zonasSemBarra.values()].some(Boolean));
+// ---------- Situações do dia a dia, uma de cada vez ----------
+document.querySelectorAll(".situacoes ul").forEach((ul) => {
+  const itens = [...ul.children];
+  let n = 0;
+  itens.forEach((li, i) => li.classList.toggle("ativa", i === 0));
+  if (semMovimento) return;
+  setInterval(() => {
+    if (document.hidden || raiz.classList.contains("vista-aberta")) return;
+    itens[n].classList.remove("ativa");
+    n = (n + 1) % itens.length;
+    itens[n].classList.add("ativa");
+  }, 3800);
 });
-document.querySelectorAll(".hero, #candidatura, .rodape").forEach((el) => observarBarra.observe(el));
 
 // ---------- Mercado (PT/BR): textos, preços e formulário ----------
 // O mercado inicial é escolhido em mercado.js, antes de a página aparecer.
@@ -130,11 +172,9 @@ partes.forEach((p) => {
 mostrarPeca("site");
 
 // Enquanto ninguém mexe, as peças vão acendendo sozinhas (só com a secção à vista)
-let pecasVisiveis = false;
-new IntersectionObserver(([e]) => (pecasVisiveis = e.isIntersecting), { threshold: 0.4 })
-  .observe(document.getElementById("pecas"));
+const vistaServicos = document.getElementById("servicos");
 setInterval(() => {
-  if (!rodarPecas || !pecasVisiveis || document.hidden) return;
+  if (!rodarPecas || !vistaServicos.classList.contains("ativa") || document.hidden) return;
   const i = tabsPecas.findIndex((t) => t.dataset.peca === pecaAtiva);
   mostrarPeca(tabsPecas[(i + 1) % tabsPecas.length].dataset.peca);
 }, 3200);
@@ -160,15 +200,6 @@ separadores.forEach((s, i) => {
     abrirSeparador(separadores[(i + passo + separadores.length) % separadores.length], true);
   });
 });
-// Ligações diretas a um separador (ex.: #extras) abrem-no
-function abrirPorEndereco() {
-  const sep = separadores.find((s) => `#${s.getAttribute("aria-controls")}` === location.hash);
-  if (!sep) return;
-  abrirSeparador(sep);
-  document.getElementById("como-funciona").scrollIntoView({ behavior: semMovimento ? "auto" : "smooth" });
-}
-window.addEventListener("hashchange", abrirPorEndereco);
-abrirPorEndereco();
 
 // ---------- Botões de plano preenchem o formulário ----------
 document.querySelectorAll("[data-plano]").forEach((el) =>
@@ -300,3 +331,4 @@ formulario.addEventListener("submit", async (e) => {
   }
 });
 irParaPasso(0, false);
+rota();
