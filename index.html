@@ -61,11 +61,49 @@
   <main>
     <!-- Hero -->
     <section class="hero">
-      <svg class="hero__simbolo" viewBox="-420 -420 840 840" fill="#2A2926" aria-hidden="true"><use href="#simbolo"/></svg>
-      <h1><span data-m="pt">O digital do teu negócio, tratado por nós.</span><span data-m="br">O digital do seu negócio, feito por nós.</span></h1>
-      <p>Instagram, Google, site e WhatsApp numa só mensalidade. Para salões, barbearias, estética, clínicas e fisioterapia.</p>
-      <a class="botao" href="#candidatura">Experimentar 1 mês grátis</a>
-      <small><span data-m="pt">Depois 69 €/mês · Cancelas quando quiseres</span><span data-m="br">Depois R$&nbsp;450/mês · Cancele quando quiser</span></small>
+      <div class="hero__texto">
+        <h1><span data-m="pt">O digital do teu negócio, tratado por nós.</span><span data-m="br">O digital do seu negócio, feito por nós.</span></h1>
+        <p>Instagram, Google, site e WhatsApp numa só mensalidade.</p>
+
+        <div class="escolha-negocio" role="radiogroup" aria-label="Tipo de negócio">
+          <p class="escolha-negocio__pergunta"><span data-m="pt">O teu negócio é…</span><span data-m="br">Seu negócio é…</span></p>
+          <div class="escolha-negocio__opcoes">
+            <button type="button" role="radio" aria-checked="true" data-negocio="salao">Salão</button>
+            <button type="button" role="radio" aria-checked="false" data-negocio="barbearia">Barbearia</button>
+            <button type="button" role="radio" aria-checked="false" data-negocio="estetica">Estética</button>
+            <button type="button" role="radio" aria-checked="false" data-negocio="clinica">Clínica</button>
+            <button type="button" role="radio" aria-checked="false" data-negocio="fisio">Fisioterapia</button>
+          </div>
+        </div>
+
+        <a class="botao" href="#candidatura" id="hero-cta">Experimentar 1 mês grátis</a>
+        <small><span data-m="pt">Depois 69 €/mês · Cancelas quando quiseres</span><span data-m="br">Depois R$&nbsp;450/mês · Cancele quando quiser</span></small>
+      </div>
+
+      <!-- Pré-visualização: muda com o tipo de negócio escolhido -->
+      <figure class="montra" aria-label="Exemplo de como fica o teu site e o teu WhatsApp">
+        <div class="montra__palco">
+        <div class="telemovel">
+          <div class="telemovel__site" id="montra-site">
+            <div class="mini-topo">
+              <svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg>
+              <strong id="montra-nome">O teu salão</strong>
+            </div>
+            <div class="mini-capa" id="montra-capa">
+              <span id="montra-frase">Marca o teu próximo corte</span>
+              <i>Marcar</i>
+            </div>
+            <ul class="mini-servicos" id="montra-servicos"></ul>
+            <div class="mini-mapa"><span></span></div>
+          </div>
+        </div>
+        <div class="montra__conversa" aria-live="polite">
+          <div class="bolha bolha--cliente" id="montra-pergunta">Olá! Têm vaga amanhã?</div>
+          <div class="bolha bolha--negocio" id="montra-resposta"><span class="a-escrever"><i></i><i></i><i></i></span></div>
+        </div>
+        </div>
+        <figcaption class="montra__legenda"><span data-m="pt">Exemplo. O teu fica com o teu nome, fotos e serviços.</span><span data-m="br">Exemplo. O seu fica com seu nome, fotos e serviços.</span></figcaption>
+      </figure>
     </section>
 
     <!-- O que fazemos -->
