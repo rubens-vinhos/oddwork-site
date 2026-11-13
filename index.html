@@ -81,26 +81,34 @@
       </div>
 
       <!-- Pré-visualização: muda com o tipo de negócio escolhido -->
-      <figure class="montra" aria-label="Exemplo de como fica o teu site e o teu WhatsApp">
-        <div class="montra__palco">
-        <div class="telemovel">
-          <div class="telemovel__site" id="montra-site">
-            <div class="mini-topo">
-              <svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg>
-              <strong id="montra-nome">O teu salão</strong>
+      <figure class="montra" aria-label="Exemplo de como ficam o teu site, o teu Google e o teu WhatsApp">
+        <div class="montra__palco" id="montra">
+          <div class="montra__fundo" aria-hidden="true"></div>
+
+          <div class="c-site" id="montra-site">
+            <div class="c-site__barra" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="c-site__corpo">
+              <p class="c-site__marca"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><strong data-montra-nome>O teu salão</strong></p>
+              <p class="c-site__titulo" id="montra-frase">Marca o teu próximo corte</p>
+              <ul class="c-site__servicos" id="montra-servicos"></ul>
+              <span class="c-site__botao"><span data-m="pt">Marcar agora</span><span data-m="br">Agendar agora</span></span>
             </div>
-            <div class="mini-capa" id="montra-capa">
-              <span id="montra-frase">Marca o teu próximo corte</span>
-              <i>Marcar</i>
+          </div>
+
+          <div class="c-google">
+            <span class="c-google__pino" aria-hidden="true"></span>
+            <div>
+              <strong data-montra-nome>O teu salão</strong>
+              <p><b><span data-m="pt">Aberto</span><span data-m="br">Aberto</span></b> · <span data-montra-tipo>Salão</span></p>
             </div>
-            <ul class="mini-servicos" id="montra-servicos"></ul>
-            <div class="mini-mapa"><span></span></div>
+            <span class="c-google__rotas">Rotas</span>
           </div>
-          <div class="montra__conversa" aria-live="polite">
-          <div class="bolha bolha--cliente" id="montra-pergunta">Olá! Têm vaga amanhã?</div>
-          <div class="bolha bolha--negocio" id="montra-resposta"><span class="a-escrever"><i></i><i></i><i></i></span></div>
+
+          <div class="c-whats" aria-live="polite">
+            <p class="c-whats__topo"><span class="c-whats__ponto" aria-hidden="true"></span>WhatsApp</p>
+            <div class="bolha bolha--cliente" id="montra-pergunta">Olá! Têm vaga amanhã?</div>
+            <div class="bolha bolha--negocio" id="montra-resposta"><span class="a-escrever"><i></i><i></i><i></i></span></div>
           </div>
-        </div>
         </div>
         <figcaption class="montra__legenda"><span data-m="pt">Exemplo. O teu fica com o teu nome, fotos e serviços.</span><span data-m="br">Exemplo. O seu fica com seu nome, fotos e serviços.</span></figcaption>
       </figure>

@@ -273,51 +273,57 @@ html[data-mercado="br"] [data-m="pt"] { display: none !important; }
 .escolha-negocio button:hover { border-color: #D9D5CC; transform: translateY(-1px); }
 .escolha-negocio button[aria-checked="true"] { background: var(--texto); border-color: var(--texto); color: #fff; }
 
-/* Montra: telemóvel com o mini-site + conversa de WhatsApp */
-.montra { margin: 0; text-align: left; justify-self: center; width: 100%; max-width: 18.5rem; }
-.montra__palco { position: relative; }
-.telemovel {
-  max-height: calc(100svh - 9rem);
-  margin: 0 auto;
+/* Montra: três cartões sobrepostos, com a cor do negócio */
+.montra { margin: 0; justify-self: center; width: 100%; max-width: 27rem; text-align: left; }
+.montra__palco {
   --tom: #F26A21;
   --tom-claro: #FEF1E8;
   position: relative;
-  aspect-ratio: 9 / 17;
-  padding: 0.55rem;
-  border-radius: 2.3rem;
-  background: #1E1D1B;
-  box-shadow: 0 30px 60px rgba(42, 41, 38, 0.16), 0 8px 18px rgba(42, 41, 38, 0.08);
+  aspect-ratio: 1 / 1;
+  font-size: clamp(13px, 1.25vw, 16px);
 }
-.telemovel::before { content: ""; position: absolute; top: 1.05rem; left: 50%; z-index: 2; width: 4.2rem; height: 1rem; border-radius: 99px; background: #1E1D1B; transform: translateX(-50%); }
-.telemovel__site { height: 100%; overflow: hidden; border-radius: 1.8rem; background: #fff; padding: 2.4rem 0.9rem 0.9rem; display: grid; grid-template-rows: auto auto auto minmax(3rem, 1fr); gap: 0.7rem; transition: opacity 0.25s; }
-.telemovel__site.a-mudar { opacity: 0; }
-.mini-topo { display: flex; align-items: center; gap: 0.45rem; font: 600 0.95rem var(--titulos); color: var(--texto); }
-.mini-topo svg { width: 1.2rem; height: 1.2rem; color: var(--tom); transition: color 0.3s; }
-.mini-capa { display: grid; align-content: end; gap: 0.55rem; min-height: 7.2rem; padding: 0.85rem; border-radius: 1rem; background: var(--tom-claro); transition: background-color 0.3s; }
-.mini-capa span { font: 600 1.05rem/1.15 var(--titulos); color: var(--texto); letter-spacing: -0.02em; }
-.mini-capa i { justify-self: start; font-style: normal; padding: 0.35rem 0.85rem; border-radius: 99px; background: var(--tom); color: #fff; font-size: 0.75rem; font-weight: 600; transition: background-color 0.3s; }
-.mini-servicos { display: grid; align-content: start; gap: 0; }
-.mini-servicos li { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.1rem; border-bottom: 1px solid #F0EEE9; font-size: 0.8rem; color: var(--texto); }
-.mini-servicos li::after { content: "›"; color: var(--suave); }
-.mini-mapa { position: relative; min-height: 3rem; border-radius: 0.8rem; background: repeating-linear-gradient(35deg, #EEF1EC 0 10px, #E6EAE4 10px 11px); }
-.mini-mapa span { position: absolute; left: 50%; top: 50%; width: 0.8rem; height: 0.8rem; border-radius: 50% 50% 50% 0; background: var(--tom); transform: translate(-50%, -70%) rotate(-45deg); }
+.montra__fundo { position: absolute; inset: 8% 6% 6% 8%; border-radius: 2.2em; background: var(--tom-claro); transition: background-color 0.4s; }
+.c-site, .c-google, .c-whats { position: absolute; background: #fff; border: 1px solid var(--linha); box-shadow: 0 18px 40px rgba(42, 41, 38, 0.10), 0 3px 8px rgba(42, 41, 38, 0.05); }
 
-.montra__conversa { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1.3rem; z-index: 3; display: grid; gap: 0.45rem; font-size: 0.8rem; line-height: 1.35; }
-.montra__conversa .bolha { box-shadow: 0 8px 22px rgba(42, 41, 38, 0.12); max-width: 100%; animation: bolha-entra 0.35s ease both; }
-.montra__conversa .bolha { max-width: 88%; }
-.montra__conversa .bolha--negocio { justify-self: end; }
-.montra__conversa .bolha u { font-weight: 600; }
+.c-site { left: 14%; top: 0; width: 70%; border-radius: 1.1em; overflow: hidden; transition: opacity 0.25s, transform 0.25s; }
+.c-site.a-mudar { opacity: 0; transform: translateY(6px); }
+.c-site__barra { display: flex; gap: 0.3em; padding: 0.6em 0.8em; background: #F6F4EF; border-bottom: 1px solid var(--linha); }
+.c-site__barra span { width: 0.45em; height: 0.45em; border-radius: 50%; background: #DDD9D0; }
+.c-site__corpo { display: grid; gap: 0.75em; padding: 1.1em 1.2em 1.3em; }
+.c-site__marca { display: flex; align-items: center; gap: 0.45em; margin: 0 !important; font: 600 0.82em var(--titulos) !important; color: var(--texto) !important; }
+.c-site__marca svg { width: 1.2em; height: 1.2em; color: var(--tom); transition: color 0.4s; }
+.c-site__titulo { margin: 0 !important; max-width: none !important; font: 600 1.45em/1.08 var(--titulos) !important; letter-spacing: -0.03em; color: var(--texto) !important; text-wrap: balance; }
+.c-site__servicos { display: flex; flex-wrap: wrap; gap: 0.35em; }
+.c-site__servicos li { padding: 0.3em 0.7em; border-radius: 99px; background: var(--tom-claro); color: var(--texto); font-size: 0.72em; font-weight: 500; transition: background-color 0.4s; }
+.c-site__botao { justify-self: start; padding: 0.55em 1.1em; border-radius: 99px; background: var(--tom); color: #fff; font-size: 0.78em; font-weight: 600; transition: background-color 0.4s; }
+
+.c-google { left: 0; top: 47%; display: flex; align-items: center; gap: 0.7em; width: 56%; padding: 0.8em 0.9em; border-radius: 1em; font-size: 0.82em; }
+.c-google__pino { flex: none; width: 2.2em; height: 2.2em; border-radius: 0.7em; background: var(--tom-claro); position: relative; transition: background-color 0.4s; }
+.c-google__pino::after { content: ""; position: absolute; left: 50%; top: 50%; width: 0.85em; height: 0.85em; border-radius: 50% 50% 50% 0; background: var(--tom); transform: translate(-50%, -65%) rotate(-45deg); transition: background-color 0.4s; }
+.c-google > div { min-width: 0; flex: 1; }
+.c-google strong { display: block; font: 600 1em var(--titulos); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.c-google p { margin: 0 !important; font-size: 0.85em !important; color: var(--suave) !important; }
+.c-google b { color: #2E8B57; font-weight: 600; }
+.c-google__rotas { flex: none; padding: 0.3em 0.7em; border-radius: 99px; background: #3B6FD8; color: #fff; font-size: 0.8em; font-weight: 600; }
+
+.c-whats { right: 0; bottom: 2%; display: grid; gap: 0.45em; width: 58%; padding: 0.8em; border-radius: 1.1em; background: #F1F6EF; font-size: 0.8em; line-height: 1.35; }
+.c-whats__topo { display: flex; align-items: center; gap: 0.4em; margin: 0 0 0.15em !important; font-size: 0.85em !important; font-weight: 600; color: #1F7A3D !important; }
+.c-whats__ponto { width: 0.5em; height: 0.5em; border-radius: 50%; background: #25A55A; }
+.c-whats .bolha { max-width: 90%; box-shadow: none; animation: bolha-entra 0.35s ease both; }
+.c-whats .bolha--cliente { background: #fff; }
+.c-whats .bolha--negocio { justify-self: end; background: #D7F3DC; }
+.c-whats .bolha u { font-weight: 600; color: #1F7A3D; }
 @keyframes bolha-entra { from { opacity: 0; transform: translateY(6px) scale(0.97); } to { opacity: 1; transform: none; } }
 .a-escrever { display: inline-flex; gap: 3px; padding: 2px 0; }
 .a-escrever i { width: 6px; height: 6px; border-radius: 50%; background: #5E9E70; animation: ponto 1s infinite ease-in-out; }
 .a-escrever i:nth-child(2) { animation-delay: 0.15s; }
 .a-escrever i:nth-child(3) { animation-delay: 0.3s; }
 @keyframes ponto { 0%, 80%, 100% { opacity: 0.3; transform: none; } 40% { opacity: 1; transform: translateY(-2px); } }
-.montra__legenda { margin-top: 1rem; text-align: center; font-size: 0.78rem; color: var(--suave); }
+.montra__legenda { margin-top: 0.75rem; text-align: center; font-size: 0.78rem; color: var(--suave); }
 
 @media (prefers-reduced-motion: reduce) {
-  .telemovel__site, .mini-capa, .mini-capa i, .mini-topo svg { transition: none; }
-  .montra__conversa .bolha, .a-escrever i { animation: none; }
+  .montra__fundo, .c-site, .c-site *, .c-google *, .c-site__servicos li { transition: none; }
+  .c-whats .bolha, .a-escrever i { animation: none; }
 }
 
 @media (max-width: 860px) {
@@ -331,12 +337,16 @@ html[data-mercado="br"] [data-m="pt"] { display: none !important; }
   .hero small { order: 6; }
   .hero h1, .hero p { margin-left: auto; margin-right: auto; }
   .escolha-negocio__opcoes { justify-content: center; }
-  .montra { max-width: 17rem; }
+  .montra { max-width: 24rem; }
+  .montra__palco { font-size: 14px; }
 }
 @media (max-width: 640px) {
   .hero { padding-top: 1.5rem; }
   .escolha-negocio { margin-top: 1.5rem; }
   .escolha-negocio button { min-height: 2.3rem; padding: 0 0.85rem; font-size: 0.9rem; }
-  .montra { max-width: 15.5rem; }
-  .montra__conversa { font-size: 0.72rem; left: 1rem; right: 1rem; bottom: 1.1rem; }
+  .montra { max-width: 21rem; }
+  .montra__palco { font-size: 12.5px; aspect-ratio: 1 / 1.18; }
+  .c-site { left: 10%; width: 78%; }
+  .c-google { top: 54%; width: 60%; }
+  .c-whats { width: 64%; }
 }

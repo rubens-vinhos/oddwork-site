@@ -168,7 +168,7 @@ const RESPOSTA = { pt: "Olá! Marca aqui em 1 minuto:", br: "Oi! Agende aqui em 
 const ESCREVER = '<span class="a-escrever"><i></i><i></i><i></i></span>';
 
 const botoesNegocio = [...document.querySelectorAll("[data-negocio]")];
-const telemovel = document.querySelector(".telemovel");
+const palco = document.getElementById("montra");
 const site = document.getElementById("montra-site");
 const pergunta = document.getElementById("montra-pergunta");
 const resposta = document.getElementById("montra-resposta");
@@ -192,11 +192,12 @@ function mostrarNegocio(chave, animar = true) {
   temporizadores = [];
 
   botoesNegocio.forEach((b) => b.setAttribute("aria-checked", String(b.dataset.negocio === chave)));
-  telemovel.style.setProperty("--tom", n.tom);
-  telemovel.style.setProperty("--tom-claro", n.claro);
+  palco.style.setProperty("--tom", n.tom);
+  palco.style.setProperty("--tom-claro", n.claro);
 
   const pintar = () => {
-    document.getElementById("montra-nome").textContent = n.nome[m];
+    document.querySelectorAll("[data-montra-nome]").forEach((el) => (el.textContent = n.nome[m]));
+    document.querySelectorAll("[data-montra-tipo]").forEach((el) => (el.textContent = n.tipo));
     document.getElementById("montra-frase").textContent = n.frase[m];
     document.getElementById("montra-servicos").innerHTML = n.servicos.map((s) => `<li>${s}</li>`).join("");
     site.classList.remove("a-mudar");
