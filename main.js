@@ -15,7 +15,7 @@ document.getElementById("ano").textContent = new Date().getFullYear();
 const restam = Math.max(0, Math.min(VAGAS_FUNDADOR.total, VAGAS_FUNDADOR.restam));
 const frase = restam === 0
   ? `As ${VAGAS_FUNDADOR.total} vagas de fundador estão preenchidas.`
-  : `${restam === 1 ? "Resta" : "Restam"} ${restam} de ${VAGAS_FUNDADOR.total} vagas a este preço.`;
+  : `${restam === 1 ? "Resta" : "Restam"} ${restam} de ${VAGAS_FUNDADOR.total} vagas a preço de fundador.`;
 document.querySelectorAll("[data-vagas-frase]").forEach((el) => (el.textContent = frase));
 
 // ---------- País (PT/BR) ----------
@@ -42,7 +42,7 @@ const observar = new IntersectionObserver((entradas) => {
   entradas.forEach((e) => zonas.set(e.target, e.isIntersecting));
   barra.classList.toggle("visivel", ![...zonas.values()].some(Boolean));
 });
-document.querySelectorAll(".abertura, #candidatura, .rodape").forEach((el) => observar.observe(el));
+document.querySelectorAll(".hero, #candidatura, .rodape").forEach((el) => observar.observe(el));
 
 // ---------- Plano: a ligação do Pro põe a candidatura na lista de espera ----------
 const avisoPlano = document.getElementById("formulario-plano");
