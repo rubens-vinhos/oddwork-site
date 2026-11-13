@@ -63,27 +63,36 @@
 
   <header class="topo">
     <a class="marca" href="#" aria-label="Oddwork, início">the<span>odd</span>work</a>
-    <nav class="nav" aria-label="Principal">
-      <a href="#pecas"><span data-m="pt">Serviços</span><span data-m="br">Serviços</span></a>
-      <a href="#planos">Planos</a>
-      <a href="#mes-gratis"><span data-m="pt">Mês grátis</span><span data-m="br">Mês grátis</span></a>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <a href="#pecas">O que fazemos</a>
+      <a href="#planos">Preços</a>
+      <a href="#como-funciona">Como funciona</a>
       <a href="#fundadores">Quem somos</a>
       <a href="#perguntas">Perguntas</a>
+      <a class="nav__cta" href="#candidatura"><span data-m="pt">Candidatar-me ao mês grátis</span><span data-m="br">Quero me candidatar ao mês grátis</span></a>
     </nav>
     <div class="mercado mercado--topo" role="group" aria-label="País">
       <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
       <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
     </div>
-    <a class="botao botao--pequeno" href="#candidatura"><span data-m="pt">Candidatar-me</span><span data-m="br">Quero me candidatar</span></a>
+    <a class="botao botao--pequeno topo__cta" href="#candidatura"><span data-m="pt">Candidatar-me</span><span data-m="br">Me candidatar</span></a>
+    <button class="menu" type="button" aria-expanded="false" aria-controls="nav"><span class="menu__barras" aria-hidden="true"></span>Menu</button>
   </header>
 
   <main id="conteudo">
-    <!-- Hero -->
+    <!-- Hero: o que é, para quem, quanto custa e o que fazer -->
     <section class="hero">
       <div class="hero__texto">
+        <p class="hero__para"><span data-m="pt">Para salões, barbearias, estética, clínicas e fisioterapia</span><span data-m="br">Para salões, barbearias, estética, clínicas e fisioterapia</span></p>
         <h1 class="hero__titulo">A lógica é&nbsp;outra.</h1>
-        <p class="hero__sub" data-m="pt">Para salões, barbearias, clínicas de estética e fisioterapia que vivem de marcações. Site com botão de marcação, perfil no Google, posts, Reels e um WhatsApp que responde fora de horas. Uma mensalidade, duas pessoas que respondem quando escreves.</p>
-        <p class="hero__sub" data-m="br">Para salões, barbearias, clínicas de estética e fisioterapia que vivem de agendamentos. Site com botão de agendamento, perfil no Google, posts, Reels e um WhatsApp que responde fora do horário. Uma mensalidade, duas pessoas que respondem quando você escreve.</p>
+        <p class="hero__sub" data-m="pt">Site com botão de marcação, perfil no Google, posts, Reels e um WhatsApp que responde fora de horas. Uma mensalidade, e as tuas contas sempre em teu nome.</p>
+        <p class="hero__sub" data-m="br">Site com botão de agendamento, perfil no Google, posts, Reels e um WhatsApp que responde fora do horário. Uma mensalidade, e suas contas sempre no seu nome.</p>
+
+        <div class="hero__oferta">
+          <p class="hero__preco"><span data-m="pt">69 €</span><span data-m="br">R$&nbsp;450</span><small>/mês</small></p>
+          <p class="hero__oferta-texto"><strong>1.º mês grátis</strong><span data-m="pt">Sem fidelização. Cancelas quando quiseres.</span><span data-m="br">Sem fidelidade. Cancele quando quiser.</span></p>
+        </div>
+
         <div class="hero__acoes">
           <a class="botao" href="#candidatura"><span data-m="pt">Candidatar-me ao mês grátis</span><span data-m="br">Quero me candidatar ao mês grátis</span></a>
           <a class="ligacao" href="#pecas"><span data-m="pt">Ver o que está incluído</span><span data-m="br">Ver o que está incluído</span></a>
@@ -97,39 +106,36 @@
         </div>
         <figcaption class="placa-mini">
           <span>Modelo OW-3</span>
-          <span>3 pás, 1 centro</span>
           <span class="placa-mini__dica"><span data-m="pt">Arrasta para rodar</span><span data-m="br">Arraste para girar</span></span>
         </figcaption>
       </figure>
     </section>
 
-    <!-- Problema -->
+    <!-- Problema: quatro situações, numa faixa curta -->
     <section class="proposta" aria-labelledby="proposta-titulo">
       <h2 id="proposta-titulo" class="proposta__titulo">
         <span data-m="pt">O teu trabalho é bom. O que falha está à volta dele.</span>
         <span data-m="br">Seu trabalho é bom. O que falha está em volta dele.</span>
       </h2>
       <ul class="problemas" data-m="pt">
-        <li>A agenda vive no WhatsApp e é gerida à mão, entre um cliente e o seguinte.</li>
-        <li>Quem te procura no Google encontra um perfil sem fotos, sem horário, ou nem te encontra.</li>
-        <li>O Instagram parou na última promoção.</li>
-        <li>Às 22h alguém pergunta o preço. Respondes de manhã, e já marcou noutro sítio.</li>
+        <li><strong>A agenda vive no WhatsApp</strong> e é gerida à mão, entre um cliente e o seguinte.</li>
+        <li><strong>No Google</strong> aparece um perfil sem fotos nem horário, ou nem apareces.</li>
+        <li><strong>O Instagram parou</strong> na última promoção.</li>
+        <li><strong>Às 22h perguntam o preço.</strong> Respondes de manhã, e já marcaram noutro sítio.</li>
       </ul>
       <ul class="problemas" data-m="br">
-        <li>A agenda vive no WhatsApp e é feita na mão, entre um cliente e outro.</li>
-        <li>Quem procura você no Google encontra um perfil sem fotos, sem horário, ou nem encontra.</li>
-        <li>O Instagram parou na última promoção.</li>
-        <li>Às 22h alguém pergunta o preço. Você responde de manhã, e a pessoa já agendou em outro lugar.</li>
+        <li><strong>A agenda vive no WhatsApp</strong> e é feita na mão, entre um cliente e outro.</li>
+        <li><strong>No Google</strong> aparece um perfil sem fotos nem horário, ou você nem aparece.</li>
+        <li><strong>O Instagram parou</strong> na última promoção.</li>
+        <li><strong>Às 22h perguntam o preço.</strong> Você responde de manhã, e já agendaram em outro lugar.</li>
       </ul>
-      <p class="proposta__fecho" data-m="pt">Na Oddwork montamos tudo à volta da marcação: quem te procura no Google encontra-te, o site e o WhatsApp levam ao link de marcação, e os posts e Reels lembram as pessoas de que existes. Tu tratas dos clientes.</p>
-      <p class="proposta__fecho" data-m="br">Na Oddwork montamos tudo em volta do agendamento: quem procura você no Google te encontra, o site e o WhatsApp levam ao link de agendamento, e os posts e Reels lembram as pessoas de que você existe. Você cuida dos clientes.</p>
     </section>
 
-    <!-- Serviços como vista explodida -->
+    <!-- Serviços: vista explodida interativa -->
     <section class="pecas" id="pecas" aria-labelledby="pecas-titulo">
       <div class="pecas__cabeca">
-        <h2 id="pecas-titulo">O que vem na caixa</h2>
-        <p><span data-m="pt">Seis peças à volta de um centro. O centro é o teu negócio.</span><span data-m="br">Seis peças em volta de um centro. O centro é o seu negócio.</span></p>
+        <h2 id="pecas-titulo">Seis peças, uma mensalidade</h2>
+        <p><span data-m="pt">Toca em cada peça para ver o que inclui. O centro é o teu negócio.</span><span data-m="br">Toque em cada peça para ver o que inclui. O centro é o seu negócio.</span></p>
       </div>
 
       <div class="pecas__corpo">
@@ -150,86 +156,67 @@
           <circle class="explodida__eixo" r="62"/>
         </svg>
 
-        <ul class="lista-pecas">
-          <li data-peca="site" tabindex="0">
-            <h3>Site</h3>
-            <p data-m="pt">Uma página com serviços, preços, mapa e o botão de marcação bem à vista. Alojamento incluído e até 2 alterações por mês.</p>
-            <p data-m="br">Uma página com serviços, preços, mapa e o botão de agendamento bem à vista. Hospedagem incluída e até 2 alterações por mês.</p>
-          </li>
-          <li data-peca="google" tabindex="0">
-            <h3>Perfil no Google</h3>
-            <p data-m="pt">Otimizamos a tua ficha no início, publicamos 4 novidades por mês e respondemos às avaliações.</p>
-            <p data-m="br">Otimizamos seu perfil no início, publicamos 4 novidades por mês e respondemos às avaliações.</p>
-          </li>
-          <li data-peca="posts" tabindex="0">
-            <h3>Posts</h3>
-            <p data-m="pt">8 por mês para o feed, entre imagens e carrosséis, com a cara do teu espaço e não de um modelo pronto.</p>
-            <p data-m="br">8 por mês para o feed, entre imagens e carrosséis, com a cara do seu espaço e não de um modelo pronto.</p>
-          </li>
-          <li data-peca="planeamento" tabindex="0">
-            <h3>Planeamento</h3>
-            <p data-m="pt">O calendário do mês chega até dia 25 do mês anterior: o que sai, quando, e o que precisamos que grave.</p>
-            <p data-m="br">O calendário do mês chega até o dia 25 do mês anterior: o que sai, quando, e o que precisamos que você grave.</p>
-          </li>
-          <li data-peca="video" tabindex="0">
-            <h3>4 Reels por mês</h3>
-            <p data-m="pt">Até 60 segundos cada. Editados a partir do teu material ou criados com IA, à tua escolha.</p>
-            <p data-m="br">Até 60 segundos cada. Editados a partir do seu material ou criados com IA, você escolhe.</p>
-          </li>
-          <li data-peca="bot" tabindex="0">
-            <h3>WhatsApp</h3>
-            <p data-m="pt">Mensagem de boas-vindas, de ausência e respostas rápidas, sempre com o teu link de marcação. Quem escreve às 23h já tem por onde marcar.</p>
-            <p data-m="br">Mensagem de boas-vindas, de ausência e respostas rápidas, sempre com o seu link de agendamento. Quem escreve às 23h já tem onde agendar.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
+        <div class="pecas__painel">
+          <div class="pecas__tabs" role="tablist" aria-label="Serviços incluídos">
+            <button type="button" role="tab" id="tab-site" data-peca="site" aria-selected="true" aria-controls="peca-detalhe">Site</button>
+            <button type="button" role="tab" id="tab-google" data-peca="google" aria-selected="false" aria-controls="peca-detalhe">Google</button>
+            <button type="button" role="tab" id="tab-posts" data-peca="posts" aria-selected="false" aria-controls="peca-detalhe">Posts</button>
+            <button type="button" role="tab" id="tab-planeamento" data-peca="planeamento" aria-selected="false" aria-controls="peca-detalhe">Calendário</button>
+            <button type="button" role="tab" id="tab-video" data-peca="video" aria-selected="false" aria-controls="peca-detalhe">Reels</button>
+            <button type="button" role="tab" id="tab-bot" data-peca="bot" aria-selected="false" aria-controls="peca-detalhe">WhatsApp</button>
+          </div>
 
-    <!-- Sobre -->
-    <section class="sobre" id="sobre" aria-labelledby="sobre-titulo">
-      <h2 id="sobre-titulo">Um laboratório de soluções improváveis</h2>
-      <div class="sobre__texto" data-m="pt">
-        <p>A Oddwork nasceu de uma coisa que víamos sempre: espaços bons, com profissionais bons, de agenda meio vazia. Não por falta de talento, mas porque o marketing que lhes vendiam era feito para empresas grandes.</p>
-        <p>Por isso juntámos estratégia e tecnologia na mesma bancada. Quando um problema não tem solução de catálogo, inventamos uma.</p>
+          <div class="pecas__detalhe" id="peca-detalhe" role="tabpanel" aria-live="polite">
+            <article data-peca-detalhe="site">
+              <h3>Site de 1 página</h3>
+              <p data-m="pt">Serviços, preços, mapa e o botão de marcação bem à vista. Alojamento incluído e até 2 alterações por mês. O domínio fica em teu nome.</p>
+              <p data-m="br">Serviços, preços, mapa e o botão de agendamento bem à vista. Hospedagem incluída e até 2 alterações por mês. O domínio fica no seu nome.</p>
+            </article>
+            <article data-peca-detalhe="google" hidden>
+              <h3>Perfil no Google</h3>
+              <p data-m="pt">Otimizamos a tua ficha no início, publicamos 4 novidades por mês e respondemos às avaliações.</p>
+              <p data-m="br">Otimizamos seu perfil no início, publicamos 4 novidades por mês e respondemos às avaliações.</p>
+            </article>
+            <article data-peca-detalhe="posts" hidden>
+              <h3>8 posts por mês</h3>
+              <p data-m="pt">Imagens e carrosséis para o feed, com a cara do teu espaço e não de um modelo pronto.</p>
+              <p data-m="br">Imagens e carrosséis para o feed, com a cara do seu espaço e não de um modelo pronto.</p>
+            </article>
+            <article data-peca-detalhe="planeamento" hidden>
+              <h3>Calendário do mês</h3>
+              <p data-m="pt">Chega até dia 25 do mês anterior: o que sai, quando, e o que precisamos que grave.</p>
+              <p data-m="br">Chega até o dia 25 do mês anterior: o que sai, quando, e o que precisamos que você grave.</p>
+            </article>
+            <article data-peca-detalhe="video" hidden>
+              <h3>4 Reels por mês</h3>
+              <p data-m="pt">Até 60 segundos cada. Editados a partir do teu material ou criados com IA, à tua escolha.</p>
+              <p data-m="br">Até 60 segundos cada. Editados a partir do seu material ou criados com IA, você escolhe.</p>
+            </article>
+            <article data-peca-detalhe="bot" hidden>
+              <h3>WhatsApp que responde</h3>
+              <p data-m="pt">Mensagem de boas-vindas, de ausência e respostas rápidas, sempre com o teu link de marcação. Quem escreve às 23h já tem por onde marcar.</p>
+              <p data-m="br">Mensagem de boas-vindas, de ausência e respostas rápidas, sempre com o seu link de agendamento. Quem escreve às 23h já tem onde agendar.</p>
+            </article>
+          </div>
+
+          <a class="pecas__seguir" href="#planos"><span data-m="pt">Tudo isto por 69 €/mês. Ver preços</span><span data-m="br">Tudo isso por R$&nbsp;450/mês. Ver preços</span></a>
+        </div>
       </div>
-      <div class="sobre__texto" data-m="br">
-        <p>A Oddwork nasceu de uma coisa que a gente via sempre: espaços bons, com profissionais bons, com a agenda meio vazia. Não por falta de talento, mas porque o marketing que vendiam para eles era feito para empresas grandes.</p>
-        <p>Por isso juntamos estratégia e tecnologia na mesma bancada. Quando um problema não tem solução de catálogo, a gente inventa uma.</p>
-      </div>
-      <dl class="sobre__principios">
-        <div>
-          <dt>Primeiro percebemos</dt>
-          <dd data-m="pt">No início fazemos um diagnóstico: quem te procura, onde, o que pergunta e o que o espaço ao lado faz.</dd>
-          <dd data-m="br">No início fazemos um diagnóstico: quem procura você, onde, o que pergunta e o que o espaço ao lado faz.</dd>
-        </div>
-        <div>
-          <dt>Depois montamos</dt>
-          <dd>Cada peça é feita para encaixar nas outras. Nada de serviços soltos.</dd>
-        </div>
-        <div>
-          <dt>E afinamos todos os meses</dt>
-          <dd data-m="pt">Com o relatório do dia 5 vemos o que resulta. O que não resulta sai.</dd>
-          <dd data-m="br">Com o relatório do dia 5 vemos o que funciona. O que não funciona sai.</dd>
-        </div>
-      </dl>
     </section>
 
     <!-- Planos -->
     <section class="planos" id="planos" aria-labelledby="planos-titulo">
       <div class="planos__intro">
         <h2 id="planos-titulo">Dois planos. Um já está aberto.</h2>
-        <p data-m="pt">Os preços aparecem na moeda do teu país.</p>
-        <p data-m="br">Os preços aparecem na moeda do seu país.</p>
         <div class="mercado" role="group" aria-label="País">
-          <button type="button" data-mercado="pt" aria-pressed="true">Portugal</button>
-          <button type="button" data-mercado="br" aria-pressed="false">Brasil</button>
+          <button type="button" data-mercado="pt" aria-pressed="true">Portugal (€)</button>
+          <button type="button" data-mercado="br" aria-pressed="false">Brasil (R$)</button>
         </div>
-
         <div class="vagas">
           <p class="vagas__texto"><strong data-vagas-frase>Restam 10 de 10 vagas de fundador.</strong></p>
           <div class="vagas__medidor" id="vagas-medidor" aria-hidden="true"></div>
-          <p class="vagas__porque" data-m="pt">Preço de fundador: mantém-se enquanto a tua assinatura estiver ativa. Se cancelares e voltares, entras pelo preço normal. As 10 vagas são para Portugal e Brasil juntos.</p>
-          <p class="vagas__porque" data-m="br">Preço de fundador: continua valendo enquanto sua assinatura estiver ativa. Se cancelar e voltar, você entra pelo preço normal. As 10 vagas são para Portugal e Brasil juntos.</p>
+          <p class="vagas__porque" data-m="pt">O preço de fundador mantém-se enquanto a tua assinatura estiver ativa. Se cancelares e voltares, entras pelo preço normal. 10 vagas para Portugal e Brasil juntos.</p>
+          <p class="vagas__porque" data-m="br">O preço de fundador continua valendo enquanto sua assinatura estiver ativa. Se cancelar e voltar, você entra pelo preço normal. 10 vagas para Portugal e Brasil juntos.</p>
         </div>
       </div>
 
@@ -247,25 +234,23 @@
           <p class="placa__nota"><span data-m="pt">Preço final, sem IVA (regime de isenção, art. 53.º CIVA)</span><span data-m="br" class="a-definir">[A DEFINIR: menção fiscal BR, a confirmar com contador]</span></p>
 
           <ul class="placa__lista" data-m="pt">
-            <li><strong>Site de 1 página:</strong> serviços, preços, botão de marcação e mapa. Alojamento incluído; o domínio fica em teu nome e é pago por ti. Até 2 alterações por mês.</li>
-            <li><strong>Perfil Google:</strong> otimização inicial, 4 publicações por mês e resposta a avaliações.</li>
-            <li><strong>8 posts por mês</strong> para o feed (imagens e carrosséis).</li>
-            <li><strong>4 Reels por mês</strong> (até 60 s), editados a partir do teu material ou criados com IA, à tua escolha.</li>
-            <li><strong>Calendário do mês</strong> enviado até dia 25 do mês anterior.</li>
-            <li><strong>WhatsApp:</strong> boas-vindas, ausência e respostas rápidas, com o teu link de marcação.</li>
+            <li><strong>Site de 1 página</strong> com botão de marcação. Alojamento incluído; o domínio fica em teu nome e é pago por ti. Até 2 alterações/mês.</li>
+            <li><strong>Perfil Google:</strong> otimização, 4 publicações/mês e resposta a avaliações.</li>
+            <li><strong>8 posts</strong> e <strong>4 Reels por mês</strong> (até 60 s), editados do teu material ou criados com IA, à tua escolha.</li>
+            <li><strong>Calendário do mês</strong> até dia 25 do mês anterior.</li>
+            <li><strong>WhatsApp:</strong> boas-vindas, ausência e respostas rápidas, com link de marcação.</li>
             <li><strong>Relatório mensal</strong> de 1 página, até dia 5.</li>
           </ul>
           <ul class="placa__lista" data-m="br">
-            <li><strong>Site de 1 página:</strong> serviços, preços, botão de agendamento e mapa. Hospedagem incluída; o domínio fica no seu nome e é pago por você. Até 2 alterações por mês.</li>
-            <li><strong>Perfil Google:</strong> otimização inicial, 4 publicações por mês e resposta às avaliações.</li>
-            <li><strong>8 posts por mês</strong> para o feed (imagens e carrosséis).</li>
-            <li><strong>4 Reels por mês</strong> (até 60 s), editados a partir do seu material ou criados com IA, você escolhe.</li>
-            <li><strong>Calendário do mês</strong> enviado até o dia 25 do mês anterior.</li>
-            <li><strong>WhatsApp:</strong> boas-vindas, ausência e respostas rápidas, com o seu link de agendamento.</li>
+            <li><strong>Site de 1 página</strong> com botão de agendamento. Hospedagem incluída; o domínio fica no seu nome e é pago por você. Até 2 alterações/mês.</li>
+            <li><strong>Perfil Google:</strong> otimização, 4 publicações/mês e resposta às avaliações.</li>
+            <li><strong>8 posts</strong> e <strong>4 Reels por mês</strong> (até 60 s), editados do seu material ou criados com IA, você escolhe.</li>
+            <li><strong>Calendário do mês</strong> até o dia 25 do mês anterior.</li>
+            <li><strong>WhatsApp:</strong> boas-vindas, ausência e respostas rápidas, com link de agendamento.</li>
             <li><strong>Relatório mensal</strong> de 1 página, até o dia 5.</li>
           </ul>
 
-          <a class="botao botao--escuro" href="#candidatura" data-plano="essencial" data-vagas-botao><span data-m="pt">Candidatar-me ao mês grátis</span><span data-m="br">Quero me candidatar ao mês grátis</span></a>
+          <a class="botao botao--escuro" href="#candidatura" data-plano="essencial"><span data-m="pt">Candidatar-me ao mês grátis</span><span data-m="br">Quero me candidatar ao mês grátis</span></a>
         </article>
 
         <!-- Pro -->
@@ -275,103 +260,122 @@
           <p class="placa__preco"><span data-m="pt">89 €</span><span data-m="br">R$&nbsp;580</span><small>/mês</small></p>
           <p class="placa__normal"><span data-m="pt">Preço de fundador. Normal: <s>129 €</s>/mês</span><span data-m="br">Preço de fundador. Normal: <s>R$&nbsp;840</s>/mês</span></p>
           <ul class="placa__lista">
-            <li data-m="pt"><strong>Tudo do Essencial.</strong></li>
-            <li data-m="br"><strong>Tudo do Essencial.</strong></li>
+            <li><strong>Tudo do Essencial.</strong></li>
             <li data-m="pt"><strong>Automação pela API oficial da Meta:</strong> a marcação acontece dentro do WhatsApp, sem o cliente sair da conversa.</li>
             <li data-m="br"><strong>Automação pela API oficial da Meta:</strong> o agendamento acontece dentro do WhatsApp, sem o cliente sair da conversa.</li>
           </ul>
           <a class="botao" href="#candidatura" data-plano="pro">Entrar na lista de espera</a>
         </article>
       </div>
-
-      <div class="regras">
-        <h3><span data-m="pt">Como trabalhamos</span><span data-m="br">Como trabalhamos</span></h3>
-        <ul data-m="pt">
-          <li>Cada peça tem 1 ronda de revisão.</li>
-          <li>Aprovas em 3 dias úteis. O que não for aprovado não é publicado, e não acumula para o mês seguinte.</li>
-          <li>Tu envias fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
-          <li>Não incluído: Stories, anúncios e sessões fotográficas.</li>
-        </ul>
-        <ul data-m="br">
-          <li>Cada peça tem 1 rodada de revisão.</li>
-          <li>Você aprova em 3 dias úteis. O que não for aprovado não é publicado, e não acumula para o mês seguinte.</li>
-          <li>Você envia fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
-          <li>Não incluído: Stories, anúncios e sessões de fotos.</li>
-        </ul>
-      </div>
     </section>
 
-    <!-- Mês grátis e cancelamento -->
-    <section class="gratis" id="mes-gratis" aria-labelledby="gratis-titulo">
-      <div class="gratis__intro">
-        <h2 id="gratis-titulo">Um mês grátis, por candidatura</h2>
-        <p data-m="pt">Não é inscrição aberta. Candidatas-te, falamos contigo e, se fizer sentido para os dois, começamos. Depois da aprovação dás os dados de pagamento, mas a primeira cobrança só acontece no dia 31. O mês grátis inclui o plano completo e é uma vez por negócio.</p>
-        <p data-m="br">Não é inscrição aberta. Você se candidata, a gente conversa e, se fizer sentido para os dois, começamos. Depois da aprovação você informa os dados de pagamento, mas a primeira cobrança só acontece no dia 31. O mês grátis inclui o plano completo e vale uma vez por negócio.</p>
+    <!-- Como funciona: tudo o que é condição, em separadores para não alongar a página -->
+    <section class="funciona" id="como-funciona" aria-labelledby="funciona-titulo">
+      <h2 id="funciona-titulo">Como funciona</h2>
+
+      <div class="separadores" role="tablist" aria-label="Como funciona">
+        <button type="button" role="tab" id="sep-gratis" aria-controls="mes-gratis" aria-selected="true">Mês grátis</button>
+        <button type="button" role="tab" id="sep-cancelar" aria-controls="cancelar" aria-selected="false" tabindex="-1">Cancelar</button>
+        <button type="button" role="tab" id="sep-trabalho" aria-controls="trabalho" aria-selected="false" tabindex="-1"><span data-m="pt">O dia a dia</span><span data-m="br">O dia a dia</span></button>
+        <button type="button" role="tab" id="sep-relatorio" aria-controls="relatorio" aria-selected="false" tabindex="-1"><span data-m="pt">Relatório</span><span data-m="br">Relatório</span></button>
+        <button type="button" role="tab" id="sep-extras" aria-controls="extras" aria-selected="false" tabindex="-1">Extras</button>
       </div>
 
-      <ol class="condicoes" aria-label="Linha do tempo do mês grátis">
-        <li><strong>Dia 1</strong><span data-m="pt">Começamos: diagnóstico e primeiras peças.</span><span data-m="br">Começamos: diagnóstico e primeiras peças.</span></li>
-        <li><strong>Dia 25</strong><span data-m="pt">Lembrete antes da primeira cobrança. Se não quiseres continuar, cancelas aqui.</span><span data-m="br">Lembrete antes da primeira cobrança. Se não quiser continuar, cancela aqui.</span></li>
-        <li><strong>Dia 31</strong><span data-m="pt">Primeira cobrança da mensalidade.</span><span data-m="br">Primeira cobrança da mensalidade.</span></li>
-        <li><strong><span data-m="pt">Depois</span><span data-m="br">Depois</span></strong><span data-m="pt">Cancelas quando quiseres.</span><span data-m="br">Você cancela quando quiser.</span></li>
-      </ol>
+      <!-- Mês grátis -->
+      <div class="separador" id="mes-gratis" role="tabpanel" aria-labelledby="sep-gratis" tabindex="0">
+        <p class="separador__intro" data-m="pt">Por candidatura, uma vez por negócio, com o plano completo. Depois da aprovação dás os dados de pagamento, mas só pagas no dia 31.</p>
+        <p class="separador__intro" data-m="br">Por candidatura, uma vez por negócio, com o plano completo. Depois da aprovação você informa os dados de pagamento, mas só paga no dia 31.</p>
+        <ol class="condicoes" aria-label="Linha do tempo do mês grátis">
+          <li><strong>Dia 1</strong><span>Começamos: diagnóstico e primeiras peças.</span></li>
+          <li><strong>Dia 25</strong><span data-m="pt">Lembrete antes da primeira cobrança. Se não quiseres continuar, cancelas aqui.</span><span data-m="br">Lembrete antes da primeira cobrança. Se não quiser continuar, cancela aqui.</span></li>
+          <li><strong>Dia 31</strong><span>Primeira cobrança da mensalidade.</span></li>
+          <li><strong>Depois</strong><span data-m="pt">Cancelas quando quiseres.</span><span data-m="br">Você cancela quando quiser.</span></li>
+        </ol>
+        <p class="separador__nota" data-m="pt">Durante o mês grátis o site fica no domínio e alojamento da Oddwork. Se cancelares, o site sai do ar, ou ficas com ele por 150 €.</p>
+        <p class="separador__nota" data-m="br">Durante o mês grátis o site fica no domínio e na hospedagem da Oddwork. Se cancelar, o site sai do ar, ou você fica com ele por R$&nbsp;950.</p>
+      </div>
 
-      <div class="gratis__regras">
-        <div class="gratis__bloco">
-          <h3>Sem fidelização</h3>
-          <p data-m="pt">Cancelas quando quiseres: o serviço continua até ao fim do mês já pago e não há nova cobrança.</p>
-          <p data-m="br">Você cancela quando quiser: o serviço continua até o fim do mês já pago e não há nova cobrança.</p>
-          <p class="gratis__pequeno" data-m="pt">Durante o mês grátis o site fica no domínio e alojamento da Oddwork. Se cancelares, o site sai do ar, ou ficas com ele por 150 €. Depois de 6 meses pagos, o site passa para ti sem custo.</p>
-          <p class="gratis__pequeno" data-m="br">Durante o mês grátis o site fica no domínio e na hospedagem da Oddwork. Se cancelar, o site sai do ar, ou você fica com ele por R$&nbsp;950. Depois de 6 meses pagos, o site passa para você sem custo.</p>
+      <!-- Cancelar -->
+      <div class="separador" id="cancelar" role="tabpanel" aria-labelledby="sep-cancelar" tabindex="0" hidden>
+        <div class="separador__duas">
+          <div class="bloco">
+            <h3>Sem fidelização</h3>
+            <p data-m="pt">Cancelas quando quiseres: o serviço continua até ao fim do mês já pago e não há nova cobrança.</p>
+            <p data-m="br">Você cancela quando quiser: o serviço continua até o fim do mês já pago e não há nova cobrança.</p>
+            <ul class="bloco__lista" data-m="pt">
+              <li>Sem reembolso de meses já pagos.</li>
+              <li>Depois de 6 meses pagos, o site passa para ti sem custo. Antes disso, sai do ar ou compras-o por 150 €.</li>
+              <li>Ao cancelar perdes o preço de fundador.</li>
+            </ul>
+            <ul class="bloco__lista" data-m="br">
+              <li>Sem reembolso de meses já pagos.</li>
+              <li>Depois de 6 meses pagos, o site passa para você sem custo. Antes disso, sai do ar ou você compra por R$&nbsp;950.</li>
+              <li>Ao cancelar, você perde o preço de fundador.</li>
+            </ul>
+          </div>
+          <div class="bloco bloco--destaque">
+            <h3><span data-m="pt">As tuas contas são tuas</span><span data-m="br">Suas contas são suas</span></h3>
+            <p data-m="pt">Perfil Google, Instagram e WhatsApp ficam sempre em teu nome. Nós só temos acesso de gestão. O conteúdo publicado continua teu, e a automação de WhatsApp é desligada no fim do mês.</p>
+            <p data-m="br">Perfil Google, Instagram e WhatsApp ficam sempre no seu nome. A gente só tem acesso de gestão. O conteúdo publicado continua seu, e a automação de WhatsApp é desligada no fim do mês.</p>
+          </div>
         </div>
-        <div class="gratis__bloco gratis__bloco--destaque">
-          <h3><span data-m="pt">As tuas contas são tuas</span><span data-m="br">Suas contas são suas</span></h3>
-          <p data-m="pt">Perfil Google, Instagram e WhatsApp ficam sempre em teu nome. Nós só temos acesso de gestão, e o conteúdo publicado continua teu se saíres.</p>
-          <p data-m="br">Perfil Google, Instagram e WhatsApp ficam sempre no seu nome. A gente só tem acesso de gestão, e o conteúdo publicado continua seu se você sair.</p>
-        </div>
+      </div>
+
+      <!-- O dia a dia -->
+      <div class="separador" id="trabalho" role="tabpanel" aria-labelledby="sep-trabalho" tabindex="0" hidden>
+        <ul class="regras" data-m="pt">
+          <li><strong>1 ronda de revisão</strong> por peça.</li>
+          <li><strong>Aprovas em 3 dias úteis.</strong> O que não for aprovado não é publicado, e não acumula.</li>
+          <li><strong>Tu envias fotos, vídeos brutos e acessos.</strong> As peças que dependem disso atrasam se não chegarem.</li>
+          <li><strong>Não incluído:</strong> Stories, anúncios e sessões fotográficas.</li>
+        </ul>
+        <ul class="regras" data-m="br">
+          <li><strong>1 rodada de revisão</strong> por peça.</li>
+          <li><strong>Você aprova em 3 dias úteis.</strong> O que não for aprovado não é publicado, e não acumula.</li>
+          <li><strong>Você envia fotos, vídeos brutos e acessos.</strong> As peças que dependem disso atrasam se não chegarem.</li>
+          <li><strong>Não incluído:</strong> Stories, anúncios e sessões de fotos.</li>
+        </ul>
+      </div>
+
+      <!-- Relatório -->
+      <div class="separador" id="relatorio" role="tabpanel" aria-labelledby="sep-relatorio" tabindex="0" hidden>
+        <p class="separador__intro" data-m="pt">Uma página, enviada até dia 5 pelo WhatsApp. Sem promessas de resultados.</p>
+        <p class="separador__intro" data-m="br">Uma página, enviada até o dia 5 pelo WhatsApp. Sem promessas de resultados.</p>
+        <ol class="relatorio__lista">
+          <li><strong>Números do mês</strong><span data-m="pt">Comparados com o mês anterior: visitas ao site, cliques no WhatsApp e no link de marcação, conversas do bot, perfil Google (pesquisas, chamadas, rotas), avaliações novas e nota média, alcance no Instagram e melhor publicação.</span><span data-m="br">Comparados com o mês anterior: visitas ao site, cliques no WhatsApp e no link de agendamento, conversas do bot, perfil Google (pesquisas, ligações, rotas), avaliações novas e nota média, alcance no Instagram e melhor publicação.</span></li>
+          <li><strong>O que fizemos</strong></li>
+          <li><strong>O que aprendemos</strong></li>
+          <li><strong>A prioridade do próximo mês</strong><span>Uma só.</span></li>
+        </ol>
+      </div>
+
+      <!-- Extras -->
+      <div class="separador" id="extras" role="tabpanel" aria-labelledby="sep-extras" tabindex="0" hidden>
+        <p class="separador__intro" data-m="pt">Só entram se pedires. O valor final depende do pedido.</p>
+        <p class="separador__intro" data-m="br">Só entram se você pedir. O valor final depende do pedido.</p>
+        <table class="tabela-extras">
+          <caption class="visualmente-escondido">Extras e preços a partir de</caption>
+          <tbody>
+            <tr><th scope="row">Gestão de anúncios (Meta/Google), por mês*</th><td><span data-m="pt">a partir de 49 €</span><span data-m="br">a partir de R$&nbsp;320</span></td></tr>
+            <tr><th scope="row">Reel extra</th><td><span data-m="pt">a partir de 15 €</span><span data-m="br">a partir de R$&nbsp;100</span></td></tr>
+            <tr><th scope="row">Pack de 4 posts extra</th><td><span data-m="pt">a partir de 25 €</span><span data-m="br">a partir de R$&nbsp;160</span></td></tr>
+            <tr><th scope="row">Stories (12 por mês)</th><td><span data-m="pt">a partir de 29 €</span><span data-m="br">a partir de R$&nbsp;190</span></td></tr>
+            <tr><th scope="row">Página extra no site</th><td><span data-m="pt">a partir de 49 €</span><span data-m="br">a partir de R$&nbsp;320</span></td></tr>
+            <tr><th scope="row">Logótipo simples</th><td><span data-m="pt">a partir de 149 €</span><span data-m="br">a partir de R$&nbsp;970</span></td></tr>
+          </tbody>
+        </table>
+        <p class="separador__nota" data-m="pt">*O investimento em anúncios é pago à parte por ti, diretamente à Meta ou à Google.</p>
+        <p class="separador__nota" data-m="br">*O investimento em anúncios é pago à parte por você, diretamente à Meta ou ao Google.</p>
       </div>
     </section>
 
-    <!-- Extras -->
-    <section class="extras" id="extras" aria-labelledby="extras-titulo">
-      <div>
-        <h2 id="extras-titulo">Extras</h2>
-        <p data-m="pt">Só entram se pedires. Preços de referência: o valor final depende do pedido.</p>
-        <p data-m="br">Só entram se você pedir. Preços de referência: o valor final depende do pedido.</p>
-      </div>
-      <table class="tabela-extras">
-        <caption class="visualmente-escondido">Extras e preços a partir de</caption>
-        <tbody>
-          <tr><th scope="row">Gestão de anúncios (Meta/Google), por mês*</th><td><span data-m="pt">a partir de 49 €</span><span data-m="br">a partir de R$&nbsp;320</span></td></tr>
-          <tr><th scope="row">Reel extra</th><td><span data-m="pt">a partir de 15 €</span><span data-m="br">a partir de R$&nbsp;100</span></td></tr>
-          <tr><th scope="row">Pack de 4 posts extra</th><td><span data-m="pt">a partir de 25 €</span><span data-m="br">a partir de R$&nbsp;160</span></td></tr>
-          <tr><th scope="row">Stories (12 por mês)</th><td><span data-m="pt">a partir de 29 €</span><span data-m="br">a partir de R$&nbsp;190</span></td></tr>
-          <tr><th scope="row">Página extra no site</th><td><span data-m="pt">a partir de 49 €</span><span data-m="br">a partir de R$&nbsp;320</span></td></tr>
-          <tr><th scope="row">Logótipo simples</th><td><span data-m="pt">a partir de 149 €</span><span data-m="br">a partir de R$&nbsp;970</span></td></tr>
-        </tbody>
-      </table>
-      <p class="extras__nota" data-m="pt">*O investimento em anúncios é pago à parte por ti, diretamente à Meta ou à Google.</p>
-      <p class="extras__nota" data-m="br">*O investimento em anúncios é pago à parte por você, diretamente à Meta ou ao Google.</p>
-    </section>
-
-    <!-- Relatório -->
-    <section class="relatorio" id="relatorio" aria-labelledby="relatorio-titulo">
-      <div>
-        <h2 id="relatorio-titulo">O relatório do mês</h2>
-        <p data-m="pt">Uma página, enviada até dia 5 pelo WhatsApp. Sem promessas de resultados: números, o que fizemos e o que vem a seguir.</p>
-        <p data-m="br">Uma página, enviada até o dia 5 pelo WhatsApp. Sem promessas de resultados: números, o que fizemos e o que vem a seguir.</p>
-      </div>
-      <ol class="relatorio__lista">
-        <li><strong>Números do mês</strong><span data-m="pt">Comparados com o mês anterior: visitas ao site, cliques no WhatsApp e no link de marcação, conversas do bot, perfil Google (pesquisas, chamadas, rotas), avaliações novas e nota média, alcance no Instagram e melhor publicação.</span><span data-m="br">Comparados com o mês anterior: visitas ao site, cliques no WhatsApp e no link de agendamento, conversas do bot, perfil Google (pesquisas, ligações, rotas), avaliações novas e nota média, alcance no Instagram e melhor publicação.</span></li>
-        <li><strong>O que fizemos</strong></li>
-        <li><strong>O que aprendemos</strong></li>
-        <li><strong>A prioridade do próximo mês</strong><span>Uma só.</span></li>
-      </ol>
-    </section>
-
-    <!-- Fundadores -->
+    <!-- Quem somos: sobre e fundadores juntos -->
     <section class="fundadores" id="fundadores" aria-labelledby="fundadores-titulo">
-      <h2 id="fundadores-titulo">Quem está na bancada</h2>
+      <div class="fundadores__texto">
+        <h2 id="fundadores-titulo">Quem está na bancada</h2>
+        <p data-m="pt">A Oddwork nasceu de uma coisa que víamos sempre: espaços bons, com profissionais bons, de agenda meio vazia. Somos dois, juntámos estratégia e tecnologia na mesma bancada, e respondemos quando escreves.</p>
+        <p data-m="br">A Oddwork nasceu de uma coisa que a gente via sempre: espaços bons, com profissionais bons, com a agenda meio vazia. Somos dois, juntamos estratégia e tecnologia na mesma bancada, e respondemos quando você escreve.</p>
+      </div>
       <div class="crachas">
         <article class="cracha">
           <div class="cracha__foto" role="img" aria-label="Foto do Rubens, em breve">R</div>
@@ -406,15 +410,7 @@
         </details>
         <details>
           <summary>Como cancelo?</summary>
-          <p>Com um email para geral@theoddwork.com. Sem fidelização: o serviço continua até ao fim do mês já pago e não há nova cobrança. Não há reembolso de meses já pagos, e ao cancelar perdes o preço de fundador.</p>
-        </details>
-        <details>
-          <summary>De quem são as minhas contas e o conteúdo?</summary>
-          <p>Teus. Perfil Google, Instagram e WhatsApp ficam sempre em teu nome; a Oddwork tem só acesso de gestão. O conteúdo publicado continua teu. Se tiveres automação de WhatsApp, é desligada no fim do mês.</p>
-        </details>
-        <details>
-          <summary>O que acontece ao site se cancelar?</summary>
-          <p>Depois de 6 meses pagos, o site passa para ti sem custo. Antes disso, sai do ar ou compras-o por 150 €.</p>
+          <p>Com um email para geral@theoddwork.com. O serviço continua até ao fim do mês já pago e não há nova cobrança.</p>
         </details>
         <details>
           <summary>Preciso de perceber de tecnologia?</summary>
@@ -432,15 +428,7 @@
         </details>
         <details>
           <summary>Como eu cancelo?</summary>
-          <p>Com um email para geral@theoddwork.com. Sem fidelidade: o serviço continua até o fim do mês já pago e não há nova cobrança. Não há reembolso de meses já pagos, e ao cancelar você perde o preço de fundador.</p>
-        </details>
-        <details>
-          <summary>De quem são minhas contas e o conteúdo?</summary>
-          <p>Seus. Perfil Google, Instagram e WhatsApp ficam sempre no seu nome; a Oddwork tem só acesso de gestão. O conteúdo publicado continua seu. Se você tiver automação de WhatsApp, ela é desligada no fim do mês.</p>
-        </details>
-        <details>
-          <summary>O que acontece com o site se eu cancelar?</summary>
-          <p>Depois de 6 meses pagos, o site passa para você sem custo. Antes disso, ele sai do ar ou você compra por R$&nbsp;950.</p>
+          <p>Com um email para geral@theoddwork.com. O serviço continua até o fim do mês já pago e não há nova cobrança.</p>
         </details>
         <details>
           <summary>Preciso entender de tecnologia?</summary>
@@ -449,47 +437,66 @@
       </div>
     </section>
 
-    <!-- Candidatura -->
+    <!-- Candidatura em 3 passos -->
     <section class="contacto" id="candidatura" aria-labelledby="candidatura-titulo">
       <div class="contacto__info">
         <h2 id="candidatura-titulo">Candidatura ao mês grátis</h2>
-        <p data-m="pt">Leva 2 minutos. Respondemos em até 48h úteis pelo WhatsApp.</p>
-        <p data-m="br">Leva 2 minutos. Respondemos em até 48h úteis pelo WhatsApp.</p>
-        <dl class="canais">
-          <div><dt><span data-m="pt">Prefere email?</span><span data-m="br">Prefere email?</span></dt><dd><a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></dd></div>
-        </dl>
+        <p>3 passos, 2 minutos. Respondemos em até 48h úteis pelo WhatsApp.</p>
+        <ul class="contacto__garantias" data-m="pt">
+          <li>Não pagas nada para te candidatares.</li>
+          <li>Primeira cobrança só no dia 31.</li>
+          <li>As tuas contas ficam em teu nome.</li>
+        </ul>
+        <ul class="contacto__garantias" data-m="br">
+          <li>Você não paga nada para se candidatar.</li>
+          <li>Primeira cobrança só no dia 31.</li>
+          <li>Suas contas ficam no seu nome.</li>
+        </ul>
+        <p class="contacto__email"><span data-m="pt">Preferes email?</span><span data-m="br">Prefere email?</span> <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
       </div>
 
       <form class="formulario" id="formulario" novalidate>
-        <label>
-          <span>Nome</span>
-          <input name="nome" autocomplete="name" required>
-        </label>
-        <label>
-          <span>Nome do negócio</span>
-          <input name="negocio" autocomplete="organization" required>
-        </label>
+        <ol class="passos" aria-label="Progresso">
+          <li class="ativo" data-passo-marca="1"><span data-m="pt">O negócio</span><span data-m="br">O negócio</span></li>
+          <li data-passo-marca="2"><span data-m="pt">Contacto</span><span data-m="br">Contato</span></li>
+          <li data-passo-marca="3"><span data-m="pt">O dia a dia</span><span data-m="br">O dia a dia</span></li>
+        </ol>
 
-        <fieldset class="escolha">
-          <legend>País</legend>
-          <label><input type="radio" name="pais" value="Portugal" required> Portugal</label>
-          <label><input type="radio" name="pais" value="Brasil"> Brasil</label>
+        <!-- Passo 1 -->
+        <fieldset class="passo" data-passo="1">
+          <legend class="visualmente-escondido">Passo 1 de 3: o negócio</legend>
+          <label>
+            <span>Nome</span>
+            <input name="nome" autocomplete="name" required>
+          </label>
+          <label>
+            <span>Nome do negócio</span>
+            <input name="negocio" autocomplete="organization" required>
+          </label>
+          <fieldset class="escolha">
+            <legend>Tipo de negócio</legend>
+            <label class="pilula"><input type="radio" name="tipo" value="Salão" required> Salão</label>
+            <label class="pilula"><input type="radio" name="tipo" value="Barbearia"> Barbearia</label>
+            <label class="pilula"><input type="radio" name="tipo" value="Estética"> Estética</label>
+            <label class="pilula"><input type="radio" name="tipo" value="Clínica"> Clínica</label>
+            <label class="pilula"><input type="radio" name="tipo" value="Fisioterapia"> Fisioterapia</label>
+            <label class="pilula"><input type="radio" name="tipo" value="Outro"> Outro</label>
+          </fieldset>
+          <fieldset class="escolha">
+            <legend>País</legend>
+            <label class="pilula"><input type="radio" name="pais" value="Portugal" required> Portugal</label>
+            <label class="pilula"><input type="radio" name="pais" value="Brasil"> Brasil</label>
+          </fieldset>
+          <fieldset class="escolha">
+            <legend>Plano de interesse</legend>
+            <label class="pilula"><input type="radio" name="plano" value="Essencial" required checked> Essencial</label>
+            <label class="pilula"><input type="radio" name="plano" value="Pro (lista de espera)"> Pro (lista de espera)</label>
+          </fieldset>
         </fieldset>
 
-        <label>
-          <span>Tipo de negócio</span>
-          <select name="tipo" required>
-            <option value="">—</option>
-            <option>Salão</option>
-            <option>Barbearia</option>
-            <option>Estética</option>
-            <option>Clínica</option>
-            <option>Fisioterapia</option>
-            <option>Outro</option>
-          </select>
-        </label>
-
-        <div class="formulario__par">
+        <!-- Passo 2 -->
+        <fieldset class="passo" data-passo="2" hidden>
+          <legend class="visualmente-escondido">Passo 2 de 3: contacto</legend>
           <label>
             <span>WhatsApp</span>
             <input name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required>
@@ -498,56 +505,50 @@
             <span>Email</span>
             <input name="email" type="email" autocomplete="email" required>
           </label>
-        </div>
+          <label>
+            <span>Instagram ou site <small>(opcional)</small></span>
+            <input name="instagram">
+          </label>
+        </fieldset>
 
-        <label>
-          <span>Instagram ou site <small>(opcional)</small></span>
-          <input name="instagram">
-        </label>
+        <!-- Passo 3 -->
+        <fieldset class="passo" data-passo="3" hidden>
+          <legend class="visualmente-escondido">Passo 3 de 3: o dia a dia</legend>
+          <label>
+            <span>Como chegam os clientes novos hoje?</span>
+            <input name="clientes_novos" required>
+          </label>
+          <fieldset class="escolha">
+            <legend><span data-m="pt">Como fazem as marcações hoje?</span><span data-m="br">Como vocês fazem os agendamentos hoje?</span></legend>
+            <label class="pilula"><input type="radio" name="marcacoes" value="WhatsApp manual" required> WhatsApp manual</label>
+            <label class="pilula"><input type="radio" name="marcacoes" value="Telefone"> Telefone</label>
+            <label class="pilula"><input type="radio" name="marcacoes" value="App"> App</label>
+            <label class="pilula"><input type="radio" name="marcacoes" value="Outro"> Outro</label>
+          </fieldset>
+          <label>
+            <span><span data-m="pt">O que mais te tira tempo no digital?</span><span data-m="br">O que mais toma seu tempo no digital?</span></span>
+            <input name="tempo" required>
+          </label>
 
-        <label>
-          <span>Como chegam os clientes novos hoje?</span>
-          <input name="clientes_novos" required>
-        </label>
-
-        <label>
-          <span><span data-m="pt">Como fazem as marcações hoje?</span><span data-m="br">Como vocês fazem os agendamentos hoje?</span></span>
-          <select name="marcacoes" required>
-            <option value="">—</option>
-            <option>WhatsApp manual</option>
-            <option>Telefone</option>
-            <option>App</option>
-            <option>Outro</option>
-          </select>
-        </label>
-
-        <label>
-          <span><span data-m="pt">O que mais te tira tempo no digital?</span><span data-m="br">O que mais toma seu tempo no digital?</span></span>
-          <input name="tempo" required>
-        </label>
-
-        <fieldset class="escolha">
-          <legend>Plano de interesse</legend>
-          <label><input type="radio" name="plano" value="Essencial" required checked> Essencial</label>
-          <label><input type="radio" name="plano" value="Pro (lista de espera)"> <span><span data-m="pt">Pro (lista de espera)</span><span data-m="br">Pro (lista de espera)</span></span></label>
+          <label class="caixa">
+            <input type="checkbox" name="consentimento" value="sim" required>
+            <span data-m="pt">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contacto comigo relativamente às necessidades do meu negócio e a uma possível colaboração. Consulte a nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
+            <span data-m="br">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contato comigo sobre as necessidades do meu negócio e uma possível colaboração. Consulte nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
+          </label>
+          <label class="caixa">
+            <input type="checkbox" name="novidades" value="sim">
+            <span>Quero receber novidades da Oddwork (opcional).</span>
+          </label>
         </fieldset>
 
         <!-- Armadilha para robôs: pessoas não veem este campo -->
         <label class="armadilha" aria-hidden="true">Não preencher <input name="website" tabindex="-1" autocomplete="off"></label>
 
-        <label class="caixa">
-          <input type="checkbox" name="consentimento" value="sim" required>
-          <span data-m="pt">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contacto comigo relativamente às necessidades do meu negócio e a uma possível colaboração. Consulte a nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
-          <span data-m="br">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contato comigo sobre as necessidades do meu negócio e uma possível colaboração. Consulte nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
-        </label>
-        <label class="caixa">
-          <input type="checkbox" name="novidades" value="sim">
-          <span data-m="pt">Quero receber novidades da Oddwork (opcional).</span>
-          <span data-m="br">Quero receber novidades da Oddwork (opcional).</span>
-        </label>
-
         <p class="formulario__erro" id="formulario-erro" role="alert" hidden></p>
-        <button class="botao" type="submit" id="formulario-botao"><span data-m="pt">Enviar candidatura</span><span data-m="br">Enviar candidatura</span></button>
+        <div class="formulario__acoes">
+          <button class="ligacao formulario__voltar" type="button" id="formulario-voltar" hidden>Voltar</button>
+          <button class="botao" type="submit" id="formulario-botao"><span data-m="pt">Continuar</span><span data-m="br">Continuar</span></button>
+        </div>
       </form>
 
       <div class="formulario__sucesso" id="formulario-sucesso" role="status" hidden tabindex="-1">
@@ -561,7 +562,7 @@
     <a class="marca marca--grande" href="#" aria-label="Oddwork, voltar ao início">the<span>odd</span>work</a>
     <p class="rodape__slogan">A lógica é outra.</p>
     <nav class="rodape__nav" aria-label="Rodapé">
-      <a href="#planos">Planos</a>
+      <a href="#planos">Preços</a>
       <a href="#candidatura">Candidatura</a>
       <a href="privacidade.html">Política de Privacidade</a>
       <a href="termos.html">Termos</a>
@@ -570,9 +571,9 @@
     <p class="rodape__legal">© <span id="ano">2026</span> Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal · <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
   </footer>
 
-  <!-- Barra fixa no telemóvel: aparece depois do hero, desaparece nos planos e na candidatura -->
+  <!-- Barra fixa no telemóvel: preço e candidatura sempre à mão -->
   <div class="barra-fixa" id="barra-fixa" aria-hidden="true">
-    <p><strong data-vagas-curta>10 de 10</strong> <span data-m="pt">vagas de fundador</span><span data-m="br">vagas de fundador</span></p>
+    <p><strong><span data-m="pt">69 €/mês</span><span data-m="br">R$&nbsp;450/mês</span></strong> · 1.º mês grátis</p>
     <a class="botao botao--pequeno" href="#candidatura" tabindex="-1"><span data-m="pt">Candidatar-me</span><span data-m="br">Me candidatar</span></a>
   </div>
 

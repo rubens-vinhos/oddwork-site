@@ -7,19 +7,17 @@ const VAGAS_FUNDADOR = { total: 10, restam: 10 };
 // Ver scripts/candidaturas.gs.
 const CANDIDATURAS_URL = "";
 
+const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mercadoAtual = () => (document.documentElement.dataset.mercado === "br" ? "br" : "pt");
+
 document.getElementById("ano").textContent = new Date().getFullYear();
 
 // ---------- Vagas de fundador ----------
 const restam = Math.max(0, Math.min(VAGAS_FUNDADOR.total, VAGAS_FUNDADOR.restam));
-const esgotado = restam === 0;
-const frase = esgotado
+const frase = restam === 0
   ? `As ${VAGAS_FUNDADOR.total} vagas de fundador estão preenchidas.`
   : `${restam === 1 ? "Resta" : "Restam"} ${restam} de ${VAGAS_FUNDADOR.total} vagas de fundador.`;
-
 document.querySelectorAll("[data-vagas-frase]").forEach((el) => (el.textContent = frase));
-document.querySelectorAll("[data-vagas-curta]").forEach((el) => {
-  el.textContent = esgotado ? "Sem" : `${restam} de ${VAGAS_FUNDADOR.total}`;
-});
 
 const medidor = document.getElementById("vagas-medidor");
 for (let i = 0; i < VAGAS_FUNDADOR.total; i++) {
@@ -28,21 +26,42 @@ for (let i = 0; i < VAGAS_FUNDADOR.total; i++) {
   medidor.appendChild(seg);
 }
 
+// ---------- Topo: linha ao fazer scroll, menu no telemóvel, secção ativa ----------
+const topo = document.querySelector(".topo");
+const marcarTopo = () => topo.classList.toggle("com-linha", window.scrollY > 8);
+window.addEventListener("scroll", marcarTopo, { passive: true });
+marcarTopo();
+
+const botaoMenu = document.querySelector(".menu");
+const nav = document.getElementById("nav");
+function abrirMenu(aberto) {
+  topo.classList.toggle("menu-aberto", aberto);
+  botaoMenu.setAttribute("aria-expanded", String(aberto));
+}
+botaoMenu.addEventListener("click", () => abrirMenu(botaoMenu.getAttribute("aria-expanded") !== "true"));
+nav.addEventListener("click", (e) => { if (e.target.closest("a")) abrirMenu(false); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && topo.classList.contains("menu-aberto")) { abrirMenu(false); botaoMenu.focus(); }
+});
+
+const ligacoesNav = [...nav.querySelectorAll('a[href^="#"]:not(.nav__cta)')];
+const seccoesNav = ligacoesNav.map((a) => document.querySelector(a.getAttribute("href")));
+const observarSeccoes = new IntersectionObserver((entradas) => {
+  entradas.forEach((e) => {
+    if (!e.isIntersecting) return;
+    ligacoesNav.forEach((a) => a.toggleAttribute("aria-current", a.getAttribute("href") === `#${e.target.id}`));
+  });
+}, { rootMargin: "-45% 0px -50% 0px" });
+seccoesNav.forEach((s) => s && observarSeccoes.observe(s));
+
 // ---------- Barra fixa no telemóvel ----------
 const barra = document.getElementById("barra-fixa");
 const zonasSemBarra = new Map();
 const observarBarra = new IntersectionObserver((entradas) => {
   entradas.forEach((e) => zonasSemBarra.set(e.target, e.isIntersecting));
-  const esconder = [...zonasSemBarra.values()].some(Boolean);
-  barra.classList.toggle("visivel", !esconder);
+  barra.classList.toggle("visivel", ![...zonasSemBarra.values()].some(Boolean));
 });
-document.querySelectorAll(".hero, #planos, #candidatura, .rodape").forEach((el) => observarBarra.observe(el));
-
-// ---------- Linha por baixo do topo quando se faz scroll ----------
-const topo = document.querySelector(".topo");
-const marcarTopo = () => topo.classList.toggle("com-linha", window.scrollY > 8);
-window.addEventListener("scroll", marcarTopo, { passive: true });
-marcarTopo();
+document.querySelectorAll(".hero, #candidatura, .rodape").forEach((el) => observarBarra.observe(el));
 
 // ---------- Mercado (PT/BR): textos, preços e formulário ----------
 // O mercado inicial é escolhido em mercado.js, antes de a página aparecer.
@@ -72,7 +91,84 @@ formulario.querySelectorAll('input[name="pais"]').forEach((r) =>
     guardarMercado(m);
   })
 );
-aplicarMercado(document.documentElement.dataset.mercado === "br" ? "br" : "pt");
+aplicarMercado(mercadoAtual());
+
+// ---------- Serviços: separadores ligados à vista explodida ----------
+const partes = document.querySelectorAll(".explodida .parte");
+const tabsPecas = [...document.querySelectorAll(".pecas__tabs [role=tab]")];
+const detalhes = document.querySelectorAll("[data-peca-detalhe]");
+let pecaAtiva = "site";
+let rodarPecas = !semMovimento;
+
+function mostrarPeca(peca, foco = false) {
+  pecaAtiva = peca;
+  partes.forEach((p) => p.classList.toggle("ativa", p.dataset.peca === peca));
+  tabsPecas.forEach((t) => {
+    const ativo = t.dataset.peca === peca;
+    t.setAttribute("aria-selected", String(ativo));
+    t.tabIndex = ativo ? 0 : -1;
+    if (ativo && foco) t.focus();
+  });
+  detalhes.forEach((d) => (d.hidden = d.dataset.pecaDetalhe !== peca));
+}
+function pararRotacao() { rodarPecas = false; }
+
+tabsPecas.forEach((t, i) => {
+  t.addEventListener("click", () => { pararRotacao(); mostrarPeca(t.dataset.peca); });
+  t.addEventListener("keydown", (e) => {
+    const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!passo) return;
+    e.preventDefault();
+    pararRotacao();
+    mostrarPeca(tabsPecas[(i + passo + tabsPecas.length) % tabsPecas.length].dataset.peca, true);
+  });
+});
+partes.forEach((p) => {
+  p.addEventListener("click", () => { pararRotacao(); mostrarPeca(p.dataset.peca); });
+  p.addEventListener("mouseenter", () => { pararRotacao(); mostrarPeca(p.dataset.peca); });
+});
+mostrarPeca("site");
+
+// Enquanto ninguém mexe, as peças vão acendendo sozinhas (só com a secção à vista)
+let pecasVisiveis = false;
+new IntersectionObserver(([e]) => (pecasVisiveis = e.isIntersecting), { threshold: 0.4 })
+  .observe(document.getElementById("pecas"));
+setInterval(() => {
+  if (!rodarPecas || !pecasVisiveis || document.hidden) return;
+  const i = tabsPecas.findIndex((t) => t.dataset.peca === pecaAtiva);
+  mostrarPeca(tabsPecas[(i + 1) % tabsPecas.length].dataset.peca);
+}, 3200);
+
+// ---------- Como funciona: separadores ----------
+const separadores = [...document.querySelectorAll(".separadores [role=tab]")];
+
+function abrirSeparador(sep, foco = false) {
+  separadores.forEach((s) => {
+    const ativo = s === sep;
+    s.setAttribute("aria-selected", String(ativo));
+    s.tabIndex = ativo ? 0 : -1;
+    document.getElementById(s.getAttribute("aria-controls")).hidden = !ativo;
+  });
+  if (foco) sep.focus();
+}
+separadores.forEach((s, i) => {
+  s.addEventListener("click", () => abrirSeparador(s));
+  s.addEventListener("keydown", (e) => {
+    const passo = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!passo) return;
+    e.preventDefault();
+    abrirSeparador(separadores[(i + passo + separadores.length) % separadores.length], true);
+  });
+});
+// Ligações diretas a um separador (ex.: #extras) abrem-no
+function abrirPorEndereco() {
+  const sep = separadores.find((s) => `#${s.getAttribute("aria-controls")}` === location.hash);
+  if (!sep) return;
+  abrirSeparador(sep);
+  document.getElementById("como-funciona").scrollIntoView({ behavior: semMovimento ? "auto" : "smooth" });
+}
+window.addEventListener("hashchange", abrirPorEndereco);
+abrirPorEndereco();
 
 // ---------- Botões de plano preenchem o formulário ----------
 document.querySelectorAll("[data-plano]").forEach((el) =>
@@ -82,10 +178,14 @@ document.querySelectorAll("[data-plano]").forEach((el) =>
   })
 );
 
-// ---------- Formulário de candidatura ----------
+// ---------- Formulário de candidatura em 3 passos ----------
 const erro = document.getElementById("formulario-erro");
 const botaoEnviar = document.getElementById("formulario-botao");
+const botaoVoltar = document.getElementById("formulario-voltar");
 const sucesso = document.getElementById("formulario-sucesso");
+const passos = [...formulario.querySelectorAll(".passo")];
+const marcas = [...formulario.querySelectorAll("[data-passo-marca]")];
+let passoAtual = 0;
 
 const TEXTOS = {
   pt: {
@@ -94,6 +194,8 @@ const TEXTOS = {
     consentimento: "Para enviarmos a candidatura precisamos da tua autorização (primeira caixa).",
     falhou: "Não conseguimos enviar agora. Tenta de novo ou escreve para geral@theoddwork.com.",
     aEnviar: "A enviar…",
+    continuar: "Continuar",
+    enviar: "Enviar candidatura",
   },
   br: {
     falta: "Falta preencher: ",
@@ -101,13 +203,14 @@ const TEXTOS = {
     consentimento: "Para enviar a candidatura precisamos da sua autorização (primeira caixa).",
     falhou: "Não conseguimos enviar agora. Tente de novo ou escreva para geral@theoddwork.com.",
     aEnviar: "Enviando…",
+    continuar: "Continuar",
+    enviar: "Enviar candidatura",
   },
 };
 
 function nomeDoCampo(campo) {
-  const legenda = campo.closest("fieldset")?.querySelector("legend");
-  if (legenda) return legenda.textContent.trim();
-  const rotulo = campo.closest("label")?.querySelector(":scope > span");
+  const legenda = campo.closest("fieldset.escolha")?.querySelector("legend");
+  const rotulo = legenda || campo.closest("label")?.querySelector(":scope > span");
   const visivel = rotulo && [...rotulo.querySelectorAll("[data-m]")].find((s) => s.offsetParent !== null);
   return (visivel || rotulo)?.textContent.replace("(opcional)", "").replace(/\?$/, "").trim() || campo.name;
 }
@@ -118,15 +221,27 @@ function mostrarErro(texto, foco) {
   foco?.focus();
 }
 
-formulario.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const t = TEXTOS[document.documentElement.dataset.mercado === "br" ? "br" : "pt"];
+function irParaPasso(n, foco = true) {
+  passoAtual = n;
+  passos.forEach((p, i) => (p.hidden = i !== n));
+  marcas.forEach((m, i) => {
+    m.classList.toggle("ativo", i === n);
+    m.classList.toggle("feito", i < n);
+  });
+  botaoVoltar.hidden = n === 0;
+  const t = TEXTOS[mercadoAtual()];
+  botaoEnviar.textContent = n === passos.length - 1 ? t.enviar : t.continuar;
+  erro.hidden = true;
+  if (foco) passos[n].querySelector("input")?.focus({ preventScroll: true });
+}
 
-  const obrigatorios = [...formulario.querySelectorAll("[required]")].filter((c) => c.name !== "consentimento");
+// Valida só os campos do passo à vista
+function validarPasso(n) {
+  const t = TEXTOS[mercadoAtual()];
   const vistos = new Set();
   const emFalta = [];
-  obrigatorios.forEach((c) => {
-    if (vistos.has(c.name)) return;
+  passos[n].querySelectorAll("[required]").forEach((c) => {
+    if (c.name === "consentimento" || vistos.has(c.name)) return;
     vistos.add(c.name);
     const vazio = c.type === "radio"
       ? !formulario.querySelector(`input[name="${c.name}"]:checked`)
@@ -135,24 +250,36 @@ formulario.addEventListener("submit", async (e) => {
     if (vazio) emFalta.push(c);
   });
   if (emFalta.length) {
-    return mostrarErro(t.falta + emFalta.map(nomeDoCampo).join(", ") + ".", emFalta[0]);
+    mostrarErro(t.falta + emFalta.map(nomeDoCampo).join(", ") + ".", emFalta[0]);
+    return false;
   }
-  const email = formulario.email;
-  if (!email.checkValidity()) {
+  const email = passos[n].querySelector('input[type="email"]');
+  if (email && !email.checkValidity()) {
     email.setAttribute("aria-invalid", "true");
-    return mostrarErro(t.email, email);
+    mostrarErro(t.email, email);
+    return false;
   }
-  if (!formulario.consentimento.checked) {
-    return mostrarErro(t.consentimento, formulario.consentimento);
+  const consentimento = passos[n].querySelector('input[name="consentimento"]');
+  if (consentimento && !consentimento.checked) {
+    mostrarErro(t.consentimento, consentimento);
+    return false;
   }
-  erro.hidden = true;
+  return true;
+}
 
+botaoVoltar.addEventListener("click", () => irParaPasso(passoAtual - 1));
+
+formulario.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!validarPasso(passoAtual)) return;
+  if (passoAtual < passos.length - 1) return irParaPasso(passoAtual + 1);
+
+  const t = TEXTOS[mercadoAtual()];
   const dados = new URLSearchParams(new FormData(formulario));
   dados.set("novidades", formulario.novidades.checked ? "sim" : "não");
-  dados.set("mercado", document.documentElement.dataset.mercado);
+  dados.set("mercado", mercadoAtual());
   dados.set("pagina", location.href);
 
-  const textoBotao = botaoEnviar.innerHTML;
   botaoEnviar.disabled = true;
   botaoEnviar.textContent = t.aEnviar;
   try {
@@ -169,25 +296,7 @@ formulario.addEventListener("submit", async (e) => {
     mostrarErro(t.falhou);
   } finally {
     botaoEnviar.disabled = false;
-    botaoEnviar.innerHTML = textoBotao;
+    botaoEnviar.textContent = t.enviar;
   }
 });
-
-// ---------- Vista explodida: lista e peças acendem em conjunto ----------
-const partes = document.querySelectorAll(".explodida .parte");
-const itens = document.querySelectorAll(".lista-pecas li");
-
-function acender(peca) {
-  partes.forEach((p) => p.classList.toggle("ativa", p.dataset.peca === peca));
-  itens.forEach((i) => i.classList.toggle("ativa", i.dataset.peca === peca));
-}
-itens.forEach((i) => {
-  i.addEventListener("mouseenter", () => acender(i.dataset.peca));
-  i.addEventListener("focus", () => acender(i.dataset.peca));
-  i.addEventListener("mouseleave", () => acender(null));
-  i.addEventListener("blur", () => acender(null));
-});
-partes.forEach((p) => {
-  p.addEventListener("mouseenter", () => acender(p.dataset.peca));
-  p.addEventListener("mouseleave", () => acender(null));
-});
+irParaPasso(0, false);
