@@ -52,6 +52,7 @@
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <div class="progresso" id="progresso" aria-hidden="true"></div>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
       <g id="pa">
@@ -130,6 +131,33 @@
         <h2 id="dor-titulo" data-br="da semana de quem administra um negócio vai para tarefas administrativas.">da semana de quem gere um negócio vai para tarefas administrativas.</h2>
         <p data-br="Em uma semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem esquecer.">Numa semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem se esquecer.</p>
         <p class="fonte">Fonte: inquérito a 251 empreendedores nos EUA (Time etc e Censuswide, 2023).</p>
+      </div>
+    </section>
+
+    <!-- ============ Calculadora ============ -->
+    <section class="calc" aria-labelledby="calc-titulo">
+      <div class="calc__cartao">
+        <div class="calc__entrada">
+          <h2 id="calc-titulo"><span data-m="pt">E no teu negócio, quanto é?</span><span data-m="br">E no seu negócio, quanto é?</span></h2>
+          <p><span data-m="pt">Mexe nos valores até se parecerem com a tua semana.</span><span data-m="br">Ajuste os valores até ficarem parecidos com a sua semana.</span></p>
+          <label class="calc__campo">
+            <span class="calc__pergunta"><span data-m="pt">Clientes ou alunos por semana</span><span data-m="br">Clientes ou alunos por semana</span><output id="calc-clientes-v" for="calc-clientes">60</output></span>
+            <input type="range" id="calc-clientes" min="10" max="400" step="10" value="60">
+          </label>
+          <label class="calc__campo">
+            <span class="calc__pergunta"><span data-m="pt">Minutos por cliente a confirmar, lembrar e cobrar</span><span data-m="br">Minutos por cliente para confirmar, lembrar e cobrar</span><output id="calc-minutos-v" for="calc-minutos">4 min</output></span>
+            <input type="range" id="calc-minutos" min="1" max="15" step="1" value="4">
+          </label>
+        </div>
+        <div class="calc__saida" aria-live="polite">
+          <span class="calc__rotulo"><span data-m="pt">Por mês, isto leva-te cerca de</span><span data-m="br">Por mês, isso leva cerca de</span></span>
+          <strong class="calc__horas" id="calc-horas">17h</strong>
+          <span class="calc__dias" id="calc-dias">2 dias de 8 horas</span>
+          <div class="calc__mes" id="calc-mes" aria-hidden="true"></div>
+          <span class="calc__legenda"><span data-m="pt">Cada quadrado é um dia útil do mês.</span><span data-m="br">Cada quadrado é um dia útil do mês.</span></span>
+          <a class="botao" href="#diagnostico" data-rastrear="cta-calc"><span data-m="pt">Medir isto a sério</span><span data-m="br">Medir isso de verdade</span></a>
+          <small class="calc__nota"><span data-m="pt">Estimativa feita com os teus números. No diagnóstico medimos com o teu negócio real.</span><span data-m="br">Estimativa feita com os seus números. No diagnóstico medimos com o seu negócio real.</span></small>
+        </div>
       </div>
     </section>
 
