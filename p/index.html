@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pagamento · Oddwork</title>
+  <meta name="description" content="Link de pagamento seguro da Oddwork, feito pelo Stripe.">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#131A2B">
+  <meta property="og:title" content="Pagamento · Oddwork">
+  <meta property="og:description" content="Link de pagamento seguro, feito pelo Stripe.">
+  <meta property="og:image" content="https://theoddwork.com/assets/partilha.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <style>
+    @font-face { font-family: "Space Grotesk"; src: url("/assets/fontes/space-grotesk.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+    @font-face { font-family: "Inter"; src: url("/assets/fontes/inter.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+    :root { --noite: #131A2B; --noite2: #1C2540; --laranja: #F26A21; --suave: #A3ACC2; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { display: grid; place-items: center; padding: 24px 16px; background: var(--noite); color: #fff; font: 400 1rem/1.5 "Inter", system-ui, sans-serif; }
+    main { width: 100%; max-width: 26rem; text-align: center; }
+    .marca { display: inline-flex; align-items: center; gap: .55rem; color: #fff; text-decoration: none; font: 700 1.35rem/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: -.02em; }
+    .marca svg { width: 1.9rem; height: 1.9rem; }
+    .marca em { font-style: normal; color: var(--laranja); }
+    .cartao { margin-top: 2rem; padding: 1.8rem 1.4rem; border-radius: 1.2rem; background: var(--noite2); }
+    h1 { margin: 0 0 .5rem; font: 600 1.35rem/1.25 "Space Grotesk", system-ui, sans-serif; }
+    p { margin: 0; color: var(--suave); }
+    .roda { width: 2.4rem; height: 2.4rem; margin: 0 auto 1.1rem; border-radius: 50%; border: 3px solid rgba(255,255,255,.15); border-top-color: var(--laranja); animation: roda .8s linear infinite; }
+    @keyframes roda { to { transform: rotate(360deg); } }
+    .botao { display: inline-block; margin-top: 1.3rem; padding: .8rem 1.3rem; border-radius: 999px; background: var(--laranja); color: #fff; font-weight: 600; text-decoration: none; }
+    .botao:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .seguro { margin-top: 1.2rem; font-size: .85rem; }
+    [hidden] { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { .roda { animation-duration: 2.4s; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="marca" href="/" aria-label="Oddwork, início">
+      <svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true">
+        <defs><g id="pa"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></defs>
+        <use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/>
+      </svg>
+      <span>the<em>odd</em>work</span>
+    </a>
+
+    <div class="cartao" aria-live="polite">
+      <div id="a-abrir">
+        <div class="roda" aria-hidden="true"></div>
+        <h1 id="titulo">A abrir o pagamento…</h1>
+        <p id="texto">Vais seguir para a página segura do Stripe.</p>
+        <a class="botao" id="seguir" href="#" hidden>Continuar para o pagamento</a>
+      </div>
+      <div id="aviso" hidden>
+        <h1 id="aviso-titulo"></h1>
+        <p id="aviso-texto"></p>
+        <a class="botao" id="aviso-botao" href="mailto:geral@theoddwork.com">Falar com a Oddwork</a>
+      </div>
+    </div>
+    <p class="seguro" id="seguro">Pagamento seguro pelo Stripe. A Oddwork não vê os dados do teu cartão.</p>
+  </main>
+
+  <script src="/config.js"></script>
+  <script>
+    (function () {
+      var codigo = decodeURIComponent((location.search || "").replace(/^\?/, "").split("&")[0] || "").trim();
+      var $ = function (id) { return document.getElementById(id); };
+      var br = false;
+      var T = {
+        pt: {
+          pago: ["Este pagamento já está feito", "Obrigado! O recibo foi enviado para o teu e-mail."],
+          fechado: ["Este link já não está ativo", "Fala connosco e enviamos-te um link novo."],
+          nada: ["Não encontrámos este link", "Confirma se copiaste o link completo, ou fala connosco."],
+          erro: ["Não foi possível abrir o pagamento", "Tenta outra vez daqui a pouco, ou fala connosco."],
+          seguro: "Pagamento seguro pelo Stripe. A Oddwork não vê os dados do teu cartão.",
+          falar: "Falar com a Oddwork"
+        },
+        br: {
+          pago: ["Este pagamento já foi feito", "Obrigado! O recibo foi enviado para o seu e-mail."],
+          fechado: ["Este link não está mais ativo", "Fale com a gente e enviamos um link novo."],
+          nada: ["Não encontramos este link", "Confira se copiou o link completo, ou fale com a gente."],
+          erro: ["Não foi possível abrir o pagamento", "Tente de novo daqui a pouco, ou fale com a gente."],
+          seguro: "Pagamento seguro pelo Stripe. A Oddwork não vê os dados do seu cartão.",
+          falar: "Falar com a Oddwork"
+        }
+      };
+      function aviso(chave) {
+        var t = T[br ? "br" : "pt"];
+        $("a-abrir").hidden = true;
+        $("aviso").hidden = false;
+        $("aviso-titulo").textContent = t[chave][0];
+        $("aviso-texto").textContent = t[chave][1];
+        $("aviso-botao").textContent = t.falar;
+        $("seguro").textContent = t.seguro;
+        document.title = t[chave][0] + " · Oddwork";
+      }
+      if (!/^[A-Za-z0-9]{6,16}$/.test(codigo)) { aviso("nada"); return; }
+
+      var cfg = window.ODDWORK || {};
+      fetch(cfg.supabaseUrl + "/rest/v1/rpc/link_pagamento", {
+        method: "POST",
+        headers: { apikey: cfg.supabaseChave, "Content-Type": "application/json" },
+        body: JSON.stringify({ c: codigo })
+      })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (linhas) {
+          var l = linhas && linhas[0];
+          if (!l) { aviso("nada"); return; }
+          br = l.moeda === "brl";
+          if (br) {
+            document.documentElement.lang = "pt-BR";
+            $("titulo").textContent = "Abrindo o pagamento…";
+            $("texto").textContent = "Você vai para a página segura do Stripe.";
+            $("seguir").textContent = "Continuar para o pagamento";
+            $("seguro").textContent = T.br.seguro;
+          }
+          if (l.url && /^https:\/\/checkout\.stripe\.com\//.test(l.url)) {
+            $("seguir").href = l.url;
+            setTimeout(function () { $("seguir").hidden = false; }, 2500);
+            location.replace(l.url);
+            return;
+          }
+          aviso(l.estado === "pago" ? "pago" : "fechado");
+        })
+        .catch(function () { aviso("erro"); });
+    })();
+  </script>
+</body>
+</html>

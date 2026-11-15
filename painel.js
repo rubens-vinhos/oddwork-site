@@ -557,7 +557,7 @@ function listaPagamentos(p) {
     const li = el("li", {},
       el("div", {}, el("strong", {}, NOME_TIPO_PAG[x.tipo] || x.tipo), el("small", {}, new Date(x.criado).toLocaleDateString("pt-PT", { day: "2-digit", month: "short" }) + " · " + dinheiro(x.valor, x.moeda))),
       el("span", { class: "selo selo--" + x.estado }, NOME_ESTADO_PAG[x.estado] || x.estado));
-    if (x.url && x.estado === "link_criado") li.append(botaoCopiar(x.url, "Copiar link"));
+    if (x.url && x.estado === "link_criado") li.append(botaoCopiar(linkCurto(x), "Copiar link"));
     if (!x.exemplo && modo === "real" && ESPERA.includes(x.estado) && x.stripe_sessao) li.append(botaoCancelar(x, p));
     ul.append(li);
   });
@@ -596,7 +596,7 @@ function desenharPagamentos(p) {
     ajuda.textContent = base
       ? "Preço do catálogo: " + dinheiro(base, moeda) + (chave === "mensalidade" ? " por mês" : "") + ". Deixa vazio para usar este valor."
       : "Sem preço fixo: escreve o valor da proposta em " + moeda.toUpperCase() + (chave === "mensalidade" ? " por mês." : ".");
-    if (brasil && chave === "mensalidade") ajuda.textContent += " No Brasil é Pix Automático: o cliente autoriza até mais 20% para cobrir o IOF.";
+    if (brasil && chave === "mensalidade") ajuda.textContent += " No Brasil pode ser Pix Automático ou cartão. No Pix, o IOF já fica incluído: o cliente paga exatamente este valor.";
   };
   tipo.addEventListener("change", atualizar);
   plano.addEventListener("change", atualizar);
@@ -620,8 +620,10 @@ function desenharPagamentos(p) {
         try { msg = (await error.context.json()).erro || msg; } catch { /* sem detalhe */ }
         throw new Error(msg);
       }
-      mostrarLink(resultado, data.url, p);
       PAGAMENTOS_REAIS = await lerTudo("pagamentos", "criado");
+      const novo = PAGAMENTOS_REAIS.find((y) => y.url === data.url)
+        || { tipo: corpo.tipo, valor: corpo.valor || 0, moeda: brasil ? "brl" : "eur", url: data.url, codigo: data.codigo };
+      mostrarLink(resultado, novo, p);
       caixa.querySelector(".pagamentos__lista")?.replaceWith(listaPagamentos(p));
     } catch (err) {
       erroEl.textContent = err.message; erroEl.hidden = false;
@@ -671,17 +673,30 @@ function botaoCancelar(x, p) {
   return b;
 }
 
-function mostrarLink(caixa, url, p) {
+// Depois de criar o link: link curto + mensagem pronta (e editável) para este cliente.
+function mostrarLink(caixa, x, p) {
   const tel = soDigitos(p.whatsapp);
-  const primeiro = (p.nome || "").split(" ")[0];
-  const msg = (p.pais === "Brasil" ? "Oi " : "Olá ") + primeiro + ", aqui está o link para o pagamento: " + url;
+  const curto = linkCurto(x);
+  const texto = el("textarea", { class: "pagamentos__mensagem", rows: 8, "aria-label": "Mensagem para o cliente" });
+  texto.value = mensagemPagamento(p, x, "link");
+  const enviar = el("button", { type: "button", class: "botao botao--pequeno" }, tel ? "Enviar por WhatsApp" : "Abrir no WhatsApp");
+  enviar.addEventListener("click", () => {
+    window.open("https://wa.me/" + (tel || "") + "?text=" + encodeURIComponent(texto.value), "_blank", "noopener");
+  });
+  const copiarMsg = el("button", { type: "button", class: "botao botao--fantasma botao--pequeno" }, "Copiar mensagem");
+  copiarMsg.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(texto.value); copiarMsg.textContent = "Copiada"; } catch { texto.select(); }
+    setTimeout(() => { copiarMsg.textContent = "Copiar mensagem"; }, 1800);
+  });
   caixa.replaceChildren(
     el("strong", {}, "Link criado"),
-    el("input", { type: "text", readOnly: true, value: url, "aria-label": "Link de pagamento" }),
+    el("input", { type: "text", readOnly: true, value: curto, "aria-label": "Link de pagamento" }),
+    el("label", { class: "pagamentos__rotulo" }, "Mensagem para " + ((p.nome || "").split(" ")[0] || "o cliente") + " (podes editar antes de enviar)", texto),
     el("div", { class: "pagamentos__acoes" },
-      botaoCopiar(url, "Copiar link"),
-      tel ? el("a", { class: "botao botao--pequeno", href: "https://wa.me/" + tel + "?text=" + encodeURIComponent(msg), target: "_blank", rel: "noopener" }, "Enviar por WhatsApp") : "",
-      el("a", { class: "botao botao--fantasma botao--pequeno", href: url, target: "_blank", rel: "noopener" }, "Abrir")));
+      enviar,
+      copiarMsg,
+      botaoCopiar(curto, "Copiar link"),
+      el("a", { class: "botao botao--fantasma botao--pequeno", href: curto, target: "_blank", rel: "noopener" }, "Abrir")));
   caixa.hidden = false;
 }
 
@@ -753,12 +768,61 @@ function desenharDinheiro() {
 }
 
 // Mensagens prontas para o WhatsApp, conforme o estado do pedido.
+// Link curto do pagamento (theoddwork.com/p/?CODIGO). Os antigos, sem código, usam o link do Stripe.
+const linkCurto = (x) => (x?.codigo ? "https://theoddwork.com/p/?" + x.codigo : x?.url || "");
+
+// Mensagem personalizada para cada cobrança: nome, negócio, o que se paga e o valor.
+function mensagemPagamento(p, x, caso = "link") {
+  const br = p.pais === "Brasil";
+  const nome = (p.nome || "").split(" ")[0];
+  const ola = nome ? (br ? `Oi ${nome}, tudo bem?` : `Olá ${nome}!`) : (br ? "Oi, tudo bem?" : "Olá!");
+  const neg = p.negocio || (br ? "seu negócio" : "o teu negócio");
+  const mensal = x.tipo === "mensalidade" || x.tipo === "renovacao";
+  const valor = dinheiro(x.valor, x.moeda) + (mensal ? "/mês" : "");
+  const oque = {
+    "implantacao-1": br ? "a 1ª metade da implantação" : "a 1.ª metade da implantação",
+    "implantacao-2": br ? "a 2ª metade da implantação" : "a 2.ª metade da implantação",
+    mensalidade: "a mensalidade",
+    renovacao: "a mensalidade",
+  }[x.tipo] || (br ? "o pagamento" : "o pagamento");
+  const link = linkCurto(x);
+  const meios = br ? "Você pode pagar por Pix ou cartão." : "Podes pagar com cartão ou MB WAY.";
+
+  if (caso === "lembrete") {
+    return br
+      ? `${ola} Passando só para lembrar ${oque} do sistema de ${neg} (${valor}). O link continua aqui:\n${link}\n\nSe já pagou, pode ignorar esta mensagem. Qualquer dúvida, é só me chamar.`
+      : `${ola} Passo só para lembrar ${oque} do sistema de ${neg} (${valor}). O link continua aqui:\n${link}\n\nSe já pagaste, ignora esta mensagem. Qualquer dúvida, diz-me.`;
+  }
+  if (caso === "falhou") {
+    return br
+      ? `${ola} O pagamento d${oque} (${valor}) não passou. Às vezes é o banco que bloqueia compras internacionais. Me avisa quando puder que eu envio um link novo, e você pode usar outro cartão ou Pix.`
+      : `${ola} O pagamento d${oque} (${valor}) não passou. Às vezes é o banco que bloqueia compras online. Diz-me quando puderes e envio-te um link novo, para tentares com outro cartão ou com MB WAY.`;
+  }
+  if (x.tipo === "implantacao-1") {
+    return br
+      ? `${ola} Obrigado por fechar com a Oddwork! Para começarmos o sistema de ${neg}, aqui está o link para pagar ${oque} (${valor}):\n${link}\n\n${meios} O pagamento é seguro, pelo Stripe, e o recibo chega no seu e-mail logo em seguida. Qualquer dúvida, é só me chamar.`
+      : `${ola} Obrigado por avançares com a Oddwork! Para começarmos o sistema de ${neg}, aqui está o link para pagar ${oque} (${valor}):\n${link}\n\n${meios} O pagamento é seguro, pelo Stripe, e recebes o recibo por e-mail logo a seguir. Qualquer dúvida, diz-me.`;
+  }
+  if (x.tipo === "implantacao-2") {
+    return br
+      ? `${ola} O sistema de ${neg} está entregue e funcionando. Aqui está o link para ${oque} (${valor}):\n${link}\n\n${meios} O recibo chega no seu e-mail logo em seguida. Obrigado pela confiança!`
+      : `${ola} O sistema de ${neg} está entregue e a funcionar. Aqui está o link para ${oque} (${valor}):\n${link}\n\n${meios} Recebes o recibo por e-mail logo a seguir. Obrigado pela confiança!`;
+  }
+  if (mensal) {
+    return br
+      ? `${ola} Aqui está o link para ativar a mensalidade de ${neg} (${valor}):\n${link}\n\nSó precisa fazer isso uma vez: depois a cobrança é automática todo mês, com recibo no seu e-mail. Você pode cancelar quando quiser.`
+      : `${ola} Aqui está o link para ativar a mensalidade de ${neg} (${valor}):\n${link}\n\nSó precisas de fazer isto uma vez: a partir daí a cobrança é automática todos os meses, com recibo por e-mail. Podes cancelar quando quiseres.`;
+  }
+  return br
+    ? `${ola} Aqui está o link para o pagamento de ${neg} (${valor}):\n${link}\n\n${meios} O recibo chega no seu e-mail logo em seguida.`
+    : `${ola} Aqui está o link para o pagamento de ${neg} (${valor}):\n${link}\n\n${meios} Recebes o recibo por e-mail logo a seguir.`;
+}
+
 function textoWhats(p, extra = {}) {
   const br = p.pais === "Brasil";
   const nome = (p.nome || "").split(" ")[0];
   const ola = (br ? "Oi " : "Olá ") + nome + (br ? ", aqui é da Oddwork." : ", é a Oddwork.");
-  if (extra.tipo === "lembrete") return `${ola} ${br ? "Deixo de novo o link para o pagamento" : "Deixo outra vez o link para o pagamento"} (${extra.valor}): ${extra.url}`;
-  if (extra.tipo === "falhou") return `${ola} ${br ? "O pagamento de" : "O pagamento de"} ${extra.valor} ${br ? "não passou. Você pode tentar de novo aqui:" : "não passou. Podes tentar outra vez aqui:"} ${extra.url || ""}`.trim();
+  if (extra.x) return mensagemPagamento(p, extra.x, extra.tipo);
   const porEstado = {
     novo: br ? `Recebemos seu pedido de diagnóstico para ${p.negocio || "o seu negócio"}. Qual o melhor dia e horário para a chamada de 20 minutos?` : `Recebemos o teu pedido de diagnóstico para ${p.negocio || "o teu negócio"}. Que dia e hora te dá jeito para a chamada de 20 minutos?`,
     contactado: br ? "Só para confirmar a chamada de diagnóstico: qual dia e horário funcionam para você?" : "Só para confirmar a chamada de diagnóstico: que dia e hora te dão jeito?",
@@ -781,11 +845,11 @@ function desenharHoje() {
   });
   todosPagamentos().filter((x) => x.estado === "falhou").forEach((x) => {
     const p = pedidoDe(x);
-    itens.push({ peso: 10, cor: "verm", p, titulo: `Pagamento falhou: ${p.negocio || "—"}`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)}`, whats: p.whatsapp ? linkWhats(p, { tipo: "falhou", valor: dinheiro(x.valor, x.moeda), url: x.url }) : "" });
+    itens.push({ peso: 10, cor: "verm", p, titulo: `Pagamento falhou: ${p.negocio || "—"}`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)}`, whats: p.whatsapp ? linkWhats(p, { tipo: "falhou", x }) : "" });
   });
   todosPagamentos().filter((x) => ESPERA.includes(x.estado) && dias(x.criado) >= 2).forEach((x) => {
     const p = pedidoDe(x);
-    itens.push({ peso: 2 + dias(x.criado), cor: "lar", p, titulo: `Lembrar ${p.negocio || "—"} de pagar`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)} · link enviado ${haDias(dias(x.criado))}`, whats: p.whatsapp && x.url ? linkWhats(p, { tipo: "lembrete", valor: dinheiro(x.valor, x.moeda), url: x.url }) : "" });
+    itens.push({ peso: 2 + dias(x.criado), cor: "lar", p, titulo: `Lembrar ${p.negocio || "—"} de pagar`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)} · link enviado ${haDias(dias(x.criado))}`, whats: p.whatsapp && x.url ? linkWhats(p, { tipo: "lembrete", x }) : "" });
   });
   todosPedidos().filter((p) => p.estado === "proposta" && dias(p.data) >= 4 && !todosPagamentos().some((x) => x.pedido_id === p.id)).forEach((p) => {
     itens.push({ peso: 1, cor: "cinza", p, titulo: `Seguir a proposta de ${p.negocio || p.nome}`, sub: "Proposta enviada, ainda sem pagamento", whats: p.whatsapp ? linkWhats(p) : "" });
@@ -836,10 +900,10 @@ function desenharListaPagamentos() {
     const p = pedidoDe(x);
     const acoes = el("div", { class: "acoes" });
     if (x.url && ESPERA.includes(x.estado)) {
-      acoes.append(botaoCopiar(x.url, "Copiar link"));
-      if (p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "lembrete", valor: dinheiro(x.valor, x.moeda), url: x.url }), target: "_blank", rel: "noopener", title: "Lembrar pelo WhatsApp" }, "Lembrar"));
+      acoes.append(botaoCopiar(linkCurto(x), "Copiar link"));
+      if (p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "lembrete", x }), target: "_blank", rel: "noopener", title: "Lembrar pelo WhatsApp" }, "Lembrar"));
     }
-    if (x.estado === "falhou" && p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "falhou", valor: dinheiro(x.valor, x.moeda), url: x.url }), target: "_blank", rel: "noopener" }, "Avisar"));
+    if (x.estado === "falhou" && p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "falhou", x }), target: "_blank", rel: "noopener" }, "Avisar"));
     const negocio = el("td", {}, el("strong", {}, p.negocio || "—"), el("small", {}, p.nome || ""));
     if (x.exemplo) negocio.firstChild.after(el("span", { class: "tag" }, "exemplo"));
     const tr = el("tr", { tabIndex: 0, title: "Abrir a ficha do pedido" },

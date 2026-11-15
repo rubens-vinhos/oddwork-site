@@ -259,3 +259,8 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 @media (max-width: 900px) { .dinheiro { grid-template-columns: 1fr 1fr; } .atualizado { display: none; } }
 .barra-topo .atualizado { color: var(--noite-suave); }
 .dinheiro__item strong span { display: block; } .dinheiro__item strong span + span { font-size: .8em; }
+
+/* Mensagem personalizada depois de criar um link */
+.pagamentos__rotulo { display: grid; gap: .35rem; font-size: .8rem; color: var(--suave, #5b6478); }
+.pagamentos__mensagem { width: 100%; min-height: 9rem; padding: .7rem .8rem; border: 1px solid var(--linha); border-radius: .6rem; background: #fff; color: var(--tinta); font: 400 .9rem/1.45 "Inter", sans-serif; resize: vertical; }
+.pagamentos__mensagem:focus-visible { outline: 2px solid var(--laranja, #F26A21); outline-offset: 1px; }

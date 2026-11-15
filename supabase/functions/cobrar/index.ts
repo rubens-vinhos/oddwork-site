@@ -79,8 +79,9 @@ async function precoCatalogo(stripe: Stripe, base: string, moeda: "eur" | "brl")
   });
 }
 
+// No Pix o IOF fica incluído no preço: o cliente paga exatamente o valor do link (a Oddwork absorve o IOF).
 const IOF_AVISO =
-  "Esta é uma compra internacional e não inclui a tarifa de 3,5% de IOF. Ao prosseguir, você reconhece e aceita os termos e condições do Ebanx.";
+  "Compra internacional. No Pix, o IOF já está incluído no valor. Ao prosseguir, você reconhece e aceita os termos e condições do Ebanx.";
 
 Deno.serve(async (req) => {
   const h = cors(req.headers.get("Origin"));
@@ -186,26 +187,21 @@ Deno.serve(async (req) => {
     ...(mensal ? { subscription_data: { metadata } } : { payment_intent_data: { metadata, description: nomes[tipo!] + " · " + pedido.negocio }, invoice_creation: { enabled: true } }),
     ...(brasil
       ? {
-          ...(mensal
-            ? {
-                payment_method_options: {
-                  pix: {
-                    mandate_options: {
-                      reference: "Oddwork",
-                      amount: Math.ceil((valorCents * 1.2) / 100) * 100, // margem para o IOF e ajustes
-                      amount_type: "maximum",
-                      amount_includes_iof: "never",
-                      payment_schedule: "monthly",
-                    },
-                  },
-                },
-              }
-            : {}),
+          payment_method_options: mensal
+            ? // Pix Automático: em assinaturas o Stripe só aceita valor, periodicidade e IOF.
+              { pix: { mandate_options: { amount: valorCents, amount_includes_iof: "always", payment_schedule: "monthly" } } }
+            : { pix: { amount_includes_iof: "always" } },
         }
       : {}),
   } as Stripe.Checkout.SessionCreateParams);
 
-  const { error: erroPag } = await admin.from("pagamentos").insert({
+  // Link curto (theoddwork.com/p/?CODIGO): 8 letras e números sem os que se confundem (0/O, 1/I/L).
+  const novoCodigo = () => {
+    const letras = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    const r = crypto.getRandomValues(new Uint8Array(8));
+    return Array.from(r, (n) => letras[n % letras.length]).join("");
+  };
+  const linha = {
     pedido_id: pedido.id,
     tipo,
     descricao: nomes[tipo!] + " · " + (plano === "fundador" ? "Fundador" : "Normal"),
@@ -215,8 +211,18 @@ Deno.serve(async (req) => {
     url: sessao.url,
     stripe_sessao: sessao.id,
     stripe_cliente: cliente,
-  });
-  if (erroPag) console.error("pagamentos", erroPag);
+  };
+  let codigo: string | null = null;
+  for (let i = 0; i < 3 && !codigo; i++) {
+    const c = novoCodigo();
+    const { error } = await admin.from("pagamentos").insert({ ...linha, codigo: c });
+    if (!error) codigo = c;
+    else if (error.code !== "23505") { console.error("pagamentos", error); break; } // 23505 = código repetido
+  }
+  if (!codigo) {
+    const { error } = await admin.from("pagamentos").insert(linha);
+    if (error) console.error("pagamentos", error);
+  }
 
-  return resposta({ url: sessao.url }, 200, h);
+  return resposta({ url: sessao.url, curto: codigo ? SITE + "/p/?" + codigo : sessao.url, codigo }, 200, h);
 });
