@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel · Oddwork</title>
+  <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="painel.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+    </defs>
+  </svg>
+
+  <!-- ============ Entrada ============ -->
+  <main class="entrar" id="entrar">
+    <section class="entrar__arte" aria-hidden="true">
+      <a class="marca marca--clara" href="index.html" tabindex="-1"><svg viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <svg class="entrar__simbolo" viewBox="-420 -420 840 840"><use href="#simbolo"/></svg>
+      <div class="entrar__frase">
+        <p class="entrar__lema">We think differently.<br>We work oddly.</p>
+        <ul class="entrar__fichas">
+          <li><span class="ponto ponto--verm"></span>Pedidos por responder</li>
+          <li><span class="ponto ponto--lar"></span>Diagnósticos e propostas</li>
+          <li><span class="ponto ponto--verde"></span>Vagas de fundador</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="entrar__lado">
+      <form class="entrar__form" id="entrar-form">
+        <a class="marca entrar__marca-movel" href="index.html"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+        <span class="entrar__cadeado" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+        <h1>Painel da equipa</h1>
+        <p class="entrar__sub">Só para o Rubens e o Miguel.</p>
+        <input type="hidden" name="email" autocomplete="username" value="geral@theoddwork.com">
+        <label class="campo"><span>Palavra-passe</span>
+          <span class="senha"><input type="password" name="senha" autocomplete="current-password" required autofocus><button type="button" class="senha__ver" aria-label="Mostrar palavra-passe" aria-pressed="false">Ver</button></span>
+        </label>
+        <button class="botao botao--grande" type="submit">Entrar</button>
+        <p class="entrar__aviso" id="entrar-aviso" role="status" hidden></p>
+        <p class="entrar__teste" data-so-local>Versão de teste no computador · <button type="button" class="link" id="entrar-teste">entrar sem email</button></p>
+        <a class="entrar__voltar" href="index.html">← Voltar ao site</a>
+      </form>
+    </section>
+  </main>
+
+  <!-- ============ Painel ============ -->
+  <div class="app" id="app" hidden>
+    <header class="barra-topo">
+      <a class="marca" href="index.html"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <span class="barra-topo__sep">Painel</span>
+      <div class="barra-topo__dir">
+        <label class="interruptor" title="Mostrar linhas de exemplo para testar o painel"><input type="checkbox" id="exemplo"> <span>Dados de exemplo</span></label>
+        <button type="button" class="botao botao--fantasma" id="sair">Sair</button>
+      </div>
+    </header>
+
+    <main class="conteudo">
+      <div class="cabeca">
+        <div>
+          <div class="abas" role="tablist" aria-label="Secções do painel">
+            <button type="button" role="tab" id="aba-pedidos" aria-selected="true" aria-controls="vista-pedidos" data-aba="pedidos">Pedidos</button>
+            <button type="button" role="tab" id="aba-visitas" aria-selected="false" aria-controls="vista-visitas" data-aba="visitas">Visitas</button>
+          </div>
+          <p id="resumo">—</p>
+        </div>
+        <div class="periodo" role="group" aria-label="Período">
+          <button type="button" data-dias="7">7 dias</button>
+          <button type="button" data-dias="30" aria-pressed="true">30 dias</button>
+          <button type="button" data-dias="0">Tudo</button>
+        </div>
+      </div>
+
+      <p class="faixa" id="faixa-exemplo" hidden>Estás a ver dados de exemplo, inventados para testar o painel. Não são clientes reais.</p>
+
+      <div id="vista-pedidos" role="tabpanel" aria-labelledby="aba-pedidos">
+      <section class="kpis" aria-label="Números principais">
+        <div class="kpi"><span>Pedidos</span><strong data-kpi="pedidos">0</strong><small data-kpi-nota="pedidos"></small></div>
+        <div class="kpi kpi--alerta"><span>Por responder</span><strong data-kpi="novos">0</strong><small>Responder em até 1 dia útil</small></div>
+        <div class="kpi"><span>Diagnósticos</span><strong data-kpi="diagnosticos">0</strong><small data-kpi-nota="diagnosticos"></small></div>
+        <div class="kpi"><span>Propostas</span><strong data-kpi="propostas">0</strong><small data-kpi-nota="propostas"></small></div>
+        <div class="kpi kpi--laranja"><span>Fundadores</span><strong><span data-kpi="clientes">0</span>/10</strong><small>Vagas de fundador ocupadas</small></div>
+      </section>
+
+      <section class="grelha" aria-label="Análise">
+        <article class="cartao">
+          <h2>Funil</h2>
+          <p class="cartao__sub">Quantos passam de cada etapa para a seguinte</p>
+          <ol class="funil" id="funil"></ol>
+        </article>
+        <article class="cartao">
+          <h2>Que nicho responde</h2>
+          <p class="cartao__sub">Pedidos por tipo de negócio</p>
+          <ul class="barras" id="por-nicho"></ul>
+        </article>
+        <article class="cartao">
+          <h2>Que canal funciona</h2>
+          <p class="cartao__sub">Como nos conheceram</p>
+          <ul class="barras" id="por-canal"></ul>
+        </article>
+        <article class="cartao">
+          <h2>O que mais lhes custa</h2>
+          <p class="cartao__sub">A tarefa que mais tempo ocupa</p>
+          <ul class="barras" id="por-dor"></ul>
+        </article>
+      </section>
+
+      <section class="cartao cartao--tabela" aria-labelledby="lista-titulo">
+        <div class="tabela__topo">
+          <h2 id="lista-titulo">Todos os pedidos</h2>
+          <div class="filtros">
+            <input type="search" id="procurar" placeholder="Procurar nome ou negócio" aria-label="Procurar">
+            <select id="f-estado" aria-label="Filtrar por estado"><option value="">Todos os estados</option></select>
+            <select id="f-pais" aria-label="Filtrar por país"><option value="">PT e BR</option><option>Portugal</option><option>Brasil</option></select>
+            <button type="button" class="botao botao--fantasma" id="exportar">Exportar CSV</button>
+          </div>
+        </div>
+        <div class="tabela__rolo">
+          <table>
+            <thead><tr><th>Data</th><th>Pessoa e negócio</th><th>Tipo</th><th>País</th><th>Clientes</th><th>Maior dor</th><th>Origem</th><th>Estado</th><th><span class="vh">Contactar</span></th></tr></thead>
+            <tbody id="linhas"></tbody>
+          </table>
+          <p class="vazio" id="vazio" hidden>Ainda não há pedidos neste período. Quando alguém pedir um diagnóstico no site, aparece aqui.</p>
+        </div>
+      </section>
+      </div>
+
+      <div id="vista-visitas" role="tabpanel" aria-labelledby="aba-visitas" hidden>
+        <section class="kpis" aria-label="Números das visitas">
+          <div class="kpi"><span>Páginas vistas</span><strong data-v="vistas">0</strong><small>Todas, com ou sem cookies</small></div>
+          <div class="kpi"><span>Visitantes</span><strong data-v="visitantes">0</strong><small data-v-nota="visitantes">Que aceitaram estatísticas</small></div>
+          <div class="kpi"><span>Aceitaram cookies</span><strong data-v="aceite">0%</strong><small data-v-nota="aceite"></small></div>
+          <div class="kpi kpi--laranja"><span>Visita → pedido</span><strong data-v="conversao">0%</strong><small data-v-nota="conversao"></small></div>
+          <div class="kpi"><span>Tempo médio</span><strong data-v="tempo">0s</strong><small data-v-nota="tempo">Por página</small></div>
+        </section>
+
+        <section class="grelha grelha--3">
+          <article class="cartao cartao--largo">
+            <h2>Visitas por dia</h2>
+            <p class="cartao__sub">Sessões de quem aceitou estatísticas</p>
+            <div class="colunas" id="v-dias"></div>
+          </article>
+          <article class="cartao">
+            <h2>De onde vêm</h2>
+            <p class="cartao__sub">Canal da visita</p>
+            <ul class="barras" id="v-canal"></ul>
+          </article>
+        </section>
+
+        <section class="grelha">
+          <article class="cartao">
+            <h2>O que veem</h2>
+            <p class="cartao__sub">Visitas que chegaram a cada secção</p>
+            <ul class="barras" id="v-secoes"></ul>
+          </article>
+          <article class="cartao">
+            <h2>Botões que funcionam</h2>
+            <p class="cartao__sub">Cliques em cada botão</p>
+            <ul class="barras" id="v-cliques"></ul>
+          </article>
+          <article class="cartao">
+            <h2>Onde desistem</h2>
+            <p class="cartao__sub">Campos do formulário tocados</p>
+            <ol class="funil" id="v-form"></ol>
+          </article>
+          <article class="cartao">
+            <h2>Perguntas abertas</h2>
+            <p class="cartao__sub">As dúvidas mais comuns</p>
+            <ul class="barras" id="v-perguntas"></ul>
+          </article>
+        </section>
+
+        <section class="grelha">
+          <article class="cartao">
+            <h2>Aparelhos</h2>
+            <p class="cartao__sub">Telemóvel, computador ou tablet</p>
+            <ul class="barras" id="v-aparelho"></ul>
+          </article>
+          <article class="cartao">
+            <h2>Países</h2>
+            <p class="cartao__sub">Versão do site vista</p>
+            <ul class="barras" id="v-pais"></ul>
+          </article>
+          <article class="cartao">
+            <h2>Browsers e sistemas</h2>
+            <p class="cartao__sub">Para testar onde importa</p>
+            <ul class="barras" id="v-browser"></ul>
+          </article>
+          <article class="cartao">
+            <h2>Campanhas</h2>
+            <p class="cartao__sub">Links marcados (utm_campaign)</p>
+            <ul class="barras" id="v-campanha"></ul>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Percurso de um pedido -->
+  <div class="gaveta-fundo" id="gaveta-fundo" hidden></div>
+  <aside class="gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo" hidden>
+    <div class="gaveta__topo">
+      <div><h2 id="gaveta-titulo">—</h2><p id="gaveta-sub"></p></div>
+      <button type="button" class="gaveta__fechar" id="gaveta-fechar" aria-label="Fechar">×</button>
+    </div>
+    <dl class="gaveta__dados" id="gaveta-dados"></dl>
+    <h3>Pagamentos</h3>
+    <div class="pagamentos" id="gaveta-pagamentos"></div>
+    <h3>Percurso no site</h3>
+    <ol class="linha-tempo" id="gaveta-percurso"></ol>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="painel.js"></script>
+</body>
+</html>

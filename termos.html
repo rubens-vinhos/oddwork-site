@@ -2,111 +2,317 @@
 <html lang="pt-PT" data-mercado="pt">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Termos · Oddwork</title>
-  <meta name="description" content="Como funciona a assinatura da Oddwork: planos, mês grátis, cobrança, cancelamento e o que acontece ao site.">
-  <meta name="theme-color" content="#F2F0E9">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Termos de serviço · Oddwork</title>
+  <meta name="description" content="Como funciona a implantação, a mensalidade, as garantias e o cancelamento dos sistemas Oddwork.">
+  <meta name="theme-color" content="#131A2B">
+  <link rel="canonical" href="https://theoddwork.com/termos.html">
   <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
   <script src="mercado.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="assets/fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <header class="topo">
-    <a class="marca" href="index.html" aria-label="Oddwork, início">the<em>odd</em>work</a>
-    <div class="mercado mercado--topo" role="group" aria-label="País">
-      <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
-      <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+    </defs>
+  </svg>
+
+  <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+
+  <div class="noite">
+    <header class="topo topo--simples">
+      <a class="marca" href="index.html" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <nav aria-label="Principal">
+        <a class="so-largo" href="index.html#como">Como funciona</a>
+        <div class="mercado" role="group" aria-label="País">
+          <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
+          <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
+        </div>
+        <a class="botao botao--peq" href="index.html#diagnostico">Pedir diagnóstico</a>
+      </nav>
+    </header>
+  </div>
+
+  <main id="conteudo">
+    <article class="legal" data-m="pt">
+    <h1>Termos de serviço</h1>
+    <p class="legal__data">Última atualização: 15 de novembro de 2026</p>
+    <p class="legal__aviso">Versão provisória, em revisão jurídica.</p>
+
+    <p>Estes termos aplicam-se a quem contrata a Oddwork para construir e manter um sistema para o seu negócio. A proposta escrita que te enviamos define o que vamos construir, a data de entrega e o preço; se algo na proposta for diferente destes termos, vale a proposta. Dúvidas antes de aceitar: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+
+    <ol class="legal__indice">
+      <li><a href="#quem">Quem somos</a></li>
+      <li><a href="#servico">O que fazemos</a></li>
+      <li><a href="#processo">Do diagnóstico à entrega</a></li>
+      <li><a href="#pagamento">Preço e pagamento</a></li>
+      <li><a href="#fundador">Preço de fundador</a></li>
+      <li><a href="#garantias">Garantias</a></li>
+      <li><a href="#mensalidade">Mensalidade</a></li>
+      <li><a href="#propriedade">O que é teu e o que é nosso</a></li>
+      <li><a href="#cliente">O que precisamos de ti</a></li>
+      <li><a href="#cancelar">Cancelar</a></li>
+      <li><a href="#reclamacoes">Reclamações e lei aplicável</a></li>
+    </ol>
+
+    <h2 id="quem">1. Quem somos</h2>
+    <p>Oddwork é a marca sob a qual atua Rubens Bayard de Mello Silveiro, trabalhador independente, NIF 320510832, com domicílio fiscal no Porto, Portugal. Contacto: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+
+    <h2 id="servico">2. O que fazemos</h2>
+    <p>Construímos sistemas à medida para negócios com clientes recorrentes (clínicas, estúdios, academias, escolas, mentores e afins): o site e as automações que confirmam marcações, avisam clientes, gerem listas de espera e cobram mensalidades, ligados ao WhatsApp oficial do negócio. O âmbito exato de cada sistema fica escrito na proposta.</p>
+    <p>Garantimos a entrega e a qualidade do que está na proposta. <strong>Não prometemos mais vendas nem resultados de negócio.</strong></p>
+
+    <h2 id="processo">3. Do diagnóstico à entrega</h2>
+    <ol>
+      <li><strong>Diagnóstico:</strong> 20 minutos por videochamada, grátis e sem compromisso.</li>
+      <li><strong>Proposta:</strong> enviada em até 48 horas depois do diagnóstico, com o que vamos construir, as horas que estimamos poupar-te, a data de entrega e o preço.</li>
+      <li><strong>Aceitação:</strong> o contrato começa quando aceitas a proposta por escrito (e-mail ou WhatsApp) e pagas a primeira metade da implantação.</li>
+      <li><strong>Implantação:</strong> construímos o sistema e mostramos-te o progresso. Antes da entrega, testas e pedes os ajustes que faltem dentro do que foi combinado.</li>
+      <li><strong>Entrega:</strong> o sistema fica a funcionar no teu negócio e é paga a segunda metade.</li>
+    </ol>
+
+    <h2 id="pagamento">4. Preço e pagamento</h2>
+    <p>Há dois pagamentos diferentes:</p>
+    <ul>
+      <li><strong>Implantação:</strong> paga uma vez, em duas metades: 50% quando aceitas a proposta e 50% na entrega.</li>
+      <li><strong>Mensalidade:</strong> cobrada todos os meses, de forma automática, a partir da entrega do sistema. <span class="adefinir">[A DEFINIR: confirmar se a mensalidade começa na entrega]</span></li>
+    </ul>
+    <div class="legal__tabela">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Fundador</th><th scope="col">Normal</th></tr></thead>
+        <tbody>
+          <tr><td>Implantação</td><td>900 €</td><td>1.500 €</td></tr>
+          <tr><td>Mensalidade</td><td>100 €/mês</td><td>130 €/mês</td></tr>
+        </tbody>
+      </table>
     </div>
-    <a class="botao botao--pequeno" href="index.html#preco">Ver preço</a>
-  </header>
+    <p>Valores finais, sem IVA (regime de isenção, art. 53.º do CIVA). Emitimos fatura de cada pagamento.</p>
+    <p>A implantação só sobe se o sistema que pedires for maior do que o combinado na proposta, e só depois de aceitares o novo valor por escrito.</p>
+    <p>Os pagamentos são feitos por uma ligação segura do Stripe, por cartão, MB WAY ou outros meios disponíveis. A Oddwork não vê os dados do teu cartão. O recibo chega por e-mail.</p>
 
-  <!-- Portugal -->
-  <main class="legal" data-m="pt">
-    <h1>Termos da assinatura</h1>
-    <p class="legal__data">Última atualização: 12 de novembro de 2026</p>
-
-    <p>Estes termos aplicam-se a quem assina o serviço da Oddwork. Se tiveres dúvidas, escreve para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a> antes de assinar.</p>
-
-    <h2>Planos</h2>
-    <p><strong>Essencial:</strong> site de 1 página (serviços, preços, botão de marcação e mapa) com alojamento incluído e até 2 alterações por mês; o domínio fica em nome do cliente e é pago por ele. Perfil Google com otimização inicial, 4 publicações por mês e resposta a avaliações. 8 posts por mês para o feed. 4 Reels por mês (até 60 s), editados a partir do material do cliente ou criados com IA, à escolha do cliente. Calendário do mês enviado até dia 25 do mês anterior. WhatsApp com mensagem de boas-vindas, ausência e respostas rápidas, com link de marcação. Relatório mensal de 1 página, até dia 5, por WhatsApp.</p>
-    <p><strong>Pro (em breve):</strong> tudo do Essencial, mais automação pela API oficial da Meta, com a marcação feita dentro do WhatsApp. Por agora existe apenas lista de espera.</p>
-
-    <h2>Como trabalhamos</h2>
+    <h2 id="fundador">5. Preço de fundador</h2>
     <ul>
-      <li>Cada peça tem 1 ronda de revisão.</li>
-      <li>O cliente aprova em 3 dias úteis. O que não for aprovado não é publicado e não acumula.</li>
-      <li>O cliente envia fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
-      <li>Não incluído: Stories, anúncios e sessões fotográficas. Alguns existem como extras, orçamentados à parte.</li>
+      <li>É para os 10 primeiros clientes, contando Portugal e Brasil juntos.</li>
+      <li>Mantém-se enquanto a mensalidade estiver ativa. Se cancelares e voltares mais tarde, entras pelo preço normal.</li>
+      <li>Em troca, és cliente piloto: dás-nos opinião sobre o sistema, autorizas-nos a mostrar o teu caso (sem dados dos teus clientes) e dás um depoimento verdadeiro sobre a experiência.</li>
     </ul>
 
-    <h2>Preço</h2>
-    <p>Essencial: 69 €/mês (preço de fundador) ou 99 €/mês (preço normal). Pro: 89 €/mês (fundador) ou 129 €/mês (normal). Preço final, sem IVA (regime de isenção, art. 53.º CIVA).</p>
-    <p>O preço de fundador é para os 10 primeiros clientes (Portugal e Brasil juntos) e mantém-se enquanto a assinatura estiver ativa. Se cancelares e voltares, entras pelo preço normal.</p>
-    <p>A cobrança é mensal e automática através do Stripe. A Oddwork não vê os dados do teu cartão.</p>
+    <h2 id="garantias">6. Garantias</h2>
+    <h3>Entregamos na data</h3>
+    <p>Se falharmos a data de entrega escrita na proposta, a segunda metade da implantação não é cobrada. Esta garantia não se aplica aos dias de atraso causados por materiais, acessos ou aprovações que dependam de ti e não tenham chegado a tempo; nesse caso, a data passa para a frente o mesmo número de dias.</p>
+    <h3>30 dias para desistir</h3>
+    <p>Se não ficares satisfeito nos primeiros 30 dias <span class="adefinir">[A DEFINIR: a contar do primeiro pagamento ou da entrega]</span>, devolvemos tudo o que pagaste até aí. Basta pedires por e-mail; o reembolso é feito pelo mesmo meio de pagamento em até 14 dias.</p>
 
-    <h2>Mês grátis</h2>
-    <p>O mês grátis é por candidatura e vale uma vez por negócio. Depois da aprovação dás os dados de pagamento, mas a primeira cobrança só acontece no dia 31. Enviamos um lembrete no dia 25. Inclui o plano completo.</p>
-    <p>Durante o mês grátis o site fica no domínio e alojamento da Oddwork. Se cancelares, o site sai do ar, ou podes comprá-lo por 150 €.</p>
+    <h2 id="mensalidade">7. Mensalidade</h2>
+    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes ao sistema. <span class="adefinir">[A DEFINIR: se os custos de mensagens cobrados pela Meta estão incluídos e até que volume]</span></p>
+    <p>Ajustes são melhorias e correções dentro do sistema que existe. Funcionalidades novas e grandes são orçamentadas à parte, e só avançam se aceitares.</p>
+    <p>Se um pagamento da mensalidade falhar, avisamos-te e tentamos de novo. Se continuar por pagar <span class="adefinir">[A DEFINIR: número de dias]</span> depois do aviso, o sistema pode ser suspenso até a situação ficar resolvida. Os teus dados não são apagados por isso.</p>
 
-    <h2>Cancelar</h2>
-    <p>Sem fidelização. Cancelas quando quiseres: o serviço continua até ao fim do mês já pago e não há nova cobrança. Basta uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+    <h2 id="propriedade">8. O que é teu e o que é nosso</h2>
+    <p><strong>Fica sempre contigo:</strong></p>
     <ul>
-      <li>Não há reembolso de meses já pagos.</li>
-      <li>Perfil Google, Instagram e WhatsApp ficam sempre em nome do cliente; a Oddwork tem só acesso de gestão.</li>
-      <li>O conteúdo publicado continua do cliente. A automação de WhatsApp é desligada no fim do mês.</li>
-      <li>Site: depois de 6 meses pagos, passa para o cliente sem custo. Antes disso, sai do ar ou pode ser comprado por 150 €.</li>
-      <li>Ao cancelar perde-se o preço de fundador.</li>
+      <li>o site, o domínio, os textos e as fotos;</li>
+      <li>os dados dos teus clientes e alunos;</li>
+      <li>o número de WhatsApp e as contas do negócio (Google, Instagram, Meta), que ficam em teu nome. Nós temos apenas acesso de gestão.</li>
+    </ul>
+    <p><strong>Fica com a Oddwork:</strong> o código e a base técnica do sistema. Tens o direito de usar o sistema enquanto a mensalidade estiver em dia; o código não é entregue nem vendido.</p>
+    <p>Quanto aos dados dos teus clientes, tu és o responsável pelo tratamento e a Oddwork trata-os apenas em teu nome, como subcontratante (art. 28.º do RGPD). Usamo-los só para fazer o sistema funcionar, nunca para outros fins.</p>
+
+    <h2 id="cliente">9. O que precisamos de ti</h2>
+    <ul>
+      <li>As informações, fotos, textos e acessos de que precisamos, nos prazos combinados.</li>
+      <li>Uma pessoa de contacto que responda e aprove as fases da implantação.</li>
+      <li>Usar o sistema dentro da lei e das regras do WhatsApp e da Meta: por exemplo, só enviar mensagens a clientes que deram o contacto e informar os teus clientes sobre o tratamento dos dados deles.</li>
     </ul>
 
-    <h2>Reclamações</h2>
-    <p>Fala connosco primeiro: resolvemos quase tudo por email. Podes também usar o <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações Eletrónico</a>. Em caso de litígio, podes recorrer a uma entidade de resolução alternativa de litígios de consumo, cuja lista está no <a href="https://www.consumidor.gov.pt/" rel="noopener">Portal do Consumidor</a>.</p>
+    <h2 id="cancelar">10. Cancelar</h2>
+    <p>Não há fidelização. Cancelas quando quiseres, com uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>. O sistema continua a funcionar até ao fim do mês já pago e não há nova cobrança.</p>
+    <ul>
+      <li>Fora da garantia dos 30 dias, os meses já pagos não são reembolsados.</li>
+      <li>No fim, entregamos-te os dados dos teus clientes num ficheiro (por exemplo, folha de cálculo), os ficheiros do site e o controlo do domínio e do número de WhatsApp, se ainda não estiverem contigo.</li>
+      <li>As automações e o painel do sistema deixam de funcionar.</li>
+      <li>Perdes o preço de fundador.</li>
+    </ul>
+
+    <h2 id="reclamacoes">11. Reclamações e lei aplicável</h2>
+    <p>Fala connosco primeiro: resolvemos quase tudo por e-mail. Também podes usar o <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações Eletrónico</a>. Em caso de litígio de consumo, podes recorrer a uma entidade de resolução alternativa de litígios, cuja lista está no <a href="https://www.consumidor.gov.pt/" rel="noopener">Portal do Consumidor</a>.</p>
+    <p>Estes termos regem-se pela lei portuguesa.</p>
+    </article>
+    <article class="legal" data-m="br">
+    <h1>Termos de serviço</h1>
+    <p class="legal__data">Última atualização: 15 de novembro de 2026</p>
+    <p class="legal__aviso">Versão provisória, em revisão jurídica.</p>
+
+    <p>Estes termos valem para quem contrata a Oddwork para construir e manter um sistema para o seu negócio. A proposta escrita que enviamos define o que vamos construir, a data de entrega e o preço; se algo na proposta for diferente destes termos, vale a proposta. Dúvidas antes de aceitar: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+
+    <ol class="legal__indice">
+      <li><a href="#quem">Quem somos</a></li>
+      <li><a href="#servico">O que fazemos</a></li>
+      <li><a href="#processo">Do diagnóstico à entrega</a></li>
+      <li><a href="#pagamento">Preço e pagamento</a></li>
+      <li><a href="#fundador">Preço de fundador</a></li>
+      <li><a href="#garantias">Garantias</a></li>
+      <li><a href="#mensalidade">Mensalidade</a></li>
+      <li><a href="#propriedade">O que é seu e o que é nosso</a></li>
+      <li><a href="#cliente">O que precisamos de você</a></li>
+      <li><a href="#cancelar">Cancelar</a></li>
+      <li><a href="#reclamacoes">Reclamações e lei aplicável</a></li>
+    </ol>
+
+    <h2 id="quem">1. Quem somos</h2>
+    <p>Oddwork é a marca sob a qual atua Rubens Bayard de Mello Silveiro, trabalhador independente em Portugal, NIF 320510832, com domicílio fiscal no Porto, Portugal. Contato: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+
+    <h2 id="servico">2. O que fazemos</h2>
+    <p>Construímos sistemas sob medida para negócios com clientes recorrentes (clínicas, estúdios, academias, escolas, mentores e afins): o site e as automações que confirmam agendamentos, avisam clientes, gerenciam listas de espera e cobram mensalidades, ligados ao WhatsApp oficial do negócio. O escopo exato de cada sistema fica escrito na proposta.</p>
+    <p>Garantimos a entrega e a qualidade do que está na proposta. <strong>Não prometemos mais vendas nem resultados de negócio.</strong></p>
+
+    <h2 id="processo">3. Do diagnóstico à entrega</h2>
+    <ol>
+      <li><strong>Diagnóstico:</strong> 20 minutos por videochamada, grátis e sem compromisso.</li>
+      <li><strong>Proposta:</strong> enviada em até 48 horas depois do diagnóstico, com o que vamos construir, as horas que estimamos economizar para você, a data de entrega e o preço.</li>
+      <li><strong>Aceite:</strong> o contrato começa quando você aceita a proposta por escrito (e-mail ou WhatsApp) e paga a primeira metade da implantação.</li>
+      <li><strong>Implantação:</strong> construímos o sistema e mostramos o progresso. Antes da entrega, você testa e pede os ajustes que faltarem dentro do que foi combinado.</li>
+      <li><strong>Entrega:</strong> o sistema passa a funcionar no seu negócio e é paga a segunda metade.</li>
+    </ol>
+
+    <h2 id="pagamento">4. Preço e pagamento</h2>
+    <p>São dois pagamentos diferentes:</p>
+    <ul>
+      <li><strong>Implantação:</strong> paga uma vez, em duas metades: 50% quando você aceita a proposta e 50% na entrega.</li>
+      <li><strong>Mensalidade:</strong> cobrada todo mês, de forma automática, a partir da entrega do sistema. <span class="adefinir">[A DEFINIR: confirmar se a mensalidade começa na entrega]</span></li>
+    </ul>
+    <div class="legal__tabela">
+      <table>
+        <thead><tr><th scope="col"></th><th scope="col">Fundador</th><th scope="col">Normal</th></tr></thead>
+        <tbody>
+          <tr><td>Implantação</td><td>R$ 2.000</td><td>R$ 3.000 a 5.000, conforme a proposta</td></tr>
+          <tr><td>Mensalidade</td><td>R$ 350/mês</td><td>R$ 350 a 500/mês, conforme a proposta</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="adefinir">[A DEFINIR: menção fiscal para o Brasil]</span></p>
+    <p>A implantação só aumenta se o sistema que você pedir for maior do que o combinado na proposta, e só depois de você aceitar o novo valor por escrito.</p>
+    <p>Os pagamentos são feitos por um link seguro do Stripe, por Pix ou cartão. A mensalidade é cobrada no cartão ou por Pix Automático: nesse caso, você autoriza no app do seu banco cobranças mensais até um valor máximo, que inclui uma margem para o IOF. Por ser uma compra internacional, o banco ou o parceiro de pagamento pode cobrar IOF de 3,5%, que não está incluído no preço. A Oddwork não vê os dados do seu cartão. O recibo chega por e-mail.</p>
+
+    <h2 id="fundador">5. Preço de fundador</h2>
+    <ul>
+      <li>É para os 10 primeiros clientes, contando Portugal e Brasil juntos.</li>
+      <li>Vale enquanto a mensalidade estiver ativa. Se você cancelar e voltar depois, entra pelo preço normal.</li>
+      <li>Em troca, você é cliente piloto: dá sua opinião sobre o sistema, autoriza que a gente mostre o seu caso (sem dados dos seus clientes) e dá um depoimento verdadeiro sobre a experiência.</li>
+    </ul>
+
+    <h2 id="garantias">6. Garantias</h2>
+    <h3>Entregamos na data</h3>
+    <p>Se perdermos a data de entrega escrita na proposta, a segunda metade da implantação não é cobrada. Essa garantia não vale para os dias de atraso causados por materiais, acessos ou aprovações que dependam de você e não tenham chegado a tempo; nesse caso, a data é adiada pelo mesmo número de dias.</p>
+    <h3>30 dias para desistir</h3>
+    <p>Se você não ficar satisfeito nos primeiros 30 dias <span class="adefinir">[A DEFINIR: a contar do primeiro pagamento ou da entrega]</span>, devolvemos tudo o que você pagou até ali. Basta pedir por e-mail; o reembolso é feito pelo mesmo meio de pagamento em até 14 dias.</p>
+
+    <h2 id="mensalidade">7. Mensalidade</h2>
+    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes no sistema. <span class="adefinir">[A DEFINIR: se os custos de mensagens cobrados pela Meta estão incluídos e até que volume]</span></p>
+    <p>Ajustes são melhorias e correções dentro do sistema que já existe. Funcionalidades novas e grandes são orçadas à parte, e só avançam se você aceitar.</p>
+    <p>Se um pagamento da mensalidade falhar, avisamos você e tentamos de novo. Se continuar em aberto <span class="adefinir">[A DEFINIR: número de dias]</span> depois do aviso, o sistema pode ser suspenso até a situação ser resolvida. Seus dados não são apagados por isso.</p>
+
+    <h2 id="propriedade">8. O que é seu e o que é nosso</h2>
+    <p><strong>Fica sempre com você:</strong></p>
+    <ul>
+      <li>o site, o domínio, os textos e as fotos;</li>
+      <li>os dados dos seus clientes e alunos;</li>
+      <li>o número de WhatsApp e as contas do negócio (Google, Instagram, Meta), que ficam no seu nome. Nós temos apenas acesso de gestão.</li>
+    </ul>
+    <p><strong>Fica com a Oddwork:</strong> o código e a base técnica do sistema. Você tem o direito de usar o sistema enquanto a mensalidade estiver em dia; o código não é entregue nem vendido.</p>
+    <p>Quanto aos dados dos seus clientes, você é o controlador e a Oddwork os trata apenas em seu nome, como operadora (LGPD). Usamos esses dados só para fazer o sistema funcionar, nunca para outros fins.</p>
+
+    <h2 id="cliente">9. O que precisamos de você</h2>
+    <ul>
+      <li>As informações, fotos, textos e acessos de que precisamos, nos prazos combinados.</li>
+      <li>Uma pessoa de contato que responda e aprove as fases da implantação.</li>
+      <li>Usar o sistema dentro da lei e das regras do WhatsApp e da Meta: por exemplo, só enviar mensagens a clientes que passaram o contato e informar seus clientes sobre o tratamento dos dados deles.</li>
+    </ul>
+
+    <h2 id="cancelar">10. Cancelar</h2>
+    <p>Não há fidelidade. Você cancela quando quiser, com uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>. O sistema continua funcionando até o fim do mês já pago e não há nova cobrança. Se a mensalidade for por Pix Automático, você também pode cancelar a autorização no app do seu banco.</p>
+    <ul>
+      <li>Fora da garantia de 30 dias, os meses já pagos não são reembolsados.</li>
+      <li>No fim, entregamos os dados dos seus clientes num arquivo (por exemplo, planilha), os arquivos do site e o controle do domínio e do número de WhatsApp, se ainda não estiverem com você.</li>
+      <li>As automações e o painel do sistema param de funcionar.</li>
+      <li>Você perde o preço de fundador.</li>
+    </ul>
+
+    <h2 id="reclamacoes">11. Reclamações e lei aplicável</h2>
+    <p>Fale com a gente primeiro: resolvemos quase tudo por e-mail. Você também pode procurar o Procon do seu estado.</p>
+    <p>Estes termos são regidos pela lei portuguesa, sem prejuízo dos direitos que a lei brasileira garante a você quando for aplicável.</p>
+    </article>
   </main>
 
-  <!-- Brasil -->
-  <main class="legal" data-m="br">
-    <h1>Termos da assinatura</h1>
-    <p class="legal__data">Última atualização: 12 de novembro de 2026</p>
-
-    <p>Estes termos valem para quem assina o serviço da Oddwork. Se tiver dúvidas, escreva para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a> antes de assinar.</p>
-
-    <h2>Planos</h2>
-    <p><strong>Essencial:</strong> site de 1 página (serviços, preços, botão de agendamento e mapa) com hospedagem incluída e até 2 alterações por mês; o domínio fica no nome do cliente e é pago por ele. Perfil Google com otimização inicial, 4 publicações por mês e resposta às avaliações. 8 posts por mês para o feed. 4 Reels por mês (até 60 s), editados a partir do material do cliente ou criados com IA, à escolha do cliente. Calendário do mês enviado até o dia 25 do mês anterior. WhatsApp com mensagem de boas-vindas, ausência e respostas rápidas, com link de agendamento. Relatório mensal de 1 página, até o dia 5, por WhatsApp.</p>
-    <p><strong>Pro (em breve):</strong> tudo do Essencial, mais automação pela API oficial da Meta, com o agendamento feito dentro do WhatsApp. Por enquanto existe apenas lista de espera.</p>
-
-    <h2>Como trabalhamos</h2>
-    <ul>
-      <li>Cada peça tem 1 rodada de revisão.</li>
-      <li>O cliente aprova em 3 dias úteis. O que não for aprovado não é publicado e não acumula.</li>
-      <li>O cliente envia fotos, vídeos brutos e acessos. As peças que dependem disso atrasam se não chegarem.</li>
-      <li>Não incluído: Stories, anúncios e sessões de fotos. Alguns existem como extras, orçados à parte.</li>
-    </ul>
-
-    <h2>Preço</h2>
-    <p>Essencial: R$ 450/mês (preço de fundador) ou R$ 650/mês (preço normal). Pro: R$ 580/mês (fundador) ou R$ 840/mês (normal). <span class="a-definir">[A DEFINIR: menção fiscal BR, a confirmar com contador]</span></p>
-    <p>O preço de fundador é para os 10 primeiros clientes (Portugal e Brasil juntos) e continua valendo enquanto a assinatura estiver ativa. Se cancelar e voltar, você entra pelo preço normal.</p>
-    <p>A cobrança é mensal e automática pelo Stripe. A Oddwork não vê os dados do seu cartão.</p>
-
-    <h2>Mês grátis</h2>
-    <p>O mês grátis é por candidatura e vale uma vez por negócio. Depois da aprovação você informa os dados de pagamento, mas a primeira cobrança só acontece no dia 31. Enviamos um lembrete no dia 25. Inclui o plano completo.</p>
-    <p>Durante o mês grátis o site fica no domínio e na hospedagem da Oddwork. Se cancelar, o site sai do ar, ou você pode comprá-lo por R$ 950.</p>
-
-    <h2>Cancelar</h2>
-    <p>Sem fidelidade. Você cancela quando quiser: o serviço continua até o fim do mês já pago e não há nova cobrança. Basta uma mensagem para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
-    <ul>
-      <li>Não há reembolso de meses já pagos.</li>
-      <li>Perfil Google, Instagram e WhatsApp ficam sempre no nome do cliente; a Oddwork tem só acesso de gestão.</li>
-      <li>O conteúdo publicado continua do cliente. A automação de WhatsApp é desligada no fim do mês.</li>
-      <li>Site: depois de 6 meses pagos, passa para o cliente sem custo. Antes disso, sai do ar ou pode ser comprado por R$ 950.</li>
-      <li>Ao cancelar, perde-se o preço de fundador.</li>
-    </ul>
-
-    <h2>Reclamações</h2>
-    <p>Fale com a gente primeiro: resolvemos quase tudo por email.</p>
-  </main>
-
-  <footer class="rodape rodape--legal">
-    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal · <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
+  <footer class="rodape">
+    <div class="rodape__marca">
+      <a class="marca" href="index.html" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <p>We think differently. We work oddly.</p>
+    </div>
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>
+      <a href="https://www.instagram.com/_oddwork/" rel="noopener">Instagram</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos</a>
+      <button type="button" class="link" data-abrir-cookies>Cookies</button>
+    </nav>
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
   </footer>
-  <script src="legal.js" defer></script>
+
+  <!-- ============ Cookies ============ -->
+  <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
+    <div class="cookies__cabeca">
+      <svg class="cookies__bolacha" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="28" fill="#E9B97A"/>
+        <path d="M32 4a28 28 0 1 0 28 28 8 8 0 0 1-9-8 8 8 0 0 1-9-9 8 8 0 0 1-10-11z" fill="#F3CD94"/>
+        <circle cx="22" cy="24" r="3.6" fill="#6B3E1F"/><circle cx="38" cy="40" r="3.2" fill="#6B3E1F"/><circle cx="21" cy="41" r="2.6" fill="#6B3E1F"/><circle cx="44" cy="27" r="2.2" fill="#6B3E1F"/>
+        <circle cx="32" cy="32" r="5" fill="#F26A21"/>
+      </svg>
+      <div>
+        <h2 id="cookies-titulo"><span data-m="pt">Posso guardar umas bolachas?</span><span data-m="br">Posso guardar uns cookies?</span></h2>
+        <p id="cookies-texto">
+          <span data-m="pt">Usamos as essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
+          <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
+          <a href="privacidade.html#cookies">Saber mais</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="cookies__opcoes" id="cookies-opcoes" hidden>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Essenciais</b><small><span data-m="pt">Guardam a tua escolha de país e de cookies. Sempre ligados.</span><span data-m="br">Guardam sua escolha de país e de cookies. Sempre ligados.</span></small></span>
+        <span class="interruptor"><input type="checkbox" checked disabled><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Estatísticas</b><small><span data-m="pt">De onde vens, que páginas vês e que botões usas. Só nós vemos.</span><span data-m="br">De onde você vem, que páginas vê e que botões usa. Só nós vemos.</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-estatisticas"><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Marketing</b><small><span data-m="pt">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span><span data-m="br">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-marketing"><i></i></span>
+      </label>
+    </div>
+
+    <div class="cookies__acoes">
+      <button type="button" class="ck-botao" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
+      <button type="button" class="ck-botao" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao" data-cookies="guardar" hidden>Guardar escolha</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="cookies.js"></script>
+  <script src="rastreio.js"></script>
+  <script src="legal.js"></script>
 </body>
 </html>

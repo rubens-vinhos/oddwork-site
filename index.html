@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Oddwork · O digital do teu negócio, tratado por nós</title>
-  <meta name="description" content="Instagram, Google, site e WhatsApp numa só mensalidade, para salões, barbearias, estética, clínicas e fisioterapia. 1.º mês grátis.">
+  <title>Oddwork · Sistemas sob medida que devolvem horas ao dono</title>
+  <meta name="description" content="Construímos o site e o sistema que tiram do dono as confirmações, os avisos e as cobranças. Para clínicas, estúdios, academias, escolas e mentores. Diagnóstico grátis de 20 minutos.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Oddwork · O digital do teu negócio, tratado por nós">
-  <meta property="og:description" content="Instagram, Google, site e WhatsApp numa só mensalidade. 1.º mês grátis.">
+  <meta property="og:title" content="Oddwork · A fábrica de soluções improváveis">
+  <meta property="og:description" content="Sistemas sob medida que devolvem horas ao dono do negócio. Diagnóstico grátis de 20 minutos.">
   <meta property="og:image" content="https://theoddwork.com/assets/perfil-3d.png">
   <meta property="og:locale" content="pt_PT">
   <meta property="og:locale:alternate" content="pt_BR">
-  <meta name="theme-color" content="#FBFAF7">
+  <meta name="theme-color" content="#131A2B">
   <link rel="canonical" href="https://theoddwork.com/">
   <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
   <script type="application/ld+json">
@@ -22,14 +22,14 @@
       "url": "https://theoddwork.com/",
       "logo": "https://theoddwork.com/assets/simbolo.svg",
       "email": "geral@theoddwork.com",
-      "slogan": "A lógica é outra.",
+      "slogan": "A fábrica de soluções improváveis.",
       "sameAs": ["https://www.instagram.com/_oddwork/"]
     }
   </script>
   <script src="mercado.js"></script>
   <link rel="preload" href="assets/fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -44,257 +44,350 @@
     </defs>
   </svg>
 
-  <header class="topo">
-    <a class="marca" href="#" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="#2A2926" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
-    <nav aria-label="Principal">
-      <a href="#servicos">O que fazemos</a>
-      <a href="#como">Como funciona</a>
-      <a href="#preco">Preço</a>
-      <div class="mercado" role="group" aria-label="País">
-        <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
-        <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
-      </div>
-      <a class="botao botao--leve" href="#candidatura">Começar</a>
-    </nav>
-  </header>
+  <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
 
-  <main>
-    <!-- Hero -->
-    <section class="hero">
+  <!-- ============ Hero escuro ============ -->
+  <div class="noite">
+    <header class="topo">
+      <a class="marca" href="#" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <nav aria-label="Principal">
+        <a href="#para-quem">Para quem</a>
+        <a href="#como">Como funciona</a>
+        <a href="#preco">Preço</a>
+        <div class="mercado" role="group" aria-label="País">
+          <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
+          <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
+        </div>
+        <a class="botao botao--peq" href="#diagnostico" data-rastrear="cta-topo">Pedir diagnóstico</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-titulo">
       <div class="hero__texto">
-        <h1><span data-m="pt">O digital do teu negócio, tratado por nós.</span><span data-m="br">O digital do seu negócio, feito por nós.</span></h1>
-        <p>Instagram, Google, site e WhatsApp numa só mensalidade.</p>
-
-        <div class="escolha-negocio" role="radiogroup" aria-label="Tipo de negócio">
-          <p class="escolha-negocio__pergunta"><span data-m="pt">O teu negócio é…</span><span data-m="br">Seu negócio é…</span></p>
-          <div class="escolha-negocio__opcoes">
-            <button type="button" role="radio" aria-checked="true" data-negocio="salao">Salão</button>
-            <button type="button" role="radio" aria-checked="false" data-negocio="barbearia">Barbearia</button>
-            <button type="button" role="radio" aria-checked="false" data-negocio="estetica">Estética</button>
-            <button type="button" role="radio" aria-checked="false" data-negocio="clinica">Clínica</button>
-            <button type="button" role="radio" aria-checked="false" data-negocio="fisio">Fisioterapia</button>
-          </div>
+        <p class="hero__marca">A fábrica de soluções improváveis</p>
+        <h1 id="hero-titulo">
+          <span data-m="pt">O teu negócio cresceu. O teu dia não estica.</span>
+          <span data-m="br">Seu negócio cresceu. Seu dia não estica.</span>
+        </h1>
+        <p class="hero__lead">
+          <span data-m="pt">Construímos o site e o sistema que confirmam marcações, avisam alunos e cobram mensalidades por ti. Feito com as regras do teu negócio, não com as de um programa genérico.</span>
+          <span data-m="br">Construímos o site e o sistema que confirmam horários, avisam alunos e cobram mensalidades por você. Feito com as regras do seu negócio, não com as de um programa genérico.</span>
+        </p>
+        <div class="hero__acoes">
+          <a class="botao" href="#diagnostico" data-rastrear="cta-hero">Pedir diagnóstico grátis</a>
+          <span class="hero__nota">20 minutos, por videochamada. Sem compromisso.</span>
         </div>
-
-        <a class="botao" href="#candidatura" id="hero-cta">Experimentar 1 mês grátis</a>
-        <small><span data-m="pt">Depois 69 €/mês · Cancelas quando quiseres</span><span data-m="br">Depois R$&nbsp;450/mês · Cancele quando quiser</span></small>
       </div>
 
-      <!-- Pré-visualização: muda com o tipo de negócio escolhido -->
-      <figure class="montra" aria-label="Exemplo de como ficam o teu site, o teu Google e o teu WhatsApp">
-        <div class="montra__palco" id="montra">
-          <div class="montra__fundo" aria-hidden="true"></div>
-
-          <div class="c-site" id="montra-site">
-            <div class="c-site__barra" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="c-site__corpo">
-              <p class="c-site__marca"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><strong data-montra-nome>O teu salão</strong></p>
-              <p class="c-site__titulo" id="montra-frase">Marca o teu próximo corte</p>
-              <ul class="c-site__servicos" id="montra-servicos"></ul>
-              <span class="c-site__botao"><span data-m="pt">Marcar agora</span><span data-m="br">Agendar agora</span></span>
-            </div>
+      <figure class="dia" aria-label="Exemplo de um dia em que o sistema trata das tarefas repetitivas">
+        <div class="dia__cartao" id="dia">
+          <div class="dia__topo">
+            <span class="dia__titulo" data-br="Hoje, sem você">Hoje, sem ti</span>
+            <span class="dia__estado"><i></i> Sistema ligado</span>
           </div>
-
-          <div class="c-google">
-            <span class="c-google__pino" aria-hidden="true"></span>
-            <div>
-              <strong data-montra-nome>O teu salão</strong>
-              <p><b><span data-m="pt">Aberto</span><span data-m="br">Aberto</span></b> · <span data-montra-tipo>Salão</span></p>
-            </div>
-            <span class="c-google__rotas">Rotas</span>
-          </div>
-
-          <div class="c-whats" aria-live="polite">
-            <p class="c-whats__topo"><span class="c-whats__ponto" aria-hidden="true"></span>WhatsApp</p>
-            <div class="bolha bolha--cliente" id="montra-pergunta">Olá! Têm vaga amanhã?</div>
-            <div class="bolha bolha--negocio" id="montra-resposta"><span class="a-escrever"><i></i><i></i><i></i></span></div>
+          <ol class="dia__lista" id="dia-lista">
+            <li data-hora="08:00"><span class="dia__ico" data-tipo="whats"></span><div data-br="&lt;b&gt;Confirmar 14 agendamentos de amanhã&lt;/b&gt;&lt;small&gt;WhatsApp oficial&lt;/small&gt;"><b>Confirmar 14 marcações de amanhã</b><small>WhatsApp oficial</small></div></li>
+            <li data-hora="09:12"><span class="dia__ico" data-tipo="agenda"></span><div><b>Vaga das 18h passou para a lista de espera</b><small data-br="A Ana cancelou, a Sofia ficou com a vaga">A Ana cancelou, a Sofia ficou com o lugar</small></div></li>
+            <li data-hora="11:30"><span class="dia__ico" data-tipo="pix"></span><div><b data-br="Mensalidade cobrada de 6 alunos">Mensalidade cobrada a 6 alunos</b><small><span data-m="pt">Cartão</span><span data-m="br">Pix e cartão</span></small></div></li>
+            <li data-hora="14:05"><span class="dia__ico" data-tipo="whats"></span><div><b>Respondeu “tem vaga na quinta?”</b><small>Com os horários livres</small></div></li>
+            <li data-hora="19:00"><span class="dia__ico" data-tipo="relatorio"></span><div><b>Resumo do dia enviado ao dono</b><small>Faltas, pagamentos e vagas</small></div></li>
+          </ol>
+          <div class="dia__rodape">
+            <span data-br="Tempo que ficou com você">Tempo que ficou contigo</span>
+            <strong id="dia-horas">0h00</strong>
           </div>
         </div>
-        <figcaption class="montra__legenda"><span data-m="pt">Exemplo. O teu fica com o teu nome, fotos e serviços.</span><span data-m="br">Exemplo. O seu fica com seu nome, fotos e serviços.</span></figcaption>
+        <figcaption>Exemplo ilustrativo. Cada sistema segue as regras do negócio.</figcaption>
       </figure>
     </section>
+  </div>
 
-    <!-- O que fazemos -->
-    <section class="largura seccao" id="servicos">
-      <div class="seccao__titulo">
-        <h2><span data-m="pt">Tudo o que precisas, feito por nós</span><span data-m="br">Tudo o que você precisa, feito por nós</span></h2>
-        <p><span data-m="pt">Tu tratas dos clientes.</span><span data-m="br">Você cuida dos clientes.</span></p>
-      </div>
-      <div class="cartoes">
-        <article class="cartao">
-          <div class="cartao__desenho d-insta" aria-hidden="true"><div class="grelha"><span></span><span class="reel"></span><span></span><span></span><span></span><span class="reel"></span></div></div>
-          <div class="cartao__texto"><h3>Instagram</h3><p><span data-m="pt">8 posts e 4 Reels por mês. Feitos com o teu material ou com IA.</span><span data-m="br">8 posts e 4 Reels por mês. Feitos com seu material ou com IA.</span></p></div>
-        </article>
-        <article class="cartao">
-          <div class="cartao__desenho d-google" aria-hidden="true">
-            <div class="ficha"><div class="ficha__foto"></div><div class="risco"></div><div class="risco risco--curto"></div><div class="ficha__estado"><b>Aberto</b><i>Rotas</i></div></div>
-          </div>
-          <div class="cartao__texto"><h3>Google</h3><p>Ficha completa, 4 novidades por mês e avaliações respondidas.</p></div>
-        </article>
-        <article class="cartao">
-          <div class="cartao__desenho d-site" aria-hidden="true">
-            <div class="ecra"><div class="ecra__barra"><span></span><span></span><span></span></div><div class="ecra__corpo"><div class="ecra__titulo"></div><div class="risco"></div><div class="risco risco--curto"></div><div class="ecra__botao"></div></div></div>
-          </div>
-          <div class="cartao__texto"><h3>Site</h3><p><span data-m="pt">Serviços, preços, mapa e um botão para marcar.</span><span data-m="br">Serviços, preços, mapa e um botão para agendar.</span></p></div>
-        </article>
-        <article class="cartao">
-          <div class="cartao__desenho d-whats" aria-hidden="true">
-            <div class="conversa">
-              <div class="bolha bolha--cliente"><span data-m="pt">Olá! Têm vaga amanhã?</span><span data-m="br">Oi! Tem horário amanhã?</span></div>
-              <div class="bolha bolha--negocio"><span data-m="pt">Olá! Marca aqui:</span><span data-m="br">Oi! Agende aqui:</span> <u>link</u></div>
-            </div>
-          </div>
-          <div class="cartao__texto"><h3>WhatsApp</h3><p><span data-m="pt">Responde por ti quando estás ocupado.</span><span data-m="br">Responde por você quando está ocupado.</span></p></div>
-        </article>
-      </div>
-      <p class="extra"><span data-m="pt">E todos os meses: o plano do que vai sair e um resumo do que fizemos.</span><span data-m="br">E todo mês: o plano do que vai sair e um resumo do que fizemos.</span></p>
-    </section>
-
-    <!-- Como funciona -->
-    <section class="largura seccao" id="como">
-      <div class="seccao__titulo"><h2>Como funciona</h2></div>
-      <div class="passos">
-        <div class="passo"><div class="passo__n">1</div><h3><span data-m="pt">Candidatas-te</span><span data-m="br">Você se candidata</span></h3><p><span data-m="pt">1 minuto. Não pagas nada.</span><span data-m="br">1 minuto. Não paga nada.</span></p></div>
-        <div class="passo"><div class="passo__n">2</div><h3><span data-m="pt">Falamos contigo</span><span data-m="br">A gente conversa</span></h3><p>Pelo WhatsApp, em até 48h úteis.</p></div>
-        <div class="passo"><div class="passo__n">3</div><h3>1.º mês grátis</h3><p><span data-m="pt">Avisamos no dia 25. Só pagas no dia 31.</span><span data-m="br">Avisamos no dia 25. Você só paga no dia 31.</span></p></div>
+  <main id="conteudo">
+    <!-- ============ A dor ============ -->
+    <section class="dor" aria-labelledby="dor-titulo">
+      <div class="dor__numero" aria-hidden="true">36%</div>
+      <div>
+        <h2 id="dor-titulo" data-br="da semana de quem administra um negócio vai para tarefas administrativas.">da semana de quem gere um negócio vai para tarefas administrativas.</h2>
+        <p data-br="Em uma semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem esquecer.">Numa semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem se esquecer.</p>
+        <p class="fonte">Fonte: inquérito a 251 empreendedores nos EUA (Time etc e Censuswide, 2023).</p>
       </div>
     </section>
 
-    <!-- Preço -->
-    <section class="largura seccao" id="preco">
-      <div class="seccao__titulo">
-        <h2><span data-m="pt">Um preço, tudo incluído</span><span data-m="br">Um preço, tudo incluído</span></h2>
-        <p data-vagas-frase>Restam 10 de 10 vagas a preço de fundador.</p>
+    <!-- ============ Para quem ============ -->
+    <section id="para-quem" class="bloco" aria-labelledby="quem-titulo">
+      <div class="bloco__cabeca">
+        <h2 id="quem-titulo" data-br="Para negócios que estão dando certo">Para negócios que estão a dar certo</h2>
+        <p><span data-m="pt">Cresceste mais depressa do que o teu tempo. A procura está lá; o que falta são horas.</span><span data-m="br">Você cresceu mais rápido do que o seu tempo. A procura está lá; o que falta são horas.</span></p>
       </div>
-      <div class="planos">
-        <div class="preco">
-          <span class="preco__selo">Preço de fundador</span>
-          <h3>Essencial</h3>
-          <p class="preco__valor"><span data-m="pt">69 €</span><span data-m="br">R$&nbsp;450</span><small>/mês</small></p>
-          <p class="preco__antes"><span data-m="pt">Fica assim enquanto fores cliente. Depois das 10 vagas: 99 €/mês.</span><span data-m="br">Fica assim enquanto você for cliente. Depois das 10 vagas: R$&nbsp;650/mês.</span></p>
+      <ul class="nichos">
+        <li><span class="nichos__ico" data-ico="clinica"></span><h3>Clínicas médicas e dentárias</h3><p>Agenda cheia, confirmações, faltas e pagamentos todos os dias.</p></li>
+        <li><span class="nichos__ico" data-ico="estetica"></span><h3>Clínicas de estética</h3><p data-br="As que já têm demanda, equipe e lista de espera.">As que já têm procura, equipa e lista de espera.</p></li>
+        <li><span class="nichos__ico" data-ico="academia"></span><h3>Academias e estúdios</h3><p>Turmas com limite, planos, reposições e mensalidades.</p></li>
+        <li><span class="nichos__ico" data-ico="idiomas"></span><h3>Escolas de idiomas</h3><p>Turmas, horários e alunos em vários países.</p></li>
+        <li><span class="nichos__ico" data-ico="mentor"></span><h3>Professores e mentores</h3><p data-br="Muitas aulas e sessões, tudo gerenciado na mão.">Muitas aulas e sessões, tudo gerido à mão.</p></li>
+        <li><span class="nichos__ico" data-ico="criador"></span><h3>Criadores que vendem aulas</h3><p data-br="Mentorias, turmas e comunidades crescendo.">Mentorias, turmas e comunidades a crescer.</p></li>
+      </ul>
+
+      <div class="encaixe">
+        <div class="encaixe__col encaixe__col--sim">
+          <h3>Faz sentido se…</h3>
           <ul>
-            <li>Instagram, Google, site e WhatsApp</li>
-            <li>1.º mês grátis</li>
-            <li><span data-m="pt">Sem fidelização</span><span data-m="br">Sem fidelidade</span></li>
-            <li><span data-m="pt">As contas ficam em teu nome</span><span data-m="br">As contas ficam no seu nome</span></li>
+            <li data-br="Você tem agenda cheia ou lista de espera">Tens agenda cheia ou lista de espera</li>
+            <li data-br="A equipe está crescendo, ou já há mais de uma unidade">A equipa está a crescer, ou já há mais de uma unidade</li>
+            <li data-br="Ainda é você quem confirma, cobra e responde na mão">Ainda és tu quem confirma, cobra e responde à mão</li>
+            <li data-br="Você prefere bem feito a mais barato">Preferes bem feito a mais barato</li>
           </ul>
-          <a class="botao botao--largo" href="#candidatura">Experimentar 1 mês grátis</a>
-          <p class="preco__nota"><span data-m="pt">Preço final, sem IVA (regime de isenção, art. 53.º CIVA). Pagamento com cartão via Stripe.</span><span data-m="br"><span class="a-definir">[A DEFINIR: menção fiscal BR, a confirmar com contador]</span> Pagamento com cartão via Stripe.</span></p>
         </div>
-        <div class="preco preco--pro">
-          <span class="preco__selo">Em breve</span>
-          <h3>Pro</h3>
-          <p class="preco__valor"><span data-m="pt">89 €</span><span data-m="br">R$&nbsp;580</span><small>/mês</small></p>
-          <p class="preco__desc"><span data-m="pt">Tudo do Essencial, e o cliente marca dentro do próprio WhatsApp.</span><span data-m="br">Tudo do Essencial, e o cliente agenda dentro do próprio WhatsApp.</span></p>
-          <a class="ligacao" href="#candidatura" data-plano="pro">Entrar na lista de espera</a>
+        <div class="encaixe__col">
+          <h3>Ainda não é o momento se…</h3>
+          <ul>
+            <li data-br="Você procura só “posts para as redes”">Procuras só “posts para as redes”</li>
+            <li data-br="Ainda não tem clientes para gerenciar">Ainda não tens clientes para gerir</li>
+            <li>A decisão é só pelo preço</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- Perguntas -->
-    <section class="largura seccao" id="perguntas">
-      <div class="seccao__titulo"><h2>Perguntas</h2></div>
-      <div class="perguntas" data-m="pt">
-        <details><summary>Preciso de perceber de tecnologia?</summary><p>Não. Só nos mandas fotos, uns vídeos do telemóvel e os acessos. Nós tratamos do resto.</p></details>
-        <details><summary>As contas ficam minhas?</summary><p>Sim. Google, Instagram e WhatsApp ficam sempre em teu nome. Nós só temos acesso para os gerir.</p></details>
-        <details><summary>Como cancelo?</summary><p>Com um email para geral@theoddwork.com. O serviço continua até ao fim do mês pago e não há mais cobranças. Não devolvemos meses já pagos.</p></details>
-        <details><summary>E o site, se eu cancelar?</summary><p>Depois de 6 meses pagos, o site passa a ser teu sem custo. Antes disso sai do ar, ou ficas com ele por 150 €.</p></details>
-        <details><summary>O que não está incluído?</summary><p>Stories, anúncios e sessões fotográficas. Alguns existem como extra, por exemplo Reel extra a partir de 15 € ou gestão de anúncios a partir de 49 €/mês. <a href="termos.html">Ver todos os detalhes</a>.</p></details>
-        <details><summary>Quem são vocês?</summary><p>Somos o Rubens (estratégia) e o Miguel (tecnologia), no Porto. Somos novos, por isso o 1.º mês é grátis: vês o trabalho antes de pagar.</p></details>
+    <!-- ============ O que construímos ============ -->
+    <section id="sistema" class="bloco bloco--papel" aria-labelledby="sistema-titulo">
+      <div class="bloco__cabeca">
+        <h2 id="sistema-titulo" data-br="Um sistema feito sob medida, não um programa de prateleira">Um sistema feito à medida, não um programa de prateleira</h2>
+        <p data-br="Os programas prontos seguem as regras de todo mundo. O nosso segue as suas: limite por turma, prazos para cancelar, planos, textos e cores.">Os programas prontos seguem as regras de toda a gente. O nosso segue as tuas: limite por turma, prazos para cancelar, planos, textos e cores.</p>
       </div>
-      <div class="perguntas" data-m="br">
-        <details><summary>Preciso entender de tecnologia?</summary><p>Não. Você só manda fotos, alguns vídeos do celular e os acessos. A gente cuida do resto.</p></details>
-        <details><summary>As contas ficam minhas?</summary><p>Sim. Google, Instagram e WhatsApp ficam sempre no seu nome. A gente só tem acesso para gerenciar.</p></details>
-        <details><summary>Como eu cancelo?</summary><p>Com um email para geral@theoddwork.com. O serviço continua até o fim do mês pago e não há mais cobranças. Não devolvemos meses já pagos.</p></details>
-        <details><summary>E o site, se eu cancelar?</summary><p>Depois de 6 meses pagos, o site passa a ser seu sem custo. Antes disso sai do ar, ou você fica com ele por R$&nbsp;950.</p></details>
-        <details><summary>O que não está incluído?</summary><p>Stories, anúncios e sessões de fotos. Alguns existem como extra, por exemplo Reel extra a partir de R$&nbsp;100 ou gestão de anúncios a partir de R$&nbsp;320/mês. <a href="termos.html">Ver todos os detalhes</a>.</p></details>
-        <details><summary>Quem são vocês?</summary><p>Somos o Rubens (estratégia) e o Miguel (tecnologia), no Porto. Somos novos, por isso o 1.º mês é grátis: você vê o trabalho antes de pagar.</p></details>
+      <ul class="pecas">
+        <li><h3 data-br="Site com agendamento">Site com marcação</h3><p data-br="O cliente vê os horários livres e agenda sozinho, a qualquer hora.">O cliente vê os horários livres e marca sozinho, a qualquer hora.</p></li>
+        <li><h3>Confirmações e avisos</h3><p data-br="Pelo WhatsApp oficial, com o número do seu negócio. Menos faltas, sem mensagens na mão.">Pelo WhatsApp oficial, com o número do teu negócio. Menos faltas, sem mensagens à mão.</p></li>
+        <li><h3>Lista de espera</h3><p>Quando alguém cancela, a vaga é oferecida ao próximo automaticamente.</p></li>
+        <li><h3>Cobranças</h3><p>Mensalidades e pacotes cobrados <span data-m="pt">por cartão</span><span data-m="br">por Pix e cartão</span>, com aviso a quem se atrasa.</p></li>
+        <li><h3>Painel do dono</h3><p data-br="Quem vem, quem pagou, quem faltou e quantas vagas sobram, numa tela só.">Quem vem, quem pagou, quem faltou e quantas vagas sobram, num só ecrã.</p></li>
+        <li><h3>Relatório mensal</h3><p data-br="Quantas horas o sistema devolveu a você e o que melhorar em seguida.">Quantas horas o sistema te devolveu e o que melhorar a seguir.</p></li>
+      </ul>
+      <p class="pecas__nota" data-br="Usamos IA todos os dias, mas nada sai sem um humano revisar.">Usamos IA todos os dias, mas nada sai sem um humano a rever.</p>
+    </section>
+
+    <!-- ============ Como funciona ============ -->
+    <section id="como" class="bloco" aria-labelledby="como-titulo">
+      <div class="bloco__cabeca">
+        <h2 id="como-titulo">Primeiro medimos. Depois propomos.</h2>
+        <p data-br="Só fazemos proposta depois de entender onde suas horas se perdem.">Só fazemos proposta depois de perceber onde se perdem as tuas horas.</p>
+      </div>
+      <ol class="passos">
+        <li><span class="passos__n">1</span><h3>Diagnóstico</h3><p>20 minutos por videochamada para medir as horas perdidas e as regras do negócio. Grátis.</p></li>
+        <li><span class="passos__n">2</span><h3>Proposta</h3><p data-br="Em até 48 horas, feita para o seu negócio, com as horas que você economiza e o preço.">Em até 48 horas, feita para o teu negócio, com as horas que poupas e o preço.</p></li>
+        <li><span class="passos__n">3</span><h3>Implantação</h3><p data-br="Paga uma vez: metade quando você aceita, metade na entrega.">Paga uma vez: metade quando aceitas, metade na entrega.</p></li>
+        <li><span class="passos__n">4</span><h3>Mensalidade</h3><p data-br="WhatsApp oficial, servidor, suporte e ajustes. O sistema continua melhorando.">WhatsApp oficial, servidor, suporte e ajustes. O sistema continua a melhorar.</p></li>
+      </ol>
+      <div class="garantias">
+        <div class="garantia">
+          <span class="garantia__selo" aria-hidden="true">✓</span>
+          <div><h3>Entregamos na data</h3><p data-br="Se perdermos o prazo combinado, a segunda metade da implantação não é cobrada.">Se falharmos o prazo combinado, a segunda metade da implantação não é cobrada.</p></div>
+        </div>
+        <div class="garantia">
+          <span class="garantia__selo" aria-hidden="true">✓</span>
+          <div><h3>30 dias para desistir</h3><p data-br="Se você não ficar satisfeito nos primeiros 30 dias, devolvemos o que pagou.">Se não ficares satisfeito nos primeiros 30 dias, devolvemos o que pagaste.</p></div>
+        </div>
       </div>
     </section>
 
-    <!-- Candidatura -->
-    <section class="largura seccao" id="candidatura">
-      <div class="candidatura">
-        <div class="seccao__titulo">
-          <h2>Experimentar 1 mês grátis</h2>
-          <p><span data-m="pt">Respondemos pelo WhatsApp em até 48h úteis.</span><span data-m="br">Respondemos pelo WhatsApp em até 48h úteis.</span></p>
-        </div>
+    <!-- ============ Preço ============ -->
+    <section id="preco" class="bloco bloco--papel" aria-labelledby="preco-titulo">
+      <div class="bloco__cabeca">
+        <h2 id="preco-titulo">Preço de fundador para os primeiros dez</h2>
+        <p data-vagas-frase>10 vagas de fundador.</p>
+      </div>
 
-        <form class="formulario" id="formulario" novalidate>
-          <div class="formulario__par">
-            <label>
-              <span><span data-m="pt">O teu nome</span><span data-m="br">Seu nome</span></span>
-              <input name="nome" autocomplete="name" required>
-            </label>
-            <label>
-              <span>Nome do negócio</span>
-              <input name="negocio" autocomplete="organization" required>
-            </label>
+      <div class="preco">
+        <div class="preco__topo">
+          <span class="preco__selo">Membro fundador</span>
+          <div class="vagas" aria-hidden="true"><span data-vagas-barra></span></div>
+        </div>
+        <div class="preco__linhas">
+          <div class="preco__linha">
+            <span class="preco__rotulo">Implantação</span>
+            <span class="preco__valor"><span data-m="pt">900 €</span><span data-m="br">R$ 2.000</span></span>
+            <span class="preco__normal">Depois: <span data-m="pt">1.500 €</span><span data-m="br">R$ 3.000 a 5.000</span></span>
           </div>
-          <label>
-            <span>Tipo de negócio</span>
+          <div class="preco__linha">
+            <span class="preco__rotulo">Mensalidade</span>
+            <span class="preco__valor"><span data-m="pt">100 €</span><span data-m="br">R$ 350</span><small>/mês</small></span>
+            <span class="preco__normal">Depois: <span data-m="pt">130 €</span><span data-m="br">R$ 350 a 500</span></span>
+          </div>
+        </div>
+        <ul class="preco__lista">
+          <li>Preço de fundador mantido enquanto a assinatura estiver ativa</li>
+          <li data-br="Em troca: você é piloto, autoriza que mostremos o caso e dá um depoimento">Em troca: és piloto, autorizas mostrarmos o caso e dás um depoimento</li>
+          <li data-br="A implantação só aumenta se o sistema for maior do que o combinado">A implantação sobe só se o sistema for maior do que o combinado</li>
+        </ul>
+        <a class="botao" href="#diagnostico" data-rastrear="cta-preco">Pedir diagnóstico grátis</a>
+        <p class="preco__fiscal" data-m="pt">Valores finais, sem IVA (regime de isenção, art. 53.º CIVA).</p>
+        <p class="preco__fiscal" data-m="br">[A DEFINIR: menção fiscal para o Brasil]</p>
+      </div>
+
+      <div class="dono">
+        <h3 data-br="O que fica com você">O que fica contigo</h3>
+        <ul>
+          <li>O site, o domínio, os textos e as fotos</li>
+          <li data-br="Os dados dos seus clientes e alunos">Os dados dos teus clientes e alunos</li>
+          <li>O número de WhatsApp, sempre</li>
+        </ul>
+        <p>O sistema funciona enquanto a mensalidade estiver em dia. O código é a base da Oddwork e não é entregue.</p>
+      </div>
+    </section>
+
+    <!-- ============ Perguntas ============ -->
+    <section id="perguntas" class="bloco" aria-labelledby="perguntas-titulo">
+      <div class="bloco__cabeca"><h2 id="perguntas-titulo">Perguntas</h2></div>
+      <div class="perguntas">
+        <details><summary data-br="Por que não usar um programa de agendamento pronto?">Porque não usar um programa de agendamento pronto?</summary><p data-br="Os programas prontos obrigam o seu negócio a seguir as regras deles. Nós fazemos o contrário: o sistema segue os seus limites por turma, prazos, planos e forma de cobrar.">Os programas prontos obrigam o teu negócio a seguir as regras deles. Nós fazemos o contrário: o sistema segue os teus limites por turma, prazos, planos e forma de cobrar.</p></details>
+        <details><summary>Quanto tempo demora a implantação?</summary><p data-br="Depende do tamanho do sistema. A data fica escrita na proposta, e se perdermos o prazo a segunda metade não é cobrada.">Depende do tamanho do sistema. A data fica escrita na proposta, e se falharmos a segunda metade não é cobrada.</p></details>
+        <details><summary>O que inclui a mensalidade?</summary><p data-br="O WhatsApp oficial, o servidor, o suporte e os ajustes no sistema. Sem custos escondidos.">O WhatsApp oficial, o servidor, o suporte e os ajustes ao sistema. Sem custos escondidos.</p></details>
+        <details><summary>E se eu quiser cancelar?</summary><p data-br="Nos primeiros 30 dias devolvemos o que você pagou. Depois, você cancela quando quiser: os dados dos seus clientes e o número de WhatsApp são sempre seus.">Nos primeiros 30 dias devolvemos o que pagaste. Depois, cancelas quando quiseres: os dados dos teus clientes e o número de WhatsApp são sempre teus.</p></details>
+        <details><summary>Prometem mais vendas?</summary><p data-br="Não. Garantimos a entrega e a qualidade. O que medimos é o tempo que o sistema devolve a você.">Não. Garantimos a entrega e a qualidade. O que medimos é o tempo que o sistema te devolve.</p></details>
+        <details><summary>Trabalham em Portugal e no Brasil?</summary><p>Sim. Cada país tem o seu preço, em euros ou em reais, e as cobranças usam os meios de pagamento de cada mercado.</p></details>
+      </div>
+    </section>
+
+    <!-- ============ Diagnóstico (formulário) ============ -->
+    <section id="diagnostico" class="diag" aria-labelledby="diag-titulo">
+      <div class="diag__intro">
+        <h2 id="diag-titulo" data-br="Peça o seu diagnóstico">Pede o teu diagnóstico</h2>
+        <p data-br="Leva um minuto para preencher. Depois marcamos 20 minutos com você. Você sai sabendo quantas horas está perdendo, mesmo que não avance.">Leva um minuto a preencher. Depois marcamos 20 minutos contigo. Saís com as horas que estás a perder, mesmo que não avances.</p>
+        <ul class="diag__passos">
+          <li>Respondemos em até 1 dia útil</li>
+          <li>Proposta em até 48 horas depois do diagnóstico</li>
+        </ul>
+      </div>
+
+      <form class="form" id="formulario" novalidate>
+        <div class="form__grelha">
+          <label class="campo"><span data-br="Seu nome">O teu nome</span><input name="nome" autocomplete="name" required></label>
+          <label class="campo"><span>Nome do negócio</span><input name="negocio" autocomplete="organization" required></label>
+          <label class="campo"><span>Tipo de negócio</span>
             <select name="tipo" required>
-              <option value="">Escolher…</option>
-              <option>Salão</option>
-              <option>Barbearia</option>
-              <option>Estética</option>
-              <option>Clínica</option>
-              <option>Fisioterapia</option>
+              <option value="" data-br="Escolha…">Escolhe…</option>
+              <option>Clínica médica ou dentária</option>
+              <option>Clínica de estética</option>
+              <option>Academia ou estúdio</option>
+              <option>Escola de idiomas</option>
+              <option>Professor ou mentor</option>
+              <option>Criador que vende aulas</option>
               <option>Outro</option>
             </select>
           </label>
-          <div class="formulario__par">
-            <label>
-              <span>WhatsApp</span>
-              <input name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required>
-            </label>
-            <label>
-              <span>Email</span>
-              <input name="email" type="email" autocomplete="email" required>
-            </label>
-          </div>
-
-          <input type="hidden" name="plano" value="Essencial">
-          <input type="hidden" name="pais" value="Portugal">
-          <!-- Armadilha para robôs: pessoas não veem este campo -->
-          <label class="armadilha" aria-hidden="true">Não preencher <input name="website" tabindex="-1" autocomplete="off"></label>
-
-          <label class="caixa">
-            <input type="checkbox" name="consentimento" value="sim" required>
-            <span data-m="pt">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contacto comigo relativamente às necessidades do meu negócio e a uma possível colaboração. Consulte a nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
-            <span data-m="br">Autorizo a Oddwork a utilizar os dados fornecidos para entrar em contato comigo sobre as necessidades do meu negócio e uma possível colaboração. Consulte nossa <a href="privacidade.html">Política de Privacidade</a>.</span>
+          <label class="campo"><span>Quantos clientes ou alunos ativos?</span>
+            <select name="clientes" required>
+              <option value="" data-br="Escolha…">Escolhe…</option>
+              <option>Menos de 30</option>
+              <option>30 a 100</option>
+              <option>100 a 300</option>
+              <option>Mais de 300</option>
+            </select>
           </label>
-
-          <p class="formulario__erro" id="formulario-erro" role="alert" hidden></p>
-          <p class="formulario__plano" id="formulario-plano" hidden><span data-m="pt">Vais entrar na lista de espera do Pro.</span><span data-m="br">Você vai entrar na lista de espera do Pro.</span></p>
-          <button class="botao botao--largo" type="submit" id="formulario-botao">Enviar candidatura</button>
-        </form>
-
-        <div class="sucesso" id="formulario-sucesso" role="status" hidden tabindex="-1">
-          <div class="sucesso__icone" aria-hidden="true"></div>
-          <h3>Recebemos.</h3>
-          <p><span data-m="pt">Falamos contigo pelo WhatsApp em até 48h úteis.</span><span data-m="br">A gente fala com você pelo WhatsApp em até 48h úteis.</span></p>
+          <label class="campo campo--largo"><span data-br="O que mais toma o seu tempo hoje?">O que te ocupa mais tempo hoje?</span>
+            <select name="dor" required>
+              <option value="" data-br="Escolha…">Escolhe…</option>
+              <option data-br="Confirmar agendamentos e faltas" value="Confirmar marcações e faltas">Confirmar marcações e faltas</option>
+              <option>Cobrar mensalidades</option>
+              <option>Responder sempre às mesmas perguntas</option>
+              <option data-br="Gerenciar turmas e lista de espera" value="Gerir turmas e lista de espera">Gerir turmas e lista de espera</option>
+              <option>Outra coisa</option>
+            </select>
+          </label>
+          <label class="campo"><span>WhatsApp</span><input name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required></label>
+          <label class="campo"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
+          <label class="campo campo--largo"><span data-br="Como você conheceu a Oddwork?">Como conheceste a Oddwork?</span>
+            <select name="origem">
+              <option value="" data-br="Escolha…">Escolhe…</option>
+              <option>Instagram ou TikTok</option>
+              <option>Live ou YouTube</option>
+              <option>Recebi um email</option>
+              <option>Recebi uma chamada ou visita</option>
+              <option>Indicação</option>
+              <option>Google</option>
+              <option>Outro</option>
+            </select>
+          </label>
         </div>
+        <input type="hidden" name="pais">
+        <div class="isco" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="consent"><input type="checkbox" name="consentimento" required><span data-br="Aceito que a Oddwork use estes dados para me contatar sobre o diagnóstico, conforme a &lt;a href=&quot;privacidade.html&quot;&gt;política de privacidade&lt;/a&gt;.">Aceito que a Oddwork use estes dados para me contactar sobre o diagnóstico, conforme a <a href="privacidade.html">política de privacidade</a>.</span></label>
+        <p class="form__erro" id="formulario-erro" role="alert" hidden></p>
+        <button class="botao botao--largo" id="formulario-botao" type="submit">Pedir diagnóstico</button>
+      </form>
+
+      <div class="form__ok" id="formulario-sucesso" hidden tabindex="-1">
+        <span class="garantia__selo" aria-hidden="true">✓</span>
+        <h3>Pedido recebido</h3>
+        <p data-br="Vamos falar com você pelo WhatsApp em até 1 dia útil para marcar os 20 minutos.">Vamos falar contigo pelo WhatsApp em até 1 dia útil para marcar os 20 minutos.</p>
       </div>
     </section>
   </main>
 
   <footer class="rodape">
-    <nav class="rodape__nav" aria-label="Rodapé">
+    <div class="rodape__marca">
+      <a class="marca" href="#" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <p>We think differently. We work oddly.</p>
+    </div>
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>
+      <a href="https://www.instagram.com/_oddwork/" rel="noopener">Instagram</a>
       <a href="privacidade.html">Privacidade</a>
       <a href="termos.html">Termos</a>
-      <a href="https://www.instagram.com/_oddwork/" rel="noopener">Instagram</a>
-      <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>
-      <a href="https://www.livroreclamacoes.pt/" rel="noopener" data-m="pt">Livro de Reclamações</a>
+      <button type="button" class="link" data-abrir-cookies>Cookies</button>
     </nav>
-    <p class="rodape__legal">© <span id="ano">2026</span> Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
   </footer>
 
-  <a class="barra" id="barra" href="#candidatura" aria-hidden="true" tabindex="-1">
-    <span><strong>1.º mês grátis</strong></span>
-    <span class="barra__botao">Começar</span>
-  </a>
+  <div class="barra" id="barra" aria-hidden="true">
+    <a class="botao botao--largo" href="#diagnostico" tabindex="-1" data-rastrear="cta-barra">Pedir diagnóstico grátis</a>
+  </div>
 
-  <script src="main.js" defer></script>
+  <!-- ============ Cookies ============ -->
+  <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
+    <div class="cookies__cabeca">
+      <svg class="cookies__bolacha" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="28" fill="#E9B97A"/>
+        <path d="M32 4a28 28 0 1 0 28 28 8 8 0 0 1-9-8 8 8 0 0 1-9-9 8 8 0 0 1-10-11z" fill="#F3CD94"/>
+        <circle cx="22" cy="24" r="3.6" fill="#6B3E1F"/><circle cx="38" cy="40" r="3.2" fill="#6B3E1F"/><circle cx="21" cy="41" r="2.6" fill="#6B3E1F"/><circle cx="44" cy="27" r="2.2" fill="#6B3E1F"/>
+        <circle cx="32" cy="32" r="5" fill="#F26A21"/>
+      </svg>
+      <div>
+        <h2 id="cookies-titulo"><span data-m="pt">Posso guardar umas bolachas?</span><span data-m="br">Posso guardar uns cookies?</span></h2>
+        <p id="cookies-texto">
+          <span data-m="pt">Usamos as essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
+          <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
+          <a href="privacidade.html#cookies">Saber mais</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="cookies__opcoes" id="cookies-opcoes" hidden>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Essenciais</b><small><span data-m="pt">Guardam a tua escolha de país e de cookies. Sempre ligados.</span><span data-m="br">Guardam sua escolha de país e de cookies. Sempre ligados.</span></small></span>
+        <span class="interruptor"><input type="checkbox" checked disabled><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Estatísticas</b><small><span data-m="pt">De onde vens, que páginas vês e que botões usas. Só nós vemos.</span><span data-m="br">De onde você vem, que páginas vê e que botões usa. Só nós vemos.</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-estatisticas"><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Marketing</b><small><span data-m="pt">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span><span data-m="br">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-marketing"><i></i></span>
+      </label>
+    </div>
+
+    <div class="cookies__acoes">
+      <button type="button" class="ck-botao" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
+      <button type="button" class="ck-botao" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao" data-cookies="guardar" hidden>Guardar escolha</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="cookies.js"></script>
+  <script src="rastreio.js"></script>
+  <script src="site.js"></script>
 </body>
 </html>

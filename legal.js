@@ -1,5 +1,5 @@
 // Páginas de texto (privacidade, termos): seletor PT/BR igual ao da página inicial.
-const botoesMercado = document.querySelectorAll("[data-mercado]");
+const botoesMercado = document.querySelectorAll(".mercado [data-mercado]");
 
 function aplicarMercado(m) {
   document.documentElement.dataset.mercado = m;

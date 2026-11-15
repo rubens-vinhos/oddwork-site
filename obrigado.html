@@ -2,45 +2,210 @@
 <html lang="pt-PT" data-mercado="pt">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assinatura ativa · Oddwork</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pagamento recebido · Oddwork</title>
+  <meta name="description" content="Pagamento recebido.">
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#F2F0E9">
+  <meta name="theme-color" content="#131A2B">
   <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
   <script src="mercado.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="assets/fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <header class="topo">
-    <a class="marca" href="index.html" aria-label="Oddwork, início">the<em>odd</em>work</a>
-  </header>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+    </defs>
+  </svg>
 
-  <main class="legal" data-m="pt">
-    <h1>Estás dentro.</h1>
-    <p class="legal__data">Os dados de pagamento ficaram guardados. A primeira cobrança só acontece no dia 31, e avisamos-te no dia 25.</p>
+  <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
 
-    <h2>O que acontece agora</h2>
-    <ul>
-      <li>Falamos contigo pelo WhatsApp para o diagnóstico do teu espaço.</li>
-      <li>Pedimos fotos, vídeos e os acessos de que precisamos. As contas continuam em teu nome.</li>
-      <li>Recebes o calendário do mês e começamos as primeiras peças.</li>
-    </ul>
-    <p>Dúvidas: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
-    <p><a class="botao" href="index.html">Voltar ao site</a></p>
+  <div class="noite">
+    <header class="topo topo--simples">
+      <a class="marca" href="index.html" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <nav aria-label="Principal">
+        <a class="so-largo" href="index.html#como">Como funciona</a>
+        <div class="mercado" role="group" aria-label="País">
+          <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
+          <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
+        </div>
+        <a class="botao botao--peq" href="index.html#diagnostico">Pedir diagnóstico</a>
+      </nav>
+    </header>
+  </div>
+
+  <main id="conteudo">
+    <article class="legal" data-m="pt">
+    <div class="obrigado__selo" aria-hidden="true">✓</div>
+    <h1>Pagamento recebido. Obrigado!</h1>
+    <p class="legal__data">O Stripe envia o recibo para o teu e-mail. Se pagaste por MB WAY ou transferência, a confirmação pode demorar alguns minutos.</p>
+
+    <div data-tipo="implantacao-1">
+      <h2>O que acontece agora</h2>
+      <ol class="obrigado__passos">
+        <li>Falamos contigo pelo WhatsApp ainda hoje ou no próximo dia útil para marcar o arranque.</li>
+        <li>Pedimos os textos, fotos e acessos de que precisamos. As contas continuam em teu nome.</li>
+        <li>Construímos o sistema e mostramos-te o progresso até à data de entrega escrita na proposta.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="implantacao-2" hidden>
+      <h2>O sistema é teu</h2>
+      <ol class="obrigado__passos">
+        <li>A implantação está paga. O sistema continua a funcionar no teu negócio.</li>
+        <li>Enviamos-te o link da mensalidade, que inclui o WhatsApp oficial, o servidor, o suporte e os ajustes.</li>
+        <li>Se alguma coisa não funcionar como esperavas, fala connosco pelo WhatsApp.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="mensalidade" hidden>
+      <h2>A mensalidade está ativa</h2>
+      <ol class="obrigado__passos">
+        <li>A cobrança é automática, todos os meses no mesmo dia.</li>
+        <li>Recebes o recibo por e-mail em cada pagamento.</li>
+        <li>Podes cancelar quando quiseres, com uma mensagem. Sem fidelização.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="geral" hidden>
+      <h2>O que acontece agora</h2>
+      <ol class="obrigado__passos">
+        <li>Confirmamos o pagamento do nosso lado.</li>
+        <li>Falamos contigo pelo WhatsApp com o próximo passo.</li>
+      </ol>
+    </div>
+
+    <p style="margin-top:1.6rem">Dúvidas: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
+    <div class="legal__botoes">
+      <a class="botao" href="index.html">Voltar ao site</a>
+      <a class="botao botao--linha" href="termos.html">Ver os termos</a>
+    </div>
+    </article>
+    <article class="legal" data-m="br">
+    <div class="obrigado__selo" aria-hidden="true">✓</div>
+    <h1>Pagamento recebido. Obrigado!</h1>
+    <p class="legal__data">O Stripe envia o recibo para o seu e-mail. Se você pagou por Pix, a confirmação pode levar alguns minutos.</p>
+
+    <div data-tipo="implantacao-1">
+      <h2>O que acontece agora</h2>
+      <ol class="obrigado__passos">
+        <li>A gente fala com você pelo WhatsApp ainda hoje ou no próximo dia útil para marcar o início.</li>
+        <li>Pedimos os textos, fotos e acessos de que precisamos. As contas continuam no seu nome.</li>
+        <li>Construímos o sistema e mostramos o progresso até a data de entrega escrita na proposta.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="implantacao-2" hidden>
+      <h2>O sistema é seu</h2>
+      <ol class="obrigado__passos">
+        <li>A implantação está paga. O sistema continua funcionando no seu negócio.</li>
+        <li>Enviamos o link da mensalidade, que inclui o WhatsApp oficial, o servidor, o suporte e os ajustes.</li>
+        <li>Se alguma coisa não funcionar como você esperava, fale com a gente pelo WhatsApp.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="mensalidade" hidden>
+      <h2>A mensalidade está ativa</h2>
+      <ol class="obrigado__passos">
+        <li>A cobrança é automática, todo mês no mesmo dia.</li>
+        <li>Você recebe o recibo por e-mail a cada pagamento.</li>
+        <li>Se escolheu Pix Automático, a autorização fica no app do seu banco, onde também pode cancelar. Sem fidelidade.</li>
+      </ol>
+    </div>
+
+    <div data-tipo="geral" hidden>
+      <h2>O que acontece agora</h2>
+      <ol class="obrigado__passos">
+        <li>Confirmamos o pagamento do nosso lado.</li>
+        <li>A gente fala com você pelo WhatsApp com o próximo passo.</li>
+      </ol>
+    </div>
+
+    <p style="margin-top:1.6rem">Dúvidas: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></p>
+    <div class="legal__botoes">
+      <a class="botao" href="index.html">Voltar ao site</a>
+      <a class="botao botao--linha" href="termos.html">Ver os termos</a>
+    </div>
+    </article>
   </main>
 
-  <main class="legal" data-m="br">
-    <h1>Você está dentro.</h1>
-    <p class="legal__data">Os dados de pagamento ficaram salvos. A primeira cobrança só acontece no dia 31, e avisamos você no dia 25.</p>
+  <footer class="rodape">
+    <div class="rodape__marca">
+      <a class="marca" href="index.html" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+      <p>We think differently. We work oddly.</p>
+    </div>
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>
+      <a href="https://www.instagram.com/_oddwork/" rel="noopener">Instagram</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos</a>
+      <button type="button" class="link" data-abrir-cookies>Cookies</button>
+    </nav>
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
+  </footer>
 
-    <h2>O que acontece agora</h2>
-    <ul>
-      <li>A gente fala com você pelo WhatsApp para o diagnóstico do seu espaço.</li>
-      <li>Pedimos fotos, vídeos e os acessos de que precisamos. As contas continuam no seu nome.</li>
-      <li>Você recebe o calendário do mês e começamos as primeiras peças.</li>
-    </ul>
-    <p>Dúvidas: <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
-    <p><a class="botao" href="index.html">Voltar ao site</a></p>
-  </main>
+  <!-- ============ Cookies ============ -->
+  <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
+    <div class="cookies__cabeca">
+      <svg class="cookies__bolacha" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="28" fill="#E9B97A"/>
+        <path d="M32 4a28 28 0 1 0 28 28 8 8 0 0 1-9-8 8 8 0 0 1-9-9 8 8 0 0 1-10-11z" fill="#F3CD94"/>
+        <circle cx="22" cy="24" r="3.6" fill="#6B3E1F"/><circle cx="38" cy="40" r="3.2" fill="#6B3E1F"/><circle cx="21" cy="41" r="2.6" fill="#6B3E1F"/><circle cx="44" cy="27" r="2.2" fill="#6B3E1F"/>
+        <circle cx="32" cy="32" r="5" fill="#F26A21"/>
+      </svg>
+      <div>
+        <h2 id="cookies-titulo"><span data-m="pt">Posso guardar umas bolachas?</span><span data-m="br">Posso guardar uns cookies?</span></h2>
+        <p id="cookies-texto">
+          <span data-m="pt">Usamos as essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
+          <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
+          <a href="privacidade.html#cookies">Saber mais</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="cookies__opcoes" id="cookies-opcoes" hidden>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Essenciais</b><small><span data-m="pt">Guardam a tua escolha de país e de cookies. Sempre ligados.</span><span data-m="br">Guardam sua escolha de país e de cookies. Sempre ligados.</span></small></span>
+        <span class="interruptor"><input type="checkbox" checked disabled><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Estatísticas</b><small><span data-m="pt">De onde vens, que páginas vês e que botões usas. Só nós vemos.</span><span data-m="br">De onde você vem, que páginas vê e que botões usa. Só nós vemos.</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-estatisticas"><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Marketing</b><small><span data-m="pt">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span><span data-m="br">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span></small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-marketing"><i></i></span>
+      </label>
+    </div>
+
+    <div class="cookies__acoes">
+      <button type="button" class="ck-botao" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
+      <button type="button" class="ck-botao" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao" data-cookies="guardar" hidden>Guardar escolha</button>
+    </div>
+  </div>
+
+  <script>
+    // Mostra os próximos passos certos para o que foi pago (?tipo=implantacao-1|implantacao-2|mensalidade).
+    (function () {
+      var t = new URLSearchParams(location.search).get("tipo");
+      var validos = ["implantacao-1", "implantacao-2", "mensalidade"];
+      var alvo = validos.indexOf(t) >= 0 ? t : "geral";
+      document.querySelectorAll("[data-tipo]").forEach(function (el) { el.hidden = el.dataset.tipo !== alvo; });
+    })();
+  </script>
+  <script src="config.js"></script>
+  <script src="cookies.js"></script>
+  <script src="rastreio.js"></script>
+  <script src="legal.js"></script>
 </body>
 </html>
