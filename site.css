@@ -29,6 +29,7 @@ h1, h2, h3, p, ul, ol { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 a { color: inherit; }
 img, svg { display: block; }
+[hidden] { display: none !important; }
 section[id] { scroll-margin-top: 1rem; }
 :focus-visible { outline: 3px solid var(--laranja); outline-offset: 3px; border-radius: 4px; }
 html[data-mercado="pt"] [data-m="br"],
