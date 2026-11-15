@@ -62,6 +62,8 @@
       <a class="marca" href="index.html"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
       <span class="barra-topo__sep">Painel</span>
       <div class="barra-topo__dir">
+        <span class="atualizado" id="atualizado" aria-live="polite"></span>
+        <button type="button" class="botao botao--fantasma" id="atualizar" title="Ir buscar os dados mais recentes">Atualizar</button>
         <label class="interruptor" title="Mostrar linhas de exemplo para testar o painel"><input type="checkbox" id="exemplo"> <span>Dados de exemplo</span></label>
         <button type="button" class="botao botao--fantasma" id="sair">Sair</button>
       </div>
@@ -72,6 +74,7 @@
         <div>
           <div class="abas" role="tablist" aria-label="Secções do painel">
             <button type="button" role="tab" id="aba-pedidos" aria-selected="true" aria-controls="vista-pedidos" data-aba="pedidos">Pedidos</button>
+            <button type="button" role="tab" id="aba-pagamentos" aria-selected="false" aria-controls="vista-pagamentos" data-aba="pagamentos">Pagamentos</button>
             <button type="button" role="tab" id="aba-visitas" aria-selected="false" aria-controls="vista-visitas" data-aba="visitas">Visitas</button>
           </div>
           <p id="resumo">—</p>
@@ -86,6 +89,18 @@
       <p class="faixa" id="faixa-exemplo" hidden>Estás a ver dados de exemplo, inventados para testar o painel. Não são clientes reais.</p>
 
       <div id="vista-pedidos" role="tabpanel" aria-labelledby="aba-pedidos">
+      <section class="dinheiro" aria-label="Dinheiro">
+        <button type="button" class="dinheiro__item" data-ir-pag="pago-mes"><span>Recebido este mês</span><strong data-din="mes">0 €</strong><small data-din-nota="mes"></small></button>
+        <button type="button" class="dinheiro__item" data-ir-pag="mensal"><span>Entra por mês</span><strong data-din="mensal">0 €</strong><small data-din-nota="mensal">Mensalidades ativas</small></button>
+        <button type="button" class="dinheiro__item dinheiro__item--espera" data-ir-pag="espera"><span>À espera de pagamento</span><strong data-din="espera">0 €</strong><small data-din-nota="espera"></small></button>
+        <button type="button" class="dinheiro__item" data-ir-pag="tudo"><span>Recebido desde o início</span><strong data-din="total">0 €</strong><small data-din-nota="total"></small></button>
+      </section>
+
+      <section class="cartao hoje" aria-labelledby="hoje-titulo">
+        <div class="hoje__topo"><h2 id="hoje-titulo">Fazer hoje</h2><span class="hoje__conta" id="hoje-conta">0</span></div>
+        <ul class="hoje__lista" id="hoje-lista"></ul>
+      </section>
+
       <section class="kpis" aria-label="Números principais">
         <div class="kpi"><span>Pedidos</span><strong data-kpi="pedidos">0</strong><small data-kpi-nota="pedidos"></small></div>
         <div class="kpi kpi--alerta"><span>Por responder</span><strong data-kpi="novos">0</strong><small>Responder em até 1 dia útil</small></div>
@@ -135,6 +150,29 @@
           <p class="vazio" id="vazio" hidden>Ainda não há pedidos neste período. Quando alguém pedir um diagnóstico no site, aparece aqui.</p>
         </div>
       </section>
+      </div>
+
+      <div id="vista-pagamentos" role="tabpanel" aria-labelledby="aba-pagamentos" hidden>
+        <section class="cartao cartao--tabela" aria-labelledby="pag-titulo">
+          <div class="tabela__topo">
+            <h2 id="pag-titulo">Todos os pagamentos</h2>
+            <div class="filtros">
+              <input type="search" id="pag-procurar" placeholder="Procurar negócio" aria-label="Procurar pagamento">
+              <select id="pag-estado" aria-label="Filtrar por estado"><option value="">Todos os estados</option></select>
+              <select id="pag-mes" aria-label="Filtrar por mês"><option value="">Todos os meses</option></select>
+              <select id="pag-moeda" aria-label="Filtrar por moeda"><option value="">€ e R$</option><option value="eur">Só €</option><option value="brl">Só R$</option></select>
+              <button type="button" class="botao botao--fantasma" id="pag-exportar">Exportar para o contabilista</button>
+            </div>
+          </div>
+          <p class="pag-totais" id="pag-totais"></p>
+          <div class="tabela__rolo">
+            <table>
+              <thead><tr><th>Data</th><th>Negócio</th><th>O quê</th><th class="num">Valor</th><th>Estado</th><th><span class="vh">Ações</span></th></tr></thead>
+              <tbody id="pag-linhas"></tbody>
+            </table>
+            <p class="vazio" id="pag-vazio" hidden>Sem pagamentos com estes filtros. Os links criados na ficha de cada pedido aparecem aqui.</p>
+          </div>
+        </section>
       </div>
 
       <div id="vista-visitas" role="tabpanel" aria-labelledby="aba-visitas" hidden>

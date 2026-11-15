@@ -60,6 +60,7 @@ let modo = null; // "real" (sessão Supabase) ou "teste" (só no computador, sem
 let PEDIDOS_REAIS = [];
 let EVENTOS_REAIS = [];
 let PAGAMENTOS_REAIS = [];
+let ultimaCarga = 0;
 
 async function lerTudo(tabela, ordem, desde) {
   const linhas = [];
@@ -79,6 +80,7 @@ async function carregarReais() {
   const desde = new Date(Date.now() - 365 * 864e5).toISOString();
   const [ped, evs, pags] = await Promise.all([lerTudo("pedidos", "criado"), lerTudo("eventos", "t", desde), lerTudo("pagamentos", "criado")]);
   PAGAMENTOS_REAIS = pags;
+  ultimaCarga = Date.now();
   PEDIDOS_REAIS = ped.map((p) => ({ ...p, data: p.criado }));
   EVENTOS_REAIS = evs.map((e) => ({ ...(e.dados || {}), tipo: e.tipo, vid: e.vid, sid: e.sid, pagina: e.pagina, mercado: e.mercado, t: e.t }));
 }
@@ -202,6 +204,9 @@ function el(tag, props = {}, ...filhos) {
 function desenhar() {
   document.getElementById("faixa-exemplo").hidden = !estadoUI.exemplo;
   if (estadoUI.aba === "visitas") { desenharVisitas(); return; }
+  if (estadoUI.aba === "pagamentos") { desenharListaPagamentos(); return; }
+  desenharDinheiro();
+  desenharHoje();
   const todos = todosPedidos();
   const lista = noPeriodo(todos);
   document.getElementById("faixa-exemplo").hidden = !estadoUI.exemplo;
@@ -287,12 +292,17 @@ function desenharTabela() {
     const acoes = el("div", { class: "acoes" });
     acoes.addEventListener("click", (e) => e.stopPropagation());
     const tel = soDigitos(p.whatsapp);
-    if (tel) acoes.append(el("a", { href: `https://wa.me/${tel}`, target: "_blank", rel: "noopener", title: "Abrir WhatsApp", "aria-label": `WhatsApp de ${p.nome}` }, "WA"));
+    if (tel) acoes.append(el("a", { href: linkWhats(p), target: "_blank", rel: "noopener", title: "WhatsApp com mensagem pronta para o estado \"" + NOME_ESTADO[p.estado] + "\"", "aria-label": `WhatsApp de ${p.nome}` }, "WA"));
     if (p.email) acoes.append(el("a", { href: `mailto:${p.email}`, title: "Enviar email", "aria-label": `Email para ${p.nome}` }, "@"));
+    const cobrar = el("button", { type: "button", title: "Criar link de pagamento", "aria-label": `Cobrar ${p.negocio}` }, p.pais === "Brasil" ? "R$" : "€");
+    cobrar.addEventListener("click", () => abrirGaveta(p, "cobrar"));
+    acoes.append(cobrar);
 
     const negocio = el("td", {}, el("strong", {}, p.negocio || "—"));
     if (p.exemplo) negocio.firstChild.after(el("span", { class: "tag" }, "exemplo"));
     negocio.append(el("small", {}, p.nome || ""));
+    const pagos = todosPagamentos().filter((x) => x.pedido_id === p.id && x.estado === "pago");
+    if (pagos.length) negocio.append(el("span", { class: "pago-mini", title: "Já pagou" }, dinheiro(pagos.reduce((a, x) => a + x.valor, 0), pagos[0].moeda)));
 
     const linha = el("tr", { tabIndex: 0, title: "Ver percurso e dados" },
       el("td", { class: "data" }, fmtData(p.data), p.vid ? el("span", { class: "tem-percurso", title: "Tem percurso no site" }) : ""),
@@ -463,6 +473,8 @@ document.querySelectorAll("[data-aba]").forEach((b) =>
     document.querySelectorAll("[data-aba]").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
     document.getElementById("vista-pedidos").hidden = estadoUI.aba !== "pedidos";
     document.getElementById("vista-visitas").hidden = estadoUI.aba !== "visitas";
+    document.getElementById("vista-pagamentos").hidden = estadoUI.aba !== "pagamentos";
+    document.querySelector(".periodo").hidden = estadoUI.aba === "pagamentos";
     desenhar();
   })
 );
@@ -485,7 +497,7 @@ function descreverEvento(e) {
   }
 }
 
-function abrirGaveta(p) {
+function abrirGaveta(p, foco) {
   focoAntes = document.activeElement;
   document.getElementById("gaveta-titulo").textContent = p.negocio || "—";
   document.getElementById("gaveta-sub").textContent = `${p.nome || ""} · ${p.pais || ""}`;
@@ -514,7 +526,11 @@ function abrirGaveta(p) {
   }
   desenharPagamentos(p);
   gaveta.hidden = false; gavetaFundo.hidden = false;
-  document.getElementById("gaveta-fechar").focus();
+  if (foco === "cobrar") {
+    const caixa = document.getElementById("gaveta-pagamentos");
+    caixa.scrollIntoView({ block: "start" });
+    (document.getElementById("cob-tipo") || document.getElementById("gaveta-fechar")).focus();
+  } else document.getElementById("gaveta-fechar").focus();
 }
 function fecharGaveta() { gaveta.hidden = true; gavetaFundo.hidden = true; focoAntes?.focus?.(); }
 document.getElementById("gaveta-fechar").addEventListener("click", fecharGaveta);
@@ -533,7 +549,7 @@ const dinheiro = (cent, moeda) => (cent / 100).toLocaleString(moeda === "brl" ? 
 
 function listaPagamentos(p) {
   const moeda = p.pais === "Brasil" ? "brl" : "eur";
-  const lista = PAGAMENTOS_REAIS.filter((x) => x.pedido_id === p.id);
+  const lista = todosPagamentos().filter((x) => x.pedido_id === p.id);
   const pago = lista.filter((x) => x.estado === "pago").reduce((a, x) => a + x.valor, 0);
   const ul = el("ul", { class: "pagamentos__lista" });
   if (!lista.length) ul.append(el("li", { class: "sem" }, "Ainda não há cobranças para este pedido."));
@@ -552,7 +568,7 @@ function desenharPagamentos(p) {
   const caixa = document.getElementById("gaveta-pagamentos");
   const brasil = p.pais === "Brasil";
   const moeda = brasil ? "brl" : "eur";
-  const lista = PAGAMENTOS_REAIS.filter((x) => x.pedido_id === p.id);
+  const lista = todosPagamentos().filter((x) => x.pedido_id === p.id);
   const ul = listaPagamentos(p);
 
   if (modo !== "real" || p.exemplo) {
@@ -638,6 +654,233 @@ function mostrarLink(caixa, url, p) {
       el("a", { class: "botao botao--fantasma botao--pequeno", href: url, target: "_blank", rel: "noopener" }, "Abrir")));
   caixa.hidden = false;
 }
+
+// ---------- Dinheiro, "Fazer hoje" e lista de pagamentos ----------
+// Pagamentos de exemplo, ligados aos pedidos de exemplo (só para testar o painel).
+function gerarPagamentosExemplo() {
+  const dia = 864e5, agora = Date.now();
+  const ped = (i) => EXEMPLO[i];
+  const linha = (i, tipo, valor, estado, diasAtras) => {
+    const p = ped(i), moeda = p.pais === "Brasil" ? "brl" : "eur";
+    const t = new Date(agora - diasAtras * dia).toISOString();
+    return { id: "exp" + i + tipo + diasAtras, pedido_id: p.id, tipo, valor: moeda === "brl" && valor < 100000 ? valor * 3.5 : valor, moeda, estado, criado: t, atualizado: t, url: "https://checkout.stripe.com/exemplo", exemplo: true };
+  };
+  return [
+    linha(7, "implantacao-1", 45000, "pago", 20), linha(7, "mensalidade", 10000, "pago", 6), linha(7, "implantacao-2", 45000, "pago", 5),
+    linha(6, "implantacao-1", 45000, "link_criado", 4), linha(13, "implantacao-1", 45000, "link_criado", 1),
+    linha(3, "mensalidade", 10000, "falhou", 2), linha(3, "implantacao-1", 100000, "pago", 30),
+  ];
+}
+const PAGAMENTOS_EXEMPLO = gerarPagamentosExemplo();
+function todosPagamentos() {
+  const reais = modo === "real" ? PAGAMENTOS_REAIS : [];
+  return (estadoUI.exemplo ? [...reais, ...PAGAMENTOS_EXEMPLO] : reais).slice().sort((a, b) => (b.criado || "").localeCompare(a.criado || ""));
+}
+const pedidoDe = (pag) => todosPedidos().find((p) => p.id === pag.pedido_id) || {};
+const quando = (x) => x.atualizado || x.criado;
+const ESPERA = ["link_criado", "pendente"];
+
+// Soma por moeda e escreve "120 € · R$ 350,00".
+function somar(lista) {
+  const m = {};
+  lista.forEach((x) => { m[x.moeda] = (m[x.moeda] || 0) + x.valor; });
+  const partes = Object.entries(m).sort(([a], [b]) => (a === "eur" ? -1 : b === "eur" ? 1 : 0)).map(([moeda, v]) => dinheiro(v, moeda));
+  return partes.length ? partes.join(" · ") : dinheiro(0, "eur");
+}
+
+// Mensalidade ativa = a última mensalidade (ou renovação) paga de cada cliente, se não foi cancelada depois.
+function mensalidadesAtivas() {
+  const porPedido = new Map();
+  todosPagamentos().filter((x) => ["mensalidade", "renovacao"].includes(x.tipo)).forEach((x) => {
+    const lista = porPedido.get(x.pedido_id) || [];
+    lista.push(x); porPedido.set(x.pedido_id, lista);
+  });
+  const ativas = [];
+  porPedido.forEach((lista) => {
+    lista.sort((a, b) => quando(b).localeCompare(quando(a)));
+    if (lista.some((x) => x.estado === "cancelado")) return;
+    const ultimaPaga = lista.find((x) => x.estado === "pago");
+    if (ultimaPaga) ativas.push(ultimaPaga);
+  });
+  return ativas;
+}
+
+function desenharDinheiro() {
+  const pags = todosPagamentos();
+  const pagos = pags.filter((x) => x.estado === "pago");
+  const inicioMes = new Date(); inicioMes.setDate(1); inicioMes.setHours(0, 0, 0, 0);
+  const doMes = pagos.filter((x) => new Date(quando(x)) >= inicioMes);
+  const espera = pags.filter((x) => ESPERA.includes(x.estado));
+  const ativas = mensalidadesAtivas();
+  // Uma linha por moeda, para € e R$ não ficarem colados.
+  const set = (k, v) => { document.querySelector(`[data-din="${k}"]`).replaceChildren(...v.split(" · ").map((t) => el("span", {}, t))); };
+  const nota = (k, v) => { document.querySelector(`[data-din-nota="${k}"]`).textContent = v; };
+  set("mes", somar(doMes)); nota("mes", doMes.length ? `${doMes.length} pagamento${doMes.length === 1 ? "" : "s"} em ${inicioMes.toLocaleDateString("pt-PT", { month: "long" })}` : "Ainda nada este mês");
+  set("mensal", somar(ativas)); nota("mensal", ativas.length ? `${ativas.length} cliente${ativas.length === 1 ? "" : "s"} com mensalidade ativa` : "Nenhuma mensalidade ativa");
+  set("espera", somar(espera)); nota("espera", espera.length ? `${espera.length} link${espera.length === 1 ? "" : "s"} por pagar` : "Nada pendente");
+  set("total", somar(pagos)); nota("total", `${pagos.length} pagamento${pagos.length === 1 ? "" : "s"} recebido${pagos.length === 1 ? "" : "s"}`);
+  document.querySelector(".dinheiro__item--espera").classList.toggle("zero", !espera.length);
+}
+
+// Mensagens prontas para o WhatsApp, conforme o estado do pedido.
+function textoWhats(p, extra = {}) {
+  const br = p.pais === "Brasil";
+  const nome = (p.nome || "").split(" ")[0];
+  const ola = (br ? "Oi " : "Olá ") + nome + (br ? ", aqui é da Oddwork." : ", é a Oddwork.");
+  if (extra.tipo === "lembrete") return `${ola} ${br ? "Deixo de novo o link para o pagamento" : "Deixo outra vez o link para o pagamento"} (${extra.valor}): ${extra.url}`;
+  if (extra.tipo === "falhou") return `${ola} ${br ? "O pagamento de" : "O pagamento de"} ${extra.valor} ${br ? "não passou. Você pode tentar de novo aqui:" : "não passou. Podes tentar outra vez aqui:"} ${extra.url || ""}`.trim();
+  const porEstado = {
+    novo: br ? `Recebemos seu pedido de diagnóstico para ${p.negocio || "o seu negócio"}. Qual o melhor dia e horário para a chamada de 20 minutos?` : `Recebemos o teu pedido de diagnóstico para ${p.negocio || "o teu negócio"}. Que dia e hora te dá jeito para a chamada de 20 minutos?`,
+    contactado: br ? "Só para confirmar a chamada de diagnóstico: qual dia e horário funcionam para você?" : "Só para confirmar a chamada de diagnóstico: que dia e hora te dão jeito?",
+    diagnostico: br ? "Obrigado pela conversa! Estamos preparando a proposta e enviamos em até 48 horas." : "Obrigado pela conversa! Estamos a preparar a proposta e enviamo-la em até 48 horas.",
+    proposta: br ? "Conseguiu ver a proposta? Se tiver qualquer dúvida, é só me dizer." : "Conseguiste ver a proposta? Se tiveres alguma dúvida, diz-me.",
+    cliente: br ? "Está tudo funcionando bem com o sistema?" : "Está tudo a correr bem com o sistema?",
+    perdido: br ? "Passando para saber se faz sentido voltarmos a conversar." : "Passo só para saber se faz sentido voltarmos a falar.",
+  };
+  return `${ola} ${porEstado[p.estado] || ""}`.trim();
+}
+const linkWhats = (p, extra) => `https://wa.me/${soDigitos(p.whatsapp)}?text=${encodeURIComponent(textoWhats(p, extra))}`;
+
+function desenharHoje() {
+  const agora = Date.now(), dia = 864e5;
+  const dias = (iso) => Math.floor((agora - new Date(iso).getTime()) / dia);
+  const haDias = (n) => (n <= 0 ? "hoje" : n === 1 ? "há 1 dia" : `há ${n} dias`);
+  const itens = [];
+  todosPedidos().filter((p) => p.estado === "novo").forEach((p) => {
+    itens.push({ peso: 3 + dias(p.data), cor: dias(p.data) >= 1 ? "verm" : "lar", p, titulo: `Responder a ${p.negocio || p.nome}`, sub: `Pediu diagnóstico ${haDias(dias(p.data))}`, whats: p.whatsapp ? linkWhats(p) : "" });
+  });
+  todosPagamentos().filter((x) => x.estado === "falhou").forEach((x) => {
+    const p = pedidoDe(x);
+    itens.push({ peso: 10, cor: "verm", p, titulo: `Pagamento falhou: ${p.negocio || "—"}`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)}`, whats: p.whatsapp ? linkWhats(p, { tipo: "falhou", valor: dinheiro(x.valor, x.moeda), url: x.url }) : "" });
+  });
+  todosPagamentos().filter((x) => ESPERA.includes(x.estado) && dias(x.criado) >= 2).forEach((x) => {
+    const p = pedidoDe(x);
+    itens.push({ peso: 2 + dias(x.criado), cor: "lar", p, titulo: `Lembrar ${p.negocio || "—"} de pagar`, sub: `${NOME_TIPO_PAG[x.tipo] || x.tipo} · ${dinheiro(x.valor, x.moeda)} · link enviado ${haDias(dias(x.criado))}`, whats: p.whatsapp && x.url ? linkWhats(p, { tipo: "lembrete", valor: dinheiro(x.valor, x.moeda), url: x.url }) : "" });
+  });
+  todosPedidos().filter((p) => p.estado === "proposta" && dias(p.data) >= 4 && !todosPagamentos().some((x) => x.pedido_id === p.id)).forEach((p) => {
+    itens.push({ peso: 1, cor: "cinza", p, titulo: `Seguir a proposta de ${p.negocio || p.nome}`, sub: "Proposta enviada, ainda sem pagamento", whats: p.whatsapp ? linkWhats(p) : "" });
+  });
+  itens.sort((a, b) => b.peso - a.peso);
+  document.getElementById("hoje-conta").textContent = itens.length;
+  document.getElementById("hoje-conta").classList.toggle("zero", !itens.length);
+  const ul = document.getElementById("hoje-lista");
+  if (!itens.length) { ul.replaceChildren(el("li", { class: "hoje__vazio" }, "Nada pendente. Tudo respondido e sem pagamentos atrasados.")); return; }
+  ul.replaceChildren(...itens.slice(0, 8).map((it) => {
+    const abrir = el("button", { type: "button", class: "hoje__abrir" }, el("span", { class: "ponto ponto--" + it.cor }), el("span", {}, el("strong", {}, it.titulo), el("small", {}, it.sub)));
+    if (it.p.id) abrir.addEventListener("click", () => abrirGaveta(it.p));
+    const li = el("li", {}, abrir);
+    if (it.whats) li.append(el("a", { class: "botao botao--pequeno", href: it.whats, target: "_blank", rel: "noopener", title: "Abre o WhatsApp com a mensagem já escrita" }, "WhatsApp"));
+    return li;
+  }));
+  if (itens.length > 8) ul.append(el("li", { class: "hoje__mais" }, `E mais ${itens.length - 8}.`));
+}
+
+// ---------- Separador Pagamentos ----------
+const pagUI = { procurar: "", estado: "", mes: "", moeda: "" };
+const chaveMes = (iso) => iso.slice(0, 7);
+function pagamentosFiltrados() {
+  return todosPagamentos().filter((x) => {
+    const p = pedidoDe(x);
+    if (pagUI.procurar && !`${p.negocio} ${p.nome}`.toLowerCase().includes(pagUI.procurar)) return false;
+    if (pagUI.estado === "espera" ? !ESPERA.includes(x.estado) : pagUI.estado && x.estado !== pagUI.estado) return false;
+    if (pagUI.mes && chaveMes(quando(x)) !== pagUI.mes) return false;
+    if (pagUI.moeda && x.moeda !== pagUI.moeda) return false;
+    return true;
+  });
+}
+function desenharListaPagamentos() {
+  document.getElementById("faixa-exemplo").hidden = !estadoUI.exemplo;
+  // Meses disponíveis no filtro
+  const selMes = document.getElementById("pag-mes");
+  const meses = [...new Set(todosPagamentos().map((x) => chaveMes(quando(x))))].sort().reverse();
+  const atual = selMes.value;
+  selMes.replaceChildren(new Option("Todos os meses", ""), ...meses.map((m) => new Option(new Date(m + "-01T12:00").toLocaleDateString("pt-PT", { month: "long", year: "numeric" }), m)));
+  selMes.value = meses.includes(atual) ? atual : pagUI.mes = "";
+  const lista = pagamentosFiltrados();
+  const pagos = lista.filter((x) => x.estado === "pago");
+  document.getElementById("resumo").textContent = `${todosPagamentos().length} pagamento${todosPagamentos().length === 1 ? "" : "s"} registado${todosPagamentos().length === 1 ? "" : "s"}`;
+  const emEspera = lista.filter((x) => ESPERA.includes(x.estado));
+  document.getElementById("pag-totais").textContent = lista.length ? [`${lista.length} na lista`, pagos.length ? "recebido: " + somar(pagos) : "", emEspera.length ? "à espera: " + somar(emEspera) : ""].filter(Boolean).join(" · ") : "";
+  document.getElementById("pag-vazio").hidden = lista.length > 0;
+  document.getElementById("pag-linhas").replaceChildren(...lista.map((x) => {
+    const p = pedidoDe(x);
+    const acoes = el("div", { class: "acoes" });
+    if (x.url && ESPERA.includes(x.estado)) {
+      acoes.append(botaoCopiar(x.url, "Copiar link"));
+      if (p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "lembrete", valor: dinheiro(x.valor, x.moeda), url: x.url }), target: "_blank", rel: "noopener", title: "Lembrar pelo WhatsApp" }, "Lembrar"));
+    }
+    if (x.estado === "falhou" && p.whatsapp) acoes.append(el("a", { class: "acoes__texto", href: linkWhats(p, { tipo: "falhou", valor: dinheiro(x.valor, x.moeda), url: x.url }), target: "_blank", rel: "noopener" }, "Avisar"));
+    const negocio = el("td", {}, el("strong", {}, p.negocio || "—"), el("small", {}, p.nome || ""));
+    if (x.exemplo) negocio.firstChild.after(el("span", { class: "tag" }, "exemplo"));
+    const tr = el("tr", { tabIndex: 0, title: "Abrir a ficha do pedido" },
+      el("td", { class: "data" }, fmtData(quando(x))),
+      negocio,
+      el("td", {}, NOME_TIPO_PAG[x.tipo] || x.tipo),
+      el("td", { class: "num" }, dinheiro(x.valor, x.moeda)),
+      el("td", {}, el("span", { class: "selo selo--" + x.estado }, NOME_ESTADO_PAG[x.estado] || x.estado)),
+      el("td", {}, acoes));
+    acoes.addEventListener("click", (e) => e.stopPropagation());
+    if (p.id) {
+      tr.addEventListener("click", () => abrirGaveta(p));
+      tr.addEventListener("keydown", (e) => { if (e.key === "Enter") abrirGaveta(p); });
+    }
+    return tr;
+  }));
+}
+function exportarPagamentos() {
+  const celula = (v) => { let t = String(v ?? ""); if (/^[=+\-@]/.test(t)) t = "'" + t; return `"${t.replace(/"/g, '""')}"`; };
+  const cab = ["data", "negocio", "nome", "pais", "o_que", "valor", "moeda", "estado"];
+  const linhas = pagamentosFiltrados().map((x) => {
+    const p = pedidoDe(x);
+    return [quando(x).slice(0, 10), p.negocio, p.nome, p.pais, NOME_TIPO_PAG[x.tipo] || x.tipo, (x.valor / 100).toFixed(2).replace(".", ","), x.moeda.toUpperCase(), NOME_ESTADO_PAG[x.estado] || x.estado].map(celula).join(";");
+  });
+  const blob = new Blob(["﻿" + [cab.join(";"), ...linhas].join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: `oddwork-pagamentos-${new Date().toISOString().slice(0, 10)}.csv` });
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+const selPagEstado = document.getElementById("pag-estado");
+selPagEstado.append(new Option("À espera de pagamento", "espera"), ...Object.entries(NOME_ESTADO_PAG).map(([v, n]) => new Option(n, v)));
+selPagEstado.addEventListener("change", (e) => { pagUI.estado = e.target.value; desenharListaPagamentos(); });
+document.getElementById("pag-mes").addEventListener("change", (e) => { pagUI.mes = e.target.value; desenharListaPagamentos(); });
+document.getElementById("pag-moeda").addEventListener("change", (e) => { pagUI.moeda = e.target.value; desenharListaPagamentos(); });
+document.getElementById("pag-procurar").addEventListener("input", (e) => { pagUI.procurar = e.target.value.trim().toLowerCase(); desenharListaPagamentos(); });
+document.getElementById("pag-exportar").addEventListener("click", exportarPagamentos);
+
+// Os cartões do dinheiro abrem a lista de pagamentos já filtrada.
+document.querySelectorAll("[data-ir-pag]").forEach((b) => b.addEventListener("click", () => {
+  const filtro = b.dataset.irPag;
+  pagUI.estado = filtro === "espera" ? "espera" : filtro === "tudo" ? "" : "pago";
+  pagUI.mes = filtro === "pago-mes" ? new Date().toISOString().slice(0, 7) : "";
+  if (filtro === "mensal") pagUI.estado = "pago";
+  selPagEstado.value = pagUI.estado;
+  document.getElementById("aba-pagamentos").click();
+  document.getElementById("pag-mes").value = pagUI.mes;
+  desenharListaPagamentos();
+}));
+
+// ---------- Atualizar ----------
+async function atualizarDados(silencioso) {
+  if (modo !== "real") { desenhar(); return; }
+  const b = document.getElementById("atualizar");
+  if (!silencioso) { b.disabled = true; b.textContent = "A atualizar…"; }
+  try { await carregarReais(); desenhar(); }
+  catch { if (!silencioso) alert("Não foi possível atualizar. Verifica a ligação."); }
+  finally { b.disabled = false; b.textContent = "Atualizar"; marcarHora(); }
+}
+function marcarHora() {
+  const x = document.getElementById("atualizado");
+  if (!ultimaCarga || modo !== "real") { x.textContent = ""; return; }
+  const min = Math.floor((Date.now() - ultimaCarga) / 60000);
+  x.textContent = min < 1 ? "Atualizado agora" : `Atualizado há ${min} min`;
+}
+document.getElementById("atualizar").addEventListener("click", () => atualizarDados(false));
+// De minuto a minuto, com o separador visível e a gaveta fechada, vai buscar dados novos.
+setInterval(() => {
+  marcarHora();
+  if (modo === "real" && document.visibilityState === "visible" && gaveta.hidden && Date.now() - ultimaCarga > 60000) atualizarDados(true);
+}, 15000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && modo === "real" && Date.now() - ultimaCarga > 60000) atualizarDados(true); });
 
 // ---------- Início ----------
 if (sb) {

@@ -119,10 +119,14 @@ Deno.serve(async (req) => {
     cancel_url: SITE + "/",
     metadata,
     integration_identifier: "painel_cobranca_qmzrtvxk",
+    // Diz ao cliente, logo no checkout, que vai receber um e-mail a seguir ao pagamento.
+    custom_text: {
+      after_submit: { message: brasil ? "Logo depois do pagamento, você recebe um e-mail com o recibo." : "Logo a seguir ao pagamento, recebes um e-mail com o recibo." },
+      ...(brasil ? { submit: { message: IOF_AVISO } } : {}),
+    },
     ...(mensal ? { subscription_data: { metadata } } : { payment_intent_data: { metadata, description: nomes[tipo!] + " · " + pedido.negocio }, invoice_creation: { enabled: true } }),
     ...(brasil
       ? {
-          custom_text: { submit: { message: IOF_AVISO } },
           ...(mensal
             ? {
                 payment_method_options: {
