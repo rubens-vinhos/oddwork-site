@@ -42,6 +42,43 @@ const PRODUTO: Record<string, Record<string, string>> = {
   normal: { implantacao: "implantacao_normal", mensalidade: "mensalidade_normal" },
 };
 
+// Catálogo: se o produto ou o preço ainda não existirem nesta conta Stripe (ex.: na conta real),
+// são criados na primeira cobrança, com o mesmo lookup_key.
+const CATALOGO: Record<string, { nome: string; mensal?: boolean; eur?: number; brl?: number }> = {
+  implantacao_fundador: { nome: "Implantação · Fundador (metade)", eur: 45000, brl: 100000 },
+  implantacao_normal: { nome: "Implantação (metade)", eur: 75000 },
+  mensalidade_fundador: { nome: "Mensalidade · Fundador", mensal: true, eur: 10000, brl: 35000 },
+  mensalidade_normal: { nome: "Mensalidade", mensal: true, eur: 13000 },
+};
+
+async function produtoCatalogo(stripe: Stripe, base: string): Promise<string> {
+  for (const m of ["eur", "brl"]) {
+    const r = await stripe.prices.list({ lookup_keys: [base + "_" + m], limit: 1 });
+    if (r.data[0]) return r.data[0].product as string;
+  }
+  const s = await stripe.products.search({ query: "metadata['chave']:'" + base + "'" });
+  if (s.data[0]) return s.data[0].id;
+  const p = await stripe.products.create({ name: CATALOGO[base].nome, metadata: { chave: base } });
+  return p.id;
+}
+
+async function precoCatalogo(stripe: Stripe, base: string, moeda: "eur" | "brl"): Promise<Stripe.Price | null> {
+  const chave = base + "_" + moeda;
+  const r = await stripe.prices.list({ lookup_keys: [chave], active: true });
+  if (r.data[0]) return r.data[0];
+  const c = CATALOGO[base];
+  const valor = c?.[moeda];
+  if (!valor) return null;
+  return await stripe.prices.create({
+    product: await produtoCatalogo(stripe, base),
+    currency: moeda,
+    unit_amount: valor,
+    tax_behavior: "inclusive",
+    lookup_key: chave,
+    ...(c.mensal ? { recurring: { interval: "month" } } : {}),
+  });
+}
+
 const IOF_AVISO =
   "Esta é uma compra internacional e não inclui a tarifa de 3,5% de IOF. Ao prosseguir, você reconhece e aceita os termos e condições do Ebanx.";
 
@@ -80,14 +117,11 @@ Deno.serve(async (req) => {
   let item: Stripe.Checkout.SessionCreateParams.LineItem;
   let valorCents: number;
   if (valor && Number.isInteger(valor) && valor > 0) {
-    const produtos = await stripe.products.search({ query: "metadata['chave']:'" + base + "'" });
-    const produto = produtos.data[0];
-    if (!produto) return resposta({ erro: "Produto não encontrado no Stripe" }, 500, h);
+    const produto = await produtoCatalogo(stripe, base);
     valorCents = valor;
-    item = { quantity: 1, price_data: { currency: moeda, product: produto.id, unit_amount: valor, tax_behavior: "inclusive", ...(mensal ? { recurring: { interval: "month" } } : {}) } };
+    item = { quantity: 1, price_data: { currency: moeda, product: produto, unit_amount: valor, tax_behavior: "inclusive", ...(mensal ? { recurring: { interval: "month" } } : {}) } };
   } else {
-    const precos = await stripe.prices.list({ lookup_keys: [base + "_" + moeda], active: true });
-    const preco = precos.data[0];
+    const preco = await precoCatalogo(stripe, base, moeda);
     if (!preco) return resposta({ erro: "Não há preço de " + plano + " em " + moeda.toUpperCase() + ". Indica o valor." }, 400, h);
     valorCents = preco.unit_amount ?? 0;
     item = { quantity: 1, price: preco.id };
@@ -95,6 +129,13 @@ Deno.serve(async (req) => {
 
   // 4. Cliente Stripe (um por pedido)
   let cliente = pedido.stripe_cliente as string | null;
+  // O cliente guardado pode ser de outra conta Stripe (ex.: do modo de teste). Nesse caso cria-se outro.
+  if (cliente) {
+    try {
+      const c = await stripe.customers.retrieve(cliente);
+      if ((c as Stripe.DeletedCustomer).deleted) cliente = null;
+    } catch { cliente = null; }
+  }
   if (!cliente) {
     const c = await stripe.customers.create({
       email: pedido.email ?? undefined,
