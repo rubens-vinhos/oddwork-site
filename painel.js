@@ -558,6 +558,7 @@ function listaPagamentos(p) {
       el("div", {}, el("strong", {}, NOME_TIPO_PAG[x.tipo] || x.tipo), el("small", {}, new Date(x.criado).toLocaleDateString("pt-PT", { day: "2-digit", month: "short" }) + " · " + dinheiro(x.valor, x.moeda))),
       el("span", { class: "selo selo--" + x.estado }, NOME_ESTADO_PAG[x.estado] || x.estado));
     if (x.url && x.estado === "link_criado") li.append(botaoCopiar(x.url, "Copiar link"));
+    if (!x.exemplo && modo === "real" && ESPERA.includes(x.estado) && x.stripe_sessao) li.append(botaoCancelar(x, p));
     ul.append(li);
   });
   if (pago) ul.append(el("li", { class: "pagamentos__total" }, "Recebido: ", el("strong", {}, dinheiro(pago, moeda))));
@@ -637,6 +638,35 @@ function botaoCopiar(texto, rotulo) {
   b.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(texto); b.textContent = "Copiado"; } catch { prompt("Copia o link:", texto); }
     setTimeout(() => { b.textContent = rotulo; }, 1800);
+  });
+  return b;
+}
+
+// Cancela um link por pagar. O Stripe avisa o webhook, que marca "Expirou"; o painel espera por isso.
+function botaoCancelar(x, p) {
+  const b = el("button", { type: "button", class: "botao botao--fantasma botao--pequeno", title: "O link deixa de funcionar" }, "Cancelar");
+  b.addEventListener("click", async () => {
+    if (!confirm("Cancelar este link de " + dinheiro(x.valor, x.moeda) + "? Deixa de dar para pagar com ele.")) return;
+    b.disabled = true; b.textContent = "A cancelar…";
+    try {
+      const { error } = await sb.functions.invoke("cobrar", { body: { cancelar: x.id } });
+      if (error) {
+        let msg = "Não foi possível cancelar.";
+        try { msg = (await error.context.json()).erro || msg; } catch { /* sem detalhe */ }
+        throw new Error(msg);
+      }
+      b.textContent = "A confirmar…";
+      for (let i = 0; i < 10; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        PAGAMENTOS_REAIS = await lerTudo("pagamentos", "criado");
+        if (PAGAMENTOS_REAIS.find((y) => y.id === x.id)?.estado === "expirado") break;
+      }
+      document.querySelector("#gaveta-pagamentos .pagamentos__lista")?.replaceWith(listaPagamentos(p));
+      desenhar();
+    } catch (err) {
+      alert(err.message);
+      b.disabled = false; b.textContent = "Cancelar";
+    }
   });
   return b;
 }

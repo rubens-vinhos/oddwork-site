@@ -95,8 +95,26 @@ Deno.serve(async (req) => {
   if (!eEquipa) return resposta({ erro: "Sem acesso" }, 403, h);
 
   // 2. O que cobrar
-  let corpo: { pedido_id?: string; tipo?: string; plano?: string; valor?: number };
+  let corpo: { pedido_id?: string; tipo?: string; plano?: string; valor?: number; cancelar?: string };
   try { corpo = await req.json(); } catch { return resposta({ erro: "Pedido inválido" }, 400, h); }
+
+  // Cancelar um link ainda por pagar. O Stripe avisa o webhook (checkout.session.expired),
+  // e é o webhook que marca o pagamento como "Expirou" no painel.
+  if (corpo.cancelar) {
+    const adm = createClient(url, chaveServidor());
+    const { data: pag } = await adm.from("pagamentos").select("id, estado, stripe_sessao").eq("id", corpo.cancelar).single();
+    if (!pag?.stripe_sessao) return resposta({ erro: "Pagamento não encontrado" }, 404, h);
+    if (!["link_criado", "pendente"].includes(pag.estado)) return resposta({ erro: "Este link já não está por pagar." }, 400, h);
+    const st = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { httpClient: Stripe.createFetchHttpClient() });
+    try {
+      await st.checkout.sessions.expire(pag.stripe_sessao);
+    } catch (e) {
+      console.error("expirar", e);
+      return resposta({ erro: "O Stripe não deixou cancelar este link." }, 400, h);
+    }
+    return resposta({ ok: true }, 200, h);
+  }
+
   const { pedido_id, tipo, plano = "fundador", valor } = corpo;
   if (!pedido_id || !["implantacao-1", "implantacao-2", "mensalidade"].includes(tipo ?? "") || !PRODUTO[plano]) {
     return resposta({ erro: "Faltam dados: pedido, tipo e plano." }, 400, h);
