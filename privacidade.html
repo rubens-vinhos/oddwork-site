@@ -7,7 +7,10 @@
   <meta name="description" content="Que dados pessoais a Oddwork recolhe, para quê, durante quanto tempo e que direitos tens.">
   <meta name="theme-color" content="#131A2B">
   <link rel="canonical" href="https://theoddwork.com/privacidade.html">
-  <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://theoddwork.com/assets/partilha.png">
   <script src="mercado.js"></script>
   <link rel="preload" href="assets/fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
@@ -299,16 +302,15 @@
   <!-- ============ Cookies ============ -->
   <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
     <div class="cookies__cabeca">
-      <svg class="cookies__bolacha" viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="28" fill="#E9B97A"/>
-        <path d="M32 4a28 28 0 1 0 28 28 8 8 0 0 1-9-8 8 8 0 0 1-9-9 8 8 0 0 1-10-11z" fill="#F3CD94"/>
-        <circle cx="22" cy="24" r="3.6" fill="#6B3E1F"/><circle cx="38" cy="40" r="3.2" fill="#6B3E1F"/><circle cx="21" cy="41" r="2.6" fill="#6B3E1F"/><circle cx="44" cy="27" r="2.2" fill="#6B3E1F"/>
-        <circle cx="32" cy="32" r="5" fill="#F26A21"/>
+      <svg class="cookies__bolacha" viewBox="-512 -512 1024 1024" aria-hidden="true">
+        <defs><mask id="ck-dentada"><rect x="-512" y="-512" width="1024" height="1024" fill="#fff"/><circle cx="470" cy="-470" r="230" fill="#000"/><circle cx="250" cy="-500" r="110" fill="#000"/><circle cx="500" cy="-230" r="110" fill="#000"/></mask></defs>
+        <rect x="-512" y="-512" width="1024" height="1024" rx="300" fill="#F26A21" mask="url(#ck-dentada)"/>
+        <g transform="translate(-20 40) scale(.92)" fill="#131A2B"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="52" fill="#fff"/></g>
       </svg>
       <div>
-        <h2 id="cookies-titulo"><span data-m="pt">Posso guardar umas bolachas?</span><span data-m="br">Posso guardar uns cookies?</span></h2>
+        <h2 id="cookies-titulo">Podemos usar cookies?</h2>
         <p id="cookies-texto">
-          <span data-m="pt">Usamos as essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
+          <span data-m="pt">Usamos os essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
           <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
           <a href="privacidade.html#cookies">Saber mais</a>
         </p>
@@ -331,10 +333,10 @@
     </div>
 
     <div class="cookies__acoes">
-      <button type="button" class="ck-botao" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--claro" data-cookies="recusar">Recusar</button>
       <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
-      <button type="button" class="ck-botao" data-cookies="aceitar">Aceitar</button>
-      <button type="button" class="ck-botao" data-cookies="guardar" hidden>Guardar escolha</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="guardar" hidden>Guardar escolha</button>
     </div>
   </div>
 

@@ -7,7 +7,10 @@
   <meta name="description" content="Como funciona a implantação, a mensalidade, as garantias e o cancelamento dos sistemas Oddwork.">
   <meta name="theme-color" content="#131A2B">
   <link rel="canonical" href="https://theoddwork.com/termos.html">
-  <link rel="icon" href="assets/simbolo.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta property="og:image" content="https://theoddwork.com/assets/partilha.png">
   <script src="mercado.js"></script>
   <link rel="preload" href="assets/fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
@@ -113,9 +116,9 @@
     <p>Se não ficares satisfeito nos primeiros 30 dias <span class="adefinir">[A DEFINIR: a contar do primeiro pagamento ou da entrega]</span>, devolvemos tudo o que pagaste até aí. Basta pedires por e-mail; o reembolso é feito pelo mesmo meio de pagamento em até 14 dias.</p>
 
     <h2 id="mensalidade">7. Mensalidade</h2>
-    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes ao sistema. <span class="adefinir">[A DEFINIR: se os custos de mensagens cobrados pela Meta estão incluídos e até que volume]</span></p>
+    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes ao sistema. As mensagens de WhatsApp que a Meta cobra também estão incluídas, sem limite de volume.</p>
     <p>Ajustes são melhorias e correções dentro do sistema que existe. Funcionalidades novas e grandes são orçamentadas à parte, e só avançam se aceitares.</p>
-    <p>Se um pagamento da mensalidade falhar, avisamos-te e tentamos de novo. Se continuar por pagar <span class="adefinir">[A DEFINIR: número de dias]</span> depois do aviso, o sistema pode ser suspenso até a situação ficar resolvida. Os teus dados não são apagados por isso.</p>
+    <p>Se um pagamento da mensalidade falhar, avisamos-te e tentamos de novo. Se continuar por pagar 5 dias depois do aviso, o sistema pode ser suspenso até a situação ficar resolvida. Os teus dados não são apagados por isso.</p>
 
     <h2 id="propriedade">8. O que é teu e o que é nosso</h2>
     <p><strong>Fica sempre contigo:</strong></p>
@@ -217,9 +220,9 @@
     <p>Se você não ficar satisfeito nos primeiros 30 dias <span class="adefinir">[A DEFINIR: a contar do primeiro pagamento ou da entrega]</span>, devolvemos tudo o que você pagou até ali. Basta pedir por e-mail; o reembolso é feito pelo mesmo meio de pagamento em até 14 dias.</p>
 
     <h2 id="mensalidade">7. Mensalidade</h2>
-    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes no sistema. <span class="adefinir">[A DEFINIR: se os custos de mensagens cobrados pela Meta estão incluídos e até que volume]</span></p>
+    <p>Inclui o WhatsApp oficial, o servidor, o suporte e os ajustes no sistema. As mensagens de WhatsApp que a Meta cobra também estão incluídas, sem limite de volume.</p>
     <p>Ajustes são melhorias e correções dentro do sistema que já existe. Funcionalidades novas e grandes são orçadas à parte, e só avançam se você aceitar.</p>
-    <p>Se um pagamento da mensalidade falhar, avisamos você e tentamos de novo. Se continuar em aberto <span class="adefinir">[A DEFINIR: número de dias]</span> depois do aviso, o sistema pode ser suspenso até a situação ser resolvida. Seus dados não são apagados por isso.</p>
+    <p>Se um pagamento da mensalidade falhar, avisamos você e tentamos de novo. Se continuar em aberto 5 dias depois do aviso, o sistema pode ser suspenso até a situação ser resolvida. Seus dados não são apagados por isso.</p>
 
     <h2 id="propriedade">8. O que é seu e o que é nosso</h2>
     <p><strong>Fica sempre com você:</strong></p>
@@ -271,16 +274,15 @@
   <!-- ============ Cookies ============ -->
   <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
     <div class="cookies__cabeca">
-      <svg class="cookies__bolacha" viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="28" fill="#E9B97A"/>
-        <path d="M32 4a28 28 0 1 0 28 28 8 8 0 0 1-9-8 8 8 0 0 1-9-9 8 8 0 0 1-10-11z" fill="#F3CD94"/>
-        <circle cx="22" cy="24" r="3.6" fill="#6B3E1F"/><circle cx="38" cy="40" r="3.2" fill="#6B3E1F"/><circle cx="21" cy="41" r="2.6" fill="#6B3E1F"/><circle cx="44" cy="27" r="2.2" fill="#6B3E1F"/>
-        <circle cx="32" cy="32" r="5" fill="#F26A21"/>
+      <svg class="cookies__bolacha" viewBox="-512 -512 1024 1024" aria-hidden="true">
+        <defs><mask id="ck-dentada"><rect x="-512" y="-512" width="1024" height="1024" fill="#fff"/><circle cx="470" cy="-470" r="230" fill="#000"/><circle cx="250" cy="-500" r="110" fill="#000"/><circle cx="500" cy="-230" r="110" fill="#000"/></mask></defs>
+        <rect x="-512" y="-512" width="1024" height="1024" rx="300" fill="#F26A21" mask="url(#ck-dentada)"/>
+        <g transform="translate(-20 40) scale(.92)" fill="#131A2B"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="52" fill="#fff"/></g>
       </svg>
       <div>
-        <h2 id="cookies-titulo"><span data-m="pt">Posso guardar umas bolachas?</span><span data-m="br">Posso guardar uns cookies?</span></h2>
+        <h2 id="cookies-titulo">Podemos usar cookies?</h2>
         <p id="cookies-texto">
-          <span data-m="pt">Usamos as essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
+          <span data-m="pt">Usamos os essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
           <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
           <a href="privacidade.html#cookies">Saber mais</a>
         </p>
@@ -303,10 +305,10 @@
     </div>
 
     <div class="cookies__acoes">
-      <button type="button" class="ck-botao" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--claro" data-cookies="recusar">Recusar</button>
       <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
-      <button type="button" class="ck-botao" data-cookies="aceitar">Aceitar</button>
-      <button type="button" class="ck-botao" data-cookies="guardar" hidden>Guardar escolha</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="guardar" hidden>Guardar escolha</button>
     </div>
   </div>
 
