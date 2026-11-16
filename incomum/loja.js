@@ -168,6 +168,7 @@ function champs() {
 
 /* ---------- simulador de conjunto ---------- */
 let simT = null, simB = null, simTops = [], simBots = [];
+const simSz = {};
 function sim() {
   const pop = f => S.prods.filter(p => f(p) && avail(p)).sort((a, b) => (/allu?re|six/i.test(b.nome) - /allu?re|six/i.test(a.nome)) || units(b) - units(a)).slice(0, 14);
   simTops = pop(isTop); simBots = pop(p => isBot(p) && !isTop(p));
@@ -176,24 +177,66 @@ function sim() {
   simDraw();
 }
 function simDraw() {
-  const opt = (p, on) => `<button class="opt ${on ? 'on' : ''}" data-s="${p.slug}"><img src="${p.imgs[0]}" alt="" loading="lazy"><span><b>${esc(p.nome)}</b><small>${eurC(from(p).c)}</small></span><span class="ck"></span></button>`;
+  const opt = (p, on) => `<button class="sopt ${on ? 'on' : ''}" data-s="${p.slug}"><img src="${p.imgs[0]}" alt="" loading="lazy"><span><b>${esc(p.nome)}</b><small>${eurC(from(p).c)}</small></span><span class="ck"></span></button>`;
   $('#tops').innerHTML = simTops.map(p => opt(p, p === simT)).join('');
   $('#bots').innerHTML = simBots.map(p => opt(p, p === simB)).join('');
   const sel = [simT, simB].filter(Boolean), n = sel.length, r = taxa(n);
   const norm = sel.reduce((a, p) => a + from(p).c, 0), tot = sel.reduce((a, p) => a + precoComDesconto(from(p).c, r), 0);
-  $('#look').innerHTML = (simT ? `<img src="${simT.imgs[0]}" alt="">` : '<div class="ph">Escolhe um top</div>') + (simB ? `<img src="${simB.imgs[0]}" alt="">` : '<div class="ph">Escolhe a parte de baixo</div>');
+  const fotoSim = p => (p.variantes.find(v => v.cor === (simSz[p.slug] || {}).cor && v.img) || {}).img || p.imgs[0];
+  $('#look').innerHTML = (simT ? `<img src="${fotoSim(simT)}" alt="">` : '<div class="ph">Escolhe um top</div>') + (simB ? `<img src="${fotoSim(simB)}" alt="">` : '<div class="ph">Escolhe a parte de baixo</div>');
   const ts = tiers();
   $('#meter').style.width = ts.length ? Math.min(100, n / ts[ts.length - 1].pecas * 100) + '%' : '0';
   $('#tiers').innerHTML = ts.map((t, i) => `<span class="${t.pecas === n ? 'hit' : ''}">${tierTxt(t, i, ts)}</span>`).join('');
   $('#sNorm').textContent = eurC(norm); $('#sLbl').textContent = r ? `Poupas (-${r}%)` : 'Poupas';
   $('#sSave').textContent = eurC(norm - tot); $('#sTot').textContent = eurC(tot);
+  // Cor e tamanho de cada peça escolhidos aqui mesmo (sem sair do simulador).
+  for (const p of sel) if (!simSz[p.slug]) simSz[p.slug] = { cor: (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '', tam: '' };
+  $('#simSz').innerHTML = sel.map(p => {
+    const e = simSz[p.slug], cores = [...new Set(p.variantes.map(v => v.cor).filter(Boolean))];
+    const tams = [...new Set(p.variantes.filter(v => !e.cor || v.cor === e.cor).map(v => v.tam).filter(Boolean))].sort(szOrd);
+    return `<div class="sp" data-sp="${p.slug}"><div class="sp-h"><b>${esc(p.nome)}</b><span>${esc([e.cor, e.tam && 'Tam. ' + e.tam].filter(Boolean).join(' · ') || 'escolhe o tamanho')}</span></div>
+      ${cores.length > 1 ? `<div class="sw">${cores.map(c => `<button class="${c === e.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-scor="${esc(c)}" aria-label="${esc(c)}" title="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div>` : ''}
+      ${tams.length ? `<div class="sz">${tams.map(t => `<button data-stam="${esc(t)}" class="${t === e.tam ? 'on' : ''}" ${avail(p, e.cor, t) ? '' : 'disabled'}>${esc(t)}</button>`).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
+  const falta = sel.filter(p => !simVar(p));
   $('#simAdd').disabled = !n;
-  $('#simAdd').textContent = n ? 'Escolher tamanhos →' : 'Escolhe pelo menos 1 peça';
+  $('#simAdd').textContent = !n ? 'Escolhe pelo menos 1 peça' : falta.length ? (n > 1 ? 'Escolhe o tamanho de cada peça' : 'Escolhe o tamanho') : `Juntar ao saco · ${eurC(tot)}`;
 }
-const simPick = (get, set) => e => { const o = e.target.closest('.opt'); if (!o) return; const p = S.by[o.dataset.s]; set(get() === p ? null : p); simDraw(); };
+// Variante escolhida no simulador (só se tiver cor/tamanho definidos e disponível).
+function simVar(p) {
+  const e = simSz[p.slug] || {}, temTam = p.variantes.some(v => v.tam);
+  if (temTam && !e.tam) return null;
+  const v = p.variantes.find(x => (!e.cor || x.cor === e.cor) && (!temTam || x.tam === e.tam));
+  return v && v.disp ? v : null;
+}
+$('#simSz').onclick = ev => {
+  const b = ev.target.closest('button'), box = ev.target.closest('[data-sp]'); if (!b || !box || b.disabled) return;
+  const p = S.by[box.dataset.sp], e = simSz[p.slug];
+  if (b.dataset.scor !== undefined) { e.cor = b.dataset.scor; if (e.tam && !avail(p, e.cor, e.tam)) e.tam = ''; }
+  if (b.dataset.stam !== undefined) e.tam = b.dataset.stam;
+  simDraw();
+};
+const simPick = (get, set) => e => { const o = e.target.closest('.sopt'); if (!o) return; const p = S.by[o.dataset.s]; set(get() === p ? null : p); simDraw(); };
 $('#tops').onclick = simPick(() => simT, v => simT = v);
 $('#bots').onclick = simPick(() => simB, v => simB = v);
-$('#simAdd').onclick = () => { const sel = [simT, simB].filter(Boolean); if (!sel.length) return; S.queue = sel.slice(1).map(p => p.slug); openP(sel[0].slug, sel.length > 1 ? `Peça 1 de ${sel.length} do conjunto` : ''); };
+$('#simAdd').onclick = () => {
+  const sel = [simT, simB].filter(Boolean); if (!sel.length) return;
+  const falta = sel.filter(p => !simVar(p));
+  if (falta.length) {
+    $$('#simSz .sp').forEach(el => el.classList.toggle('falta', falta.some(p => p.slug === el.dataset.sp)));
+    $('#simSz .sp.falta')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return toast(falta.length > 1 ? 'Escolhe o tamanho de cada peça' : 'Escolhe o tamanho');
+  }
+  for (const p of sel) {
+    const v = simVar(p), it = S.cart.find(i => i.v === v.id), max = Math.min(10, v.stock ?? 10);
+    if (it) it.q = Math.min(max, it.q + 1); else S.cart.push({ v: v.id, q: 1 });
+  }
+  save(); cartUI();
+  const nTot = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(nTot);
+  toast(`Conjunto no saco${r ? ` · -${r}% em todas as peças` : ''}`);
+  setTimeout(() => drawer('#cart', true), 300);
+};
 
 /* ---------- filtros e lista ---------- */
 function filters() {
