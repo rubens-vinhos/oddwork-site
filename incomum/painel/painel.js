@@ -27,13 +27,28 @@ async function entrar() {
   const { data: ok } = await sb.rpc('incomum_e_equipa');
   if (!ok) { await sb.auth.signOut(); $('#lerr').textContent = 'Este e-mail não tem acesso ao painel da Incomum.'; $('#lerr').hidden = false; return; }
   $('#login').hidden = true; $('#app').hidden = false;
-  try { await carregarProds(); } catch { /* fotos das encomendas ficam vazias */ }
+  try { await Promise.all([carregarProds(), carregarVendasVar()]); badgeRepor(); } catch { /* fotos das encomendas ficam vazias */ }
   go(location.hash.slice(1) || 'encomendas');
   setInterval(() => { if (S.v === 'encomendas' && !$('#drawer').classList.contains('on')) carregarEnc(); }, 60000);
   // Tempo real: encomendas novas ou mudadas noutro aparelho aparecem logo.
   sb.channel('incomum-painel').on('postgres_changes', { event: '*', schema: 'public', table: 'incomum_encomendas' }, () => {
     clearTimeout(S.rt); S.rt = setTimeout(() => { if (S.v === 'encomendas' && !$('#drawer').classList.contains('on')) carregarEnc(); }, 800);
   }).subscribe();
+  // Tempo real do stock: vendas (loja ou online), produtos criados/apagados e stock mudado noutro aparelho.
+  const mudouStock = () => {
+    clearTimeout(S.rtS); S.rtS = setTimeout(async () => {
+      if (S.v === 'produtos' && C.ed) return;               // não mexer enquanto alguém edita um produto
+      await Promise.all([carregarProds(), carregarVendasVar()]); badgeRepor();
+      if (S.v === 'repor') reporView();
+      else if (S.v === 'analise' && X.vendas) carregarAnalise();
+    }, 900);
+  };
+  sb.channel('incomum-stock')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'incomum_variantes' }, mudouStock)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'incomum_produtos' }, mudouStock)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'incomum_vendas_loja' }, mudouStock)
+    .subscribe();
+  setInterval(() => { if (S.v === 'repor' && !$('#drawer').classList.contains('on')) mudouStock(); }, 60000);
 }
 sb.auth.getSession().then(({ data }) => { if (data.session) entrar(); });
 sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').hidden) entrar(); });
@@ -42,10 +57,12 @@ sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').
 $$('#tabs a').forEach(a => a.onclick = () => go(a.dataset.v));
 function go(v) {
   if (v === 'stock') v = 'produtos';
-  if (!['encomendas', 'venda', 'produtos', 'categorias', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
+  if (v === 'mais') return abrirMais();
+  if (!['encomendas', 'venda', 'produtos', 'repor', 'cupoes', 'analise', 'categorias', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
   S.v = v; history.replaceState(null, '', '#' + v);
   $$('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-  ({ encomendas: carregarEnc, venda: carregarVenda, produtos: carregarProdutos, categorias: carregarCategorias, clientes: carregarClientes, campanha: carregarCampanha })[v]();
+  marcarMais();
+  ({ encomendas: carregarEnc, venda: carregarVenda, produtos: carregarProdutos, repor: carregarRepor, cupoes: carregarCupoes, analise: carregarAnalise, categorias: carregarCategorias, clientes: carregarClientes, campanha: carregarCampanha })[v]();
 }
 
 /* ---------- encomendas ---------- */

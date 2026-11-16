@@ -47,8 +47,20 @@ async function catalogoVivo(prefixo = '') {
   }
 }
 
-// Cupões (o servidor confirma sempre; isto só serve para mostrar). Código normalizado: maiúsculas, só letras e números.
-const CUPOES = { FIGO: { nome: 'FIGO!', portesGratis: true } };
+// Cupões: criados no painel (tabela incomum_cupoes). A loja só pergunta se um código vale; o servidor confirma sempre no pagamento.
 const normCupao = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-const cupaoValido = c => CUPOES[normCupao(c)] || null;
-const cupaoGuardado = () => { try { return localStorage.getItem('incomum-cupao') || ''; } catch { return ''; } };
+async function validarCupao(codigo) {
+  const C = window.INCOMUM || {};
+  try {
+    const r = await fetch(`${C.supabaseUrl}/rest/v1/rpc/incomum_cupao`, {
+      method: 'POST', headers: { apikey: C.supabaseChave, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_codigo: String(codigo || '').slice(0, 40) }),
+    });
+    const j = await r.json();
+    return j && typeof j === 'object' ? j : { ok: false, erro: 'Não foi possível verificar o cupão.' };
+  } catch { return { ok: false, erro: 'Não foi possível verificar o cupão. Tenta de novo.' }; }
+}
+const cupaoGuardado = () => { try { const j = JSON.parse(localStorage.getItem('incomum-cupao') || 'null'); return j && j.codigo ? j : null; } catch { return null; } };
+const guardarCupao = c => { try { c ? localStorage.setItem('incomum-cupao', JSON.stringify(c)) : localStorage.removeItem('incomum-cupao'); } catch {} };
+const cupaoTexto = c => [c.pct ? `-${c.pct}% em tudo` : '', c.portes_gratis ? 'envio grátis' : ''].filter(Boolean).join(' + ');
+const eurCup = c => (c / 100).toFixed(2).replace('.', ',') + ' €';

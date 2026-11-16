@@ -472,3 +472,4 @@ html{scroll-padding-top:80px}
 html,body{overflow-x:hidden;max-width:100%}
 @supports (overflow:clip){html,body{overflow-x:clip}}
 .drawer{overflow:hidden}
+.cup-ok.falta{color:#8a5a00;background:#fff6e5}
