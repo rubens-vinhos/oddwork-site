@@ -16,7 +16,7 @@ async function catalogoVivo(prefixo = '') {
     if (!rp.ok || !rc.ok) throw new Error('resposta ' + rp.status);
     const linhas = await rp.json(), cats = await rc.json();
     if (!linhas.length) throw new Error('sem produtos');
-    const url = u => (/^https?:/.test(u) ? u : prefixo + u);
+    const url = u => { u = String(u || ''); if (/["'<>\s]/.test(u) || /^[a-z]+:/i.test(u) && !/^https:/i.test(u)) return ''; return /^https:/i.test(u) ? u : prefixo + u; };
     const produtos = linhas.map(p => {
       const fotos = (Array.isArray(p.fotos) ? p.fotos : []).filter(f => f && f.url);
       const imgs = fotos.map(f => url(f.url));
