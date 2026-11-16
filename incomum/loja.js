@@ -41,7 +41,8 @@ const taxa = n => tiers().reduce((r, t) => n >= t.pecas ? Math.max(r, t.pct) : r
 const maxTaxa = () => tiers().reduce((r, t) => Math.max(r, t.pct), 0);
 const tierTxt = (t, i, a) => { const mais = a.length > 1 && i === a.length - 1; return `${t.pecas}${mais ? ' ou mais' : ''} peça${t.pecas > 1 || mais ? 's' : ''} -${t.pct}%`; };
 
-const avail = (p, cor, tam) => p.variantes.some(v => v.disp && (!cor || v.cor === cor) && (!tam || v.tam === tam));
+const TAM_EQ = { PP: 'XS', P: 'S', G: 'L', GG: 'XL' }, tamN = t => TAM_EQ[t] || t;
+const avail = (p, cor, tam) => p.variantes.some(v => v.disp && (!cor || v.cor === cor) && (!tam || v.tam === tam || tamN(v.tam) === tam));
 const sizes = p => [...new Set(p.variantes.map(v => v.tam).filter(Boolean))].sort(szOrd);
 const units = p => p.variantes.filter(v => v.disp).length;
 const lowStock = p => { const t = p.variantes.filter(v => typeof v.stock === 'number').reduce((a, v) => a + v.stock, 0); return p.variantes.some(v => typeof v.stock === 'number') && t > 0 && t <= 2; };
@@ -196,7 +197,7 @@ function simDraw() {
     const tams = [...new Set(p.variantes.filter(v => !e.cor || v.cor === e.cor).map(v => v.tam).filter(Boolean))].sort(szOrd);
     return `<div class="sp" data-sp="${p.slug}"><div class="sp-h"><b>${esc(p.nome)}</b><span>${esc([e.cor, e.tam && 'Tam. ' + e.tam].filter(Boolean).join(' · ') || 'escolhe o tamanho')}</span></div>
       ${cores.length > 1 ? `<div class="sw">${cores.map(c => `<button class="${c === e.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-scor="${esc(c)}" aria-label="${esc(c)}" title="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div>` : ''}
-      ${tams.length ? `<div class="sz">${tams.map(t => `<button data-stam="${esc(t)}" class="${t === e.tam ? 'on' : ''}" ${avail(p, e.cor, t) ? '' : 'disabled'}>${esc(t)}</button>`).join('')}</div>` : ''}
+      ${tams.length ? `<div class="sz">${tams.map(t => `<button data-stam="${esc(t)}" class="${t === e.tam ? 'on' : ''}" ${avail(p, e.cor, t) ? '' : 'disabled'}>${esc(tamN(t))}</button>`).join('')}</div>` : ''}
     </div>`;
   }).join('');
   const falta = sel.filter(p => !simVar(p));
@@ -244,7 +245,7 @@ function filters() {
   const chip = (k, v, t) => `<button class="chip${S.F[k] === v ? ' on' : ''}" data-k="${k}" data-v="${esc(v)}">${esc(t)}</button>`;
   $('#cats').innerHTML = chip('cat', '', 'Tudo') + tipos.map(c => chip('cat', c.slug, c.nome)).join('');
   $('#cols').innerHTML = chip('col', '', 'Todas') + cols.map(c => chip('col', c.slug, c.nome)).join('');
-  const all = [...new Set(S.prods.flatMap(p => p.variantes.filter(v => v.disp).map(v => v.tam)).filter(Boolean))].sort(szOrd);
+  const all = [...new Set(S.prods.flatMap(p => p.variantes.filter(v => v.disp).map(v => tamN(v.tam))).filter(Boolean))].sort(szOrd);
   $('#fsizes').innerHTML = chip('size', '', 'Todos') + all.map(s => chip('size', s, s)).join('');
   $$('.filters .chip').forEach(b => b.onclick = () => { const k = b.dataset.k; S.F[k] = S.F[k] === b.dataset.v ? '' : b.dataset.v; S.shown = 24; filters(); grid(); });
 }
@@ -279,7 +280,7 @@ function grid() {
 document.addEventListener('click', e => {
   const q = e.target.closest('.qadd'); if (!q) return;
   e.preventDefault(); e.stopPropagation();
-  const p = S.by[q.dataset.q], av = p.variantes.filter(v => v.disp && (!S.F.size || v.tam === S.F.size));
+  const p = S.by[q.dataset.q], av = p.variantes.filter(v => v.disp && (!S.F.size || tamN(v.tam) === S.F.size));
   if (av.length === 1) return add(av[0].id, 1);
   openP(p.slug, S.F.size ? '' : 'Escolhe a cor e o tamanho');
 });
@@ -337,7 +338,7 @@ function pp() {
         ${hint ? `<p class="hint">${hint}</p>` : ''}
         <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental, ${S.portes.prazo}</p>
         ${cores.length ? `<div class="opt"><div class="opt-h">Cor <span>${esc(P.cor)}</span></div><div class="sw">${cores.map(c => `<button class="${c === P.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-cor="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div></div>` : ''}
-        ${tams.length ? `<div class="opt"><div class="opt-h">Tamanho <span>${P.tam ? esc(P.tam) : 'escolhe o teu'}</span></div><div class="sz">${tams.map(t => `<button data-tam="${esc(t)}" class="${t === P.tam ? 'on' : ''}" ${avail(p, P.cor, t) ? '' : 'disabled'}>${esc(t)}</button>`).join('')}</div></div>` : ''}
+        ${tams.length ? `<div class="opt"><div class="opt-h">Tamanho <span>${P.tam ? esc(P.tam) : 'escolhe o teu'}</span></div><div class="sz">${tams.map(t => `<button data-tam="${esc(t)}" class="${t === P.tam ? 'on' : ''}" ${avail(p, P.cor, t) ? '' : 'disabled'}>${esc(tamN(t))}</button>`).join('')}</div></div>` : ''}
         <div class="stockmsg ${cls}">${msg}</div>
         <div class="buy"><div class="qty"><button data-q="-1" aria-label="Menos">−</button><span>${P.q}</span><button data-q="1" aria-label="Mais">+</button></div>
           <button class="btn${avail(p) && !need ? ' grad' : ''}" id="addBtn" ${!avail(p) ? 'disabled' : ''}>${!avail(p) ? 'Esgotado' : need ? 'Escolhe o tamanho' : 'Adicionar ao saco'}</button></div>
