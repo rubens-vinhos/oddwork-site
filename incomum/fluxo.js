@@ -14,7 +14,7 @@ const Saco = {
 
 // Catálogo (fotos e nomes) + preço e stock reais da base de dados.
 async function catalogo() {
-  const c = await (await fetch('catalogo.json?v=cor3')).json();
+  const c = await (await fetch('catalogo.json?v=cor4')).json();
   const porVar = {};
   for (const p of c.produtos) for (const v of p.variantes) {
     porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, stock: v.disp ? 1 : 0 };

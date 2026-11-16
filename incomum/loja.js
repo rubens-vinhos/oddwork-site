@@ -65,7 +65,7 @@ const DEF = { t1: '', t2: '', lead: '', kick: '' };
 /* ---------- arranque ---------- */
 async function load() {
   const pc = campanha().then(() => { campaign(); document.body.classList.add('ready'); });   // o topo aparece assim que a campanha responde
-  const d = await (await fetch('catalogo.json?v=cor3')).json();
+  const d = await (await fetch('catalogo.json?v=cor4')).json();
   S.prods = d.produtos.sort((a, b) => (b.destaque - a.destaque) || (a.ordem - b.ordem));
   S.cats = d.categorias; S.portes = d.portes || S.portes;
   for (const p of S.prods) { S.by[p.slug] = p; for (const v of p.variantes) S.byVar[v.id] = { p, v }; }
