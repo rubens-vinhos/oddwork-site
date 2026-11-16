@@ -14,29 +14,74 @@ function hex(c) {
   return `hsl(${h} 25% 62%)`;
 }
 
-const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [] };
+
+const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 10, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
 try { S.cart = JSON.parse(localStorage.getItem('incomum-saco') || '[]'); } catch {}
 const save = () => { try { localStorage.setItem('incomum-saco', JSON.stringify(S.cart)); } catch {} };
 
-const vPrice = v => v.promo || v.preco;
+/* ---------- preços e campanha ----------
+   O desconto real é calculado no servidor: nº total de peças do saco -> escalão mais alto atingido, aplicado a todas
+   as peças, sobre o preço atual (promo se existir e for menor, senão preço), com cada preço unitário arredondado ao cêntimo.
+   Aqui mostra-se exatamente a mesma conta (cêntimos inteiros). */
+const vPrice = v => v.promo && v.promo < v.preco ? v.promo : v.preco;
+const cent = v => Math.round(vPrice(v) * 100);                                   // preço atual da variante, em cêntimos
+const precoComDesconto = (c, pct) => Math.round(c * (100 - pct) / 100);         // preço unitário com desconto, em cêntimos
+const eurC = c => eur(c / 100);
+const PORTES = () => Math.round((S.portes && S.portes.valor || 10) * 100);
+
+let CAMP = null; // linha da tabela incomum_campanha (ou null)
+const semCamp = /[?&]semcampanha=1(&|$)/.test(location.search); // só para testes
+const camp = () => {
+  const c = CAMP;
+  return !semCamp && c && c.ativa && Date.parse(c.fim) > Date.now() && tiersOf(c).length ? c : null;
+};
+const tiersOf = c => (Array.isArray(c && c.escaloes) ? c.escaloes : []).filter(t => t && t.pecas > 0 && t.pct > 0).sort((a, b) => a.pecas - b.pecas);
+const tiers = () => { const c = camp(); return c ? tiersOf(c) : []; };
+const taxa = n => tiers().reduce((r, t) => n >= t.pecas ? Math.max(r, t.pct) : r, 0);   // % de desconto para n peças
+const maxTaxa = () => tiers().reduce((r, t) => Math.max(r, t.pct), 0);
+const tierTxt = (t, i, a) => { const mais = a.length > 1 && i === a.length - 1; return `${t.pecas}${mais ? ' ou mais' : ''} peça${t.pecas > 1 || mais ? 's' : ''} -${t.pct}%`; };
+
 const avail = (p, cor, tam) => p.variantes.some(v => v.disp && (!cor || v.cor === cor) && (!tam || v.tam === tam));
 const sizes = p => [...new Set(p.variantes.map(v => v.tam).filter(Boolean))].sort(szOrd);
-const priceHTML = p => {
-  const v = p.variantes.filter(x => x.disp).sort((a, b) => vPrice(a) - vPrice(b))[0] || p.variantes[0];
-  return v && v.promo && v.promo < v.preco ? `${eur(v.promo)}<s>${eur(v.preco)}</s>` : eur(p.preco);
-};
+const units = p => p.variantes.filter(v => v.disp).length;
+const lowStock = p => { const t = p.variantes.filter(v => typeof v.stock === 'number').reduce((a, v) => a + v.stock, 0); return p.variantes.some(v => typeof v.stock === 'number') && t > 0 && t <= 2; };
+// preço atual mais baixo entre as variantes disponíveis (em cêntimos) e o preço riscado, se houver promoção
+function from(p) {
+  const vs = p.variantes.filter(v => v.disp), l = vs.length ? vs : p.variantes;
+  const v = l.slice().sort((a, b) => cent(a) - cent(b))[0];
+  return v ? { c: cent(v), pre: Math.round(v.preco * 100) } : { c: Math.round(p.preco * 100), pre: Math.round(p.preco * 100) };
+}
+// [preço final, preço riscado ou null] para um preço atual c (cêntimos) com taxa r e preço pré-promoção
+const show = (c, pre, r) => r ? [precoComDesconto(c, r), c] : [c, pre > c ? pre : null];
+const priceFmt = (c, pre, r) => { const [f, s] = show(c, pre, r); return `${eurC(f)}${s ? `<s>${eurC(s)}</s>` : ''}`; };
+const priceHTML = p => { const x = from(p); return priceFmt(x.c, x.pre, taxa(1)); };
 const wa = t => `https://wa.me/${CFG.whatsapp || '351910202105'}?text=${encodeURIComponent(t)}`;
-function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2400); }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2800); }
+const isTop = p => p.categorias.includes('tops-croppeds-camisolas');
+const isBot = p => p.categorias.includes('leggings-calcas') || p.categorias.includes('shorts-bermudas');
+const DEF = { t1: '', t2: '', lead: '', kick: '' };
 
 /* ---------- arranque ---------- */
 async function load() {
+  const pc = campanha().then(() => { campaign(); document.body.classList.add('ready'); });   // o topo aparece assim que a campanha responde
   const d = await (await fetch('catalogo.json')).json();
   S.prods = d.produtos.sort((a, b) => (b.destaque - a.destaque) || (a.ordem - b.ordem));
-  S.cats = d.categorias; S.portes = d.portes;
+  S.cats = d.categorias; S.portes = d.portes || S.portes;
   for (const p of S.prods) { S.by[p.slug] = p; for (const v of p.variantes) S.byVar[v.id] = { p, v }; }
-  await stockAoVivo();
-  S.cart = S.cart.filter(i => S.byVar[i.v]);
-  nav(); rail(); filters(); grid(); cartUI(); route();
+  await Promise.all([stockAoVivo(), pc]);
+  S.cart = S.cart.filter(i => S.byVar[i.v] && i.q > 0);
+  paint(); filters(); route();
+  document.body.classList.add('ready');
+}
+// Campanha (Black Friday) vem da base de dados. Sem resposta ou inativa: a loja fica sem nada de campanha.
+async function campanha() {
+  if (!CFG.supabaseUrl) return;
+  try {
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_campanha?select=ativa,nome,fim,escaloes`, { headers: { apikey: CFG.supabaseChave }, signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined });
+    if (!r.ok) return;
+    const l = await r.json();
+    CAMP = Array.isArray(l) ? (l.find(c => c && c.ativa) || null) : null;
+  } catch { /* sem campanha */ }
 }
 // Preço e stock reais vêm da base de dados (o catalogo.json só traz fotos e textos).
 async function stockAoVivo() {
@@ -58,21 +103,97 @@ async function stockAoVivo() {
   } catch { /* sem ligação: fica o catálogo */ }
 }
 
+// redesenha tudo o que depende da campanha / preços
+function paint() { campaign(); nav(); champs(); sim(); grid(); cartUI(); if (P.p) pp(); observe(); }
+
+/* ---------- campanha na interface ---------- */
+function fimTxt(fim) {
+  const o = { timeZone: 'Europe/Lisbon' }, d = new Date(fim);
+  return `${d.toLocaleDateString('pt-PT', { ...o, weekday: 'long' })} ${d.toLocaleDateString('pt-PT', { ...o, day: '2-digit', month: '2-digit' })}`;
+}
+function campaign() {
+  const c = camp(), on = !!c, ts = tiers();
+  S.on = on;
+  document.body.classList.toggle('no-bf', !on);
+  if (!DEF.t1) Object.assign(DEF, { t1: $('#t1').textContent, t2: $('#t2').textContent, lead: $('#lead').textContent, kick: $('#kick').textContent });
+  if (on) {
+    const [a, ...b] = c.nome.trim().split(/\s+/);
+    $('#t1').textContent = a; $('#t2').textContent = b.join(' ');
+    $('#kick').textContent = `Só até ${fimTxt(c.fim)}`;
+    $('#lead').textContent = `A LIVE! original, em Portugal. Quanto mais peças levas, maior o desconto: ${ts.map(tierTxt).join(', ')}.`;
+    $('#stampPct').textContent = `-${maxTaxa()}%`;
+    $('#tbName').textContent = `${c.nome} Incomum`;
+  } else {
+    $('#t1').textContent = DEF.t1; $('#t2').textContent = DEF.t2; $('#lead').textContent = DEF.lead; $('#kick').textContent = DEF.kick;
+  }
+  $('#simH').textContent = on ? 'Monta o teu conjunto' : 'Monta o teu look';
+  $('#simTxt').textContent = on ? `Escolhe uma parte de cima e uma de baixo e vê já quanto poupas: ${ts.slice(1).map(tierTxt).join(', ')}.` : 'Combina uma parte de cima e uma de baixo e vê o look completo.';
+  $('#stepTxt').textContent = on ? `${ts.map(tierTxt).join(' · ')}. O desconto é automático no saco.` : 'Escolhe as peças que quiseres e junta-as ao saco.';
+  $('#lojaEye').textContent = on ? 'Tudo com desconto' : 'Coleção';
+  const items = on ? [c.nome, ...ts.map(tierTxt), 'LIVE! original', `Envio ${eurC(PORTES())}`] : ['LIVE! original', 'Revendedor autorizado', 'Envio para Portugal continental', '14 dias para devolver'];
+  $('#mq').innerHTML = Array(2).fill(items.map(x => `<span>${esc(x)}</span><span>✦</span>`).join('')).join('');
+  tick();
+}
+function tick() {
+  const on = !!camp();
+  if (S.on !== null && on !== S.on) return paint();   // a campanha acabou: esconde tudo sem recarregar
+  if (!on) return;
+  const s = Math.max(0, (Date.parse(CAMP.fim) - Date.now()) / 1000 | 0);
+  const d = s / 86400 | 0, h = s / 3600 % 24 | 0, m = s / 60 % 60 | 0, x = s % 60, p = n => String(n).padStart(2, '0');
+  $$('#cd b').forEach((b, i) => b.textContent = p([d, h, m, x][i]));
+  $('#tb').textContent = `${d}d ${p(h)}:${p(m)}:${p(x)}`;
+}
+setInterval(tick, 1000);
+
 function nav() {
-  const L = [['#loja', 'Coleção', ''], ['#loja', 'Leggings', 'leggings-calcas'], ['#loja', 'Tops', 'tops-croppeds-camisolas'], ['#loja', 'Shorts', 'shorts-bermudas'], ['#visita', 'Loja física', null]];
-  const h = L.map(([href, t, c]) => `<a href="${href}"${c !== null ? ` data-cat="${c}"` : ''}>${t}</a>`).join('');
-  $('#nav').innerHTML = h; $('#mlinks').innerHTML = h + '<a href="conta.html">A minha conta · encomendas</a>';
+  const bf = !!camp();
+  const L = [['#loja', bf ? 'Black Friday' : 'Coleção', '', bf ? 'bf' : ''], ['#loja', 'Leggings', 'leggings-calcas'], ['#loja', 'Tops', 'tops-croppeds-camisolas'], ['#loja', 'Shorts', 'shorts-bermudas'], ['#visita', 'Loja física', null]];
+  const h = L.map(([href, t, c, k]) => `<a href="${href}"${c !== undefined && c !== null ? ` data-cat="${c}"` : ''}${k ? ` class="${k}"` : ''}>${t}</a>`).join('');
+  $('#nav').innerHTML = h; $('#mlinks').innerHTML = h + (bf ? '<a href="#conjunto">Monta o teu conjunto</a>' : '') + '<a href="conta.html">A minha conta · encomendas</a>';
   $$('[data-cat]').forEach(a => a.addEventListener('click', () => { S.F.cat = a.dataset.cat; S.shown = 24; filters(); grid(); drawer('#mnav', false); }));
   $$('#mlinks a').forEach(a => a.addEventListener('click', () => drawer('#mnav', false)));
 }
 
 /* ---------- destaques ---------- */
-function rail() {
-  const six = S.prods.filter(p => /six\s*pocket/i.test(p.nome) && avail(p));
-  const all = S.prods.filter(p => /allu?re/i.test(p.nome) && avail(p));
-  const L = [...six.slice(0, 3), ...all.slice(0, 7)];
-  $('#rail').innerHTML = L.map(card).join('');
+function champs() {
+  const six = S.prods.filter(p => /six\s*pocket/i.test(p.nome) && avail(p)).sort((a, b) => units(b) - units(a));
+  const all = S.prods.filter(p => /allu?re/i.test(p.nome) && avail(p)).sort((a, b) => units(b) - units(a));
+  const L = [six[0], ...all.slice(0, 4)].filter(Boolean);
+  while (L.length < 5) { const x = S.prods.find(p => avail(p) && !L.includes(p)); if (!x) break; L.push(x); }
+  $('#champs').innerHTML = L.map((p, i) => { const x = from(p), r = taxa(1), [f, s] = show(x.c, x.pre, r);
+    return `<a class="champ reveal" href="#p/${p.slug}"><img src="${p.imgs[i === 0 ? 1 : 0] || p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">
+    <div class="ci"><div><span class="ctag">${i === 0 ? 'Mais procurada' : /allu?re/i.test(p.nome) ? 'Tecido Allure' : 'Destaque'}</span><h3>${esc(p.nome)}</h3></div>
+    <div class="pp"><b>${eurC(f)}</b>${s ? `<s>${eurC(s)}</s>` : ''}</div><span class="go">→</span></div></a>`; }).join('');
 }
+
+/* ---------- simulador de conjunto ---------- */
+let simT = null, simB = null, simTops = [], simBots = [];
+function sim() {
+  const pop = f => S.prods.filter(p => f(p) && avail(p)).sort((a, b) => (/allu?re|six/i.test(b.nome) - /allu?re|six/i.test(a.nome)) || units(b) - units(a)).slice(0, 14);
+  simTops = pop(isTop); simBots = pop(p => isBot(p) && !isTop(p));
+  if (!simTops.includes(simT)) simT = simTops[0] || null;
+  if (!simBots.includes(simB)) simB = simBots.find(p => /six/i.test(p.nome)) || simBots[0] || null;
+  simDraw();
+}
+function simDraw() {
+  const opt = (p, on) => `<button class="opt ${on ? 'on' : ''}" data-s="${p.slug}"><img src="${p.imgs[0]}" alt="" loading="lazy"><span><b>${esc(p.nome)}</b><small>${eurC(from(p).c)}</small></span><span class="ck"></span></button>`;
+  $('#tops').innerHTML = simTops.map(p => opt(p, p === simT)).join('');
+  $('#bots').innerHTML = simBots.map(p => opt(p, p === simB)).join('');
+  const sel = [simT, simB].filter(Boolean), n = sel.length, r = taxa(n);
+  const norm = sel.reduce((a, p) => a + from(p).c, 0), tot = sel.reduce((a, p) => a + precoComDesconto(from(p).c, r), 0);
+  $('#look').innerHTML = (simT ? `<img src="${simT.imgs[0]}" alt="">` : '<div class="ph">Escolhe um top</div>') + (simB ? `<img src="${simB.imgs[0]}" alt="">` : '<div class="ph">Escolhe a parte de baixo</div>');
+  const ts = tiers();
+  $('#meter').style.width = ts.length ? Math.min(100, n / ts[ts.length - 1].pecas * 100) + '%' : '0';
+  $('#tiers').innerHTML = ts.map((t, i) => `<span class="${t.pecas === n ? 'hit' : ''}">${tierTxt(t, i, ts)}</span>`).join('');
+  $('#sNorm').textContent = eurC(norm); $('#sLbl').textContent = r ? `Poupas (-${r}%)` : 'Poupas';
+  $('#sSave').textContent = eurC(norm - tot); $('#sTot').textContent = eurC(tot);
+  $('#simAdd').disabled = !n;
+  $('#simAdd').textContent = n ? 'Escolher tamanhos →' : 'Escolhe pelo menos 1 peça';
+}
+const simPick = (get, set) => e => { const o = e.target.closest('.opt'); if (!o) return; const p = S.by[o.dataset.s]; set(get() === p ? null : p); simDraw(); };
+$('#tops').onclick = simPick(() => simT, v => simT = v);
+$('#bots').onclick = simPick(() => simB, v => simB = v);
+$('#simAdd').onclick = () => { const sel = [simT, simB].filter(Boolean); if (!sel.length) return; S.queue = sel.slice(1).map(p => p.slug); openP(sel[0].slug, sel.length > 1 ? `Peça 1 de ${sel.length} do conjunto` : ''); };
 
 /* ---------- filtros e lista ---------- */
 function filters() {
@@ -87,20 +208,22 @@ function filters() {
 function list() {
   const { cat, col, size, q, sort } = S.F, n = q.trim().toLowerCase();
   let L = S.prods.filter(p => (!cat || p.categorias.includes(cat)) && (!col || p.categorias.includes(col)) && (!size || avail(p, '', size)) && (!n || (p.nome + ' ' + p.cores.join(' ')).toLowerCase().includes(n)));
-  if (sort === 'asc') L = [...L].sort((a, b) => a.preco - b.preco);
-  if (sort === 'desc') L = [...L].sort((a, b) => b.preco - a.preco);
+  if (sort === 'asc') L = [...L].sort((a, b) => from(a).c - from(b).c);
+  if (sort === 'desc') L = [...L].sort((a, b) => from(b).c - from(a).c);
   if (sort === 'az') L = [...L].sort((a, b) => a.nome.localeCompare(b.nome, 'pt'));
   if (!sort) L = [...L].sort((a, b) => avail(b) - avail(a));
   return L;
 }
-function card(p) {
-  const ok = avail(p), cores = p.cores.slice(0, 6);
-  return `<a class="card" href="#p/${p.slug}">
-    <div class="ph"><img class="a" src="${p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">${p.imgs[1] ? `<img class="b" src="${p.imgs[1]}" alt="" loading="lazy">` : ''}
-      ${!ok ? '<span class="tag out">Esgotado</span>' : p.destaque ? '<span class="tag">Mais procurado</span>' : ''}</div>
-    <div class="ci"><h3>${esc(p.nome)}</h3><p class="price">${priceHTML(p)}</p>
-      ${cores.length > 1 ? `<div class="dots">${cores.map(c => `<span class="dot" title="${esc(c)}" style="background:${hex(c)}"></span>`).join('')}</div>` : ''}
-      <div class="szs">${sizes(p).map(s => `<span class="${avail(p, '', s) ? '' : 'no'}">${esc(s)}</span>`).join('')}</div></div></a>`;
+function card(p, i = 0) {
+  const ok = avail(p), cores = p.cores.slice(0, 6), r1 = taxa(1), href = `#p/${p.slug}`;
+  return `<article class="card${ok ? '' : ' soldout'}" style="animation-delay:${(i % 24) * 30}ms">
+    <div class="ph"><a class="cl" href="${href}" aria-label="${esc(p.nome)}"><img class="a" src="${p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">${p.imgs[1] ? `<img class="b" src="${p.imgs[1]}" alt="" loading="lazy">` : ''}
+      ${r1 && ok ? `<span class="disc">-${r1}%</span>` : ''}
+      ${!ok ? '<span class="flag dark">Esgotado</span>' : lowStock(p) ? '<span class="flag">Últimas unidades</span>' : p.destaque ? '<span class="tag">Mais procurado</span>' : ''}</a>
+      ${ok ? `<button class="qadd" data-q="${p.slug}" aria-label="Adicionar ${esc(p.nome)} ao saco">+</button>` : ''}</div>
+    <a class="cb" href="${href}"><div class="ci"><h3>${esc(p.nome)}</h3></div><p class="price">${priceHTML(p)}</p>
+      ${cores.length > 1 ? `<div class="dots">${cores.map(c => `<span class="dot" title="${esc(c)}" style="background:${hex(c)}"></span>`).join('')}${p.cores.length > 6 ? ` +${p.cores.length - 6}` : ''}</div>` : ''}
+      <div class="szs">${sizes(p).map(s => `<span class="${avail(p, '', s) ? (s === S.F.size ? 'hit' : '') : 'no'}">${esc(s)}</span>`).join('')}</div></a></article>`;
 }
 function grid() {
   const L = list();
@@ -109,18 +232,31 @@ function grid() {
   $('#empty').hidden = L.length > 0;
   $('#moreBtn').hidden = L.length <= S.shown;
 }
+// adicionar rápido (+) nos cartões
+document.addEventListener('click', e => {
+  const q = e.target.closest('.qadd'); if (!q) return;
+  e.preventDefault(); e.stopPropagation();
+  const p = S.by[q.dataset.q], av = p.variantes.filter(v => v.disp && (!S.F.size || v.tam === S.F.size));
+  if (av.length === 1) return add(av[0].id, 1);
+  openP(p.slug, S.F.size ? '' : 'Escolhe a cor e o tamanho');
+});
 
 /* ---------- página de produto ---------- */
-const P = { p: null, cor: '', tam: '', q: 1, i: 0 };
+const P = { p: null, cor: '', tam: '', q: 1, i: 0, note: '' };
+function openP(slug, note = '') { S.note = note; S.expect = slug; if (location.hash !== '#p/' + slug) location.hash = 'p/' + slug; else route(); }
 function route() {
   const m = location.hash.match(/^#p\/(.+)$/), p = m && S.by[decodeURIComponent(m[1])];
   document.body.classList.toggle('on-pp', !!p);
   $('#home').hidden = !!p; $('#pp').hidden = !p;
   if (p) {
-    if (P.p !== p) Object.assign(P, { p, cor: (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '', tam: '', q: 1, i: 0 });
+    if (P.p !== p) {
+      Object.assign(P, { p, cor: (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '', tam: '', q: 1, i: 0, note: S.note });
+      if (S.expect !== p.slug) S.queue = [];
+      S.note = ''; S.expect = '';
+    }
     pp(); scrollTo(0, 0); document.title = `${p.nome} · Incomum.eu`;
   } else {
-    P.p = null; document.title = 'Incomum.eu · LIVE! original em Portugal';
+    P.p = null; S.queue = []; document.title = 'Incomum.eu · LIVE! original em Portugal';
     const ob = location.hash.match(/^#obrigado\/(cs_\w+)$/);
     if (ob) return location.replace('obrigado.html?s=' + ob[1]);
     if (location.hash === '#saco') { history.replaceState(null, '', location.pathname); return drawer('#cart', true); }
@@ -136,20 +272,32 @@ function pp() {
   const sel = p.variantes.find(v => (!cores.length || v.cor === P.cor) && (!tams.length || v.tam === P.tam));
   const need = tams.length && !P.tam;
   const cat = S.cats.find(c => c.grupo === 'tipo' && p.categorias.includes(c.slug));
+  const r1 = taxa(1), n = S.cart.reduce((a, i) => a + i.q, 0);
+  let hint = '';
+  if (r1) { const after = n + 1, ra = taxa(after), nx = tiers().find(t => t.pecas > after);
+    if (ra > r1) hint = `Com ${after} peças no saco pagas <b>-${ra}%</b> em todas.`;
+    else if (nx) hint = `Leva ${nx.pecas} peças e paga <b>-${nx.pct}%</b> em todas.`; }
+  let msg = '', cls = '';
+  if (!avail(p)) { msg = 'Esgotado de momento. Pergunta-nos quando volta.'; cls = 'no'; }
+  else if (sel && !sel.disp) { msg = 'Esgotado nesta combinação.'; cls = 'no'; }
+  else if (sel) { const lo = typeof sel.stock === 'number' && sel.stock <= 2; msg = lo ? '● Últimas unidades' : '● Disponível'; cls = lo ? 'low' : ''; }
+  const x = from(p);
   $('#pp').innerHTML = `<div class="wrap">
     <div class="crumbs"><a href="#loja">Coleção</a>${cat ? `<span>/</span><a href="#loja" data-cat="${cat.slug}">${esc(cat.nome)}</a>` : ''}</div>
     <div class="pd">
       <div class="gal"><div class="thumbs">${imgs.map((u, i) => `<button class="${i === P.i ? 'on' : ''}" data-i="${i}" aria-label="Foto ${i + 1}"><img src="${u}" alt="" loading="lazy"></button>`).join('')}</div>
         <div class="big"><img src="${imgs[P.i]}" alt="${esc(p.nome)}"></div></div>
       <div class="info">
-        <p class="eyebrow">LIVE! · Original</p>
+        ${P.note ? `<span class="pill">${esc(P.note)}</span>` : '<p class="eyebrow">LIVE! · Original</p>'}
         <h1>${esc(p.nome)}</h1>
-        <p class="price">${sel ? (sel.promo && sel.promo < sel.preco ? `${eur(sel.promo)}<s>${eur(sel.preco)}</s>` : eur(sel.preco)) : priceHTML(p)}</p>
+        <p class="price">${sel ? priceFmt(cent(sel), Math.round(sel.preco * 100), r1) : priceHTML(p)}${r1 ? `<span class="off">-${r1}%</span>` : ''}</p>
+        ${hint ? `<p class="hint">${hint}</p>` : ''}
         <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental, ${S.portes.prazo}</p>
         ${cores.length ? `<div class="opt"><div class="opt-h">Cor <span>${esc(P.cor)}</span></div><div class="sw">${cores.map(c => `<button class="${c === P.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-cor="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div></div>` : ''}
         ${tams.length ? `<div class="opt"><div class="opt-h">Tamanho <span>${P.tam ? esc(P.tam) : 'escolhe o teu'}</span></div><div class="sz">${tams.map(t => `<button data-tam="${esc(t)}" class="${t === P.tam ? 'on' : ''}" ${avail(p, P.cor, t) ? '' : 'disabled'}>${esc(t)}</button>`).join('')}</div></div>` : ''}
+        <div class="stockmsg ${cls}">${msg}</div>
         <div class="buy"><div class="qty"><button data-q="-1" aria-label="Menos">−</button><span>${P.q}</span><button data-q="1" aria-label="Mais">+</button></div>
-          <button class="btn" id="addBtn" ${!avail(p) ? 'disabled' : ''}>${!avail(p) ? 'Esgotado' : need ? 'Escolhe o tamanho' : 'Adicionar ao saco'}</button></div>
+          <button class="btn${avail(p) && !need ? ' grad' : ''}" id="addBtn" ${!avail(p) ? 'disabled' : ''}>${!avail(p) ? 'Esgotado' : need ? 'Escolhe o tamanho' : 'Adicionar ao saco'}</button></div>
         <a class="btn ghost ask" href="${wa(`Olá Incomum! Estou a ver *${p.nome}*${P.cor ? ' (' + P.cor + ')' : ''} no site. Que tamanho me aconselham?`)}" target="_blank" rel="noopener">Dúvidas de tamanho? WhatsApp</a>
         <div class="assure">
           <div><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>Revendedor autorizado LIVE! em Portugal</div>
@@ -159,17 +307,17 @@ function pp() {
         ${p.descricao ? `<div class="desc"><h4>Detalhes</h4>${esc(p.descricao)}</div>` : ''}
       </div>
     </div>
-    <div class="sec"><div class="sh"><div><p class="eyebrow">Combina com</p><h2>Também vais gostar</h2></div></div><div class="rail">${related(p).map(card).join('')}</div></div>
+    <div class="sec"><div class="sh"><div><p class="eyebrow">Combina com</p><h2>Também vais gostar</h2></div></div><div class="related">${related(p).slice(0, 4).map(card).join('')}</div></div>
   </div>`;
   $$('#pp .thumbs button').forEach(b => b.onclick = () => { P.i = +b.dataset.i; pp(); });
   $$('#pp [data-cor]').forEach(b => b.onclick = () => { P.cor = b.dataset.cor; P.i = 0; if (P.tam && !avail(p, P.cor, P.tam)) P.tam = ''; pp(); });
   $$('#pp [data-tam]').forEach(b => b.onclick = () => { P.tam = b.dataset.tam; pp(); });
-  $$('#pp [data-q]').forEach(b => b.onclick = () => { P.q = Math.max(1, Math.min(10, P.q + +b.dataset.q)); pp(); });
-  $$('#pp [data-cat]').forEach(a => a.onclick = () => { S.F.cat = a.dataset.cat; filters(); grid(); });
+  $$('#pp [data-q]:not(.qadd)').forEach(b => b.onclick = () => { P.q = Math.max(1, Math.min(10, P.q + +b.dataset.q)); pp(); });
+  $$('#pp .crumbs [data-cat]').forEach(a => a.onclick = () => { S.F.cat = a.dataset.cat; filters(); grid(); });
   $('#addBtn').onclick = () => {
     if (need) { $('.sz').animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], { duration: 260 }); toast('Escolhe primeiro o tamanho'); return; }
     if (!sel || !sel.disp) return toast('Esta combinação está esgotada');
-    add(sel.id, P.q); P.q = 1; pp();
+    const q = P.q; P.q = 1; add(sel.id, q); if (!S.queue.length) pp();
   };
 }
 function related(p) {
@@ -183,33 +331,45 @@ function add(vid, q) {
   const it = S.cart.find(i => i.v === vid);
   const max = Math.min(10, S.byVar[vid].v.stock ?? 10);
   if (it) it.q = Math.min(max, it.q + q); else S.cart.push({ v: vid, q: Math.min(max, q) });
-  save(); cartUI(); toast('Adicionado ao saco');
+  save(); cartUI();
+  const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n), nx = tiers().find(t => t.pecas > n);
+  toast(`Adicionado ao saco${nx ? ` · junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com -${nx.pct}%` : r ? ` · tens o desconto máximo de -${r}%` : ''}`);
   const b = $('#badge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
-  setTimeout(() => drawer('#cart', true), 350);
+  if (S.queue.length) { const nxt = S.queue.shift(); setTimeout(() => openP(nxt, 'Agora a parte de baixo'), 450); }
+  else setTimeout(() => drawer('#cart', true), 350);
 }
+// Mesma conta do servidor, em cêntimos: escalão pelo nº total de peças, aplicado a todas, preço unitário arredondado ao cêntimo.
 function totals() {
-  const sub = S.cart.reduce((a, i) => a + vPrice(S.byVar[i.v].v) * i.q, 0);
-  const portes = sub ? S.portes.valor : 0;
-  return { sub, portes, tot: sub + portes };
+  const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n);
+  let bruto = 0, liq = 0;
+  for (const i of S.cart) { const c = cent(S.byVar[i.v].v); bruto += c * i.q; liq += precoComDesconto(c, r) * i.q; }
+  const portes = n ? PORTES() : 0;
+  return { n, r, bruto, desc: bruto - liq, liq, portes, tot: liq + portes };
 }
 function cartUI() {
-  const n = S.cart.reduce((a, i) => a + i.q, 0), b = $('#badge');
+  const T = totals(), n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
   b.hidden = !n; b.textContent = n;
-  const { sub, portes, tot } = totals();
-  $('#ship').innerHTML = !n ? '' : `Envio para <b>Portugal continental</b> · entrega ${S.portes.prazo}`;
+  const nx = ts.find(t => t.pecas > n);
+  $('#ship').classList.toggle('g', !!(n && last));
+  $('#ship').innerHTML = !n ? '' : last
+    ? `<div class="goal"><span>${nx ? `Junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com <b>-${nx.pct}%</b> em tudo` : `Tens o desconto máximo: <b>-${T.r}%</b> em tudo ✦`}</span><div class="meter"><i style="width:${Math.min(100, n / last.pecas * 100)}%"></i></div></div>`
+    : `Envio para <b>Portugal continental</b> · entrega ${S.portes.prazo}`;
   $('#ship').hidden = !n;
   $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu saco está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
-    S.cart.map((i, k) => { const { p, v } = S.byVar[i.v]; return `<div class="it"><a href="#p/${p.slug}" data-close><img src="${v.img || p.imgs[0]}" alt=""></a>
+    S.cart.map((i, k) => { const { p, v } = S.byVar[i.v], c = cent(v), u = precoComDesconto(c, T.r), falta = typeof v.stock === 'number' && i.q > v.stock;
+      return `<div class="it"><a href="#p/${p.slug}" data-close><img src="${v.img || p.imgs[0]}" alt=""></a>
       <div><h4>${esc(p.nome)}</h4><small>${[v.cor, v.tam && 'Tam. ' + v.tam].filter(Boolean).map(esc).join(' · ')}</small>
+      ${falta ? `<div class="err">${v.stock > 0 ? 'Stock insuficiente: reduz a quantidade' : 'Esgotou entretanto'}</div>` : ''}
       <div class="qty"><button data-k="${k}" data-d="-1" aria-label="Menos">−</button><span>${i.q}</span><button data-k="${k}" data-d="1" aria-label="Mais">+</button></div></div>
-      <div class="r"><span>${eur(vPrice(v) * i.q)}</span><button class="rm" data-rm="${k}">Remover</button></div></div>`; }).join('');
-  $('#cfoot').innerHTML = !n ? '' : `<div class="ln"><span>Subtotal</span><span>${eur(sub)}</span></div>
-    <div class="ln"><span>Envio Portugal continental</span><span>${eur(portes)}</span></div>
-    <div class="ln tot"><span>Total</span><span>${eur(tot)}</span></div>
-    <button class="btn block" id="checkout">Finalizar compra</button>
+      <div class="r"><span>${eurC(u * i.q)}${T.r ? `<s>${eurC(c * i.q)}</s>` : ''}</span><button class="rm" data-rm="${k}">Remover</button></div></div>`; }).join('');
+  $('#cfoot').innerHTML = !n ? '' : `<div class="ln"><span>Subtotal (${n} peça${n === 1 ? '' : 's'})</span><span>${eurC(T.bruto)}</span></div>
+    ${T.r ? `<div class="ln save"><span>${esc(camp().nome)} -${T.r}%</span><span>-${eurC(T.desc)}</span></div>` : ''}
+    <div class="ln"><span>Envio Portugal continental</span><span>${eurC(T.portes)}</span></div>
+    <div class="ln tot"><span>Total</span><span>${eurC(T.tot)}</span></div>
+    <button class="btn block grad" id="checkout">Finalizar compra</button>
     <p class="paynote">Pagamento seguro com cartão ou MB WAY · IVA incluído<br>Ao continuar aceitas os <a href="termos.html" style="text-decoration:underline">termos de venda</a></p>`;
-  $$('#items [data-d]').forEach(x => x.onclick = () => { const i = S.cart[+x.dataset.k]; i.q += +x.dataset.d; if (i.q < 1) S.cart.splice(+x.dataset.k, 1); else i.q = Math.min(10, i.q); save(); cartUI(); });
-  $$('#items [data-rm]').forEach(x => x.onclick = () => { S.cart.splice(+x.dataset.rm, 1); save(); cartUI(); });
+  $$('#items [data-d]').forEach(x => x.onclick = () => { const i = S.cart[+x.dataset.k], max = Math.min(10, S.byVar[i.v].v.stock ?? 10); i.q += +x.dataset.d; if (i.q < 1) S.cart.splice(+x.dataset.k, 1); else i.q = Math.min(max, i.q); save(); cartUI(); if (P.p) pp(); });
+  $$('#items [data-rm]').forEach(x => x.onclick = () => { S.cart.splice(+x.dataset.rm, 1); save(); cartUI(); if (P.p) pp(); });
   $$('#cart [data-close]').forEach(x => x.addEventListener('click', () => drawer('#cart', false)));
   const c = $('#checkout'); if (c) c.onclick = checkout;
 }
@@ -217,11 +377,10 @@ function cartUI() {
 async function checkout() {
   if (CFG.checkoutUrl && CFG.stripeChave) { save(); location.href = 'checkout.html'; return; }
   // Ainda sem pagamentos online: encomenda pelo WhatsApp com o resumo do saco.
-  const { tot, portes } = totals();
-  const linhas = S.cart.map(i => { const { p, v } = S.byVar[i.v]; return `• ${i.q}× ${p.nome}${v.cor ? ' · ' + v.cor : ''}${v.tam ? ' · ' + v.tam : ''} — ${eur(vPrice(v) * i.q)}`; });
-  open(wa(`Olá! Quero encomendar:\n${linhas.join('\n')}\nEnvio: ${eur(portes)}\nTotal: ${eur(tot)}`), '_blank', 'noopener');
+  const T = totals(), r = T.r;
+  const linhas = S.cart.map(i => { const { p, v } = S.byVar[i.v]; return `• ${i.q}× ${p.nome}${v.cor ? ' · ' + v.cor : ''}${v.tam ? ' · ' + v.tam : ''} — ${eurC(precoComDesconto(cent(v), r) * i.q)}`; });
+  open(wa(`Olá! Quero encomendar:\n${linhas.join('\n')}\n${r ? `Desconto: -${r}%\n` : ''}Envio: ${eurC(T.portes)}\nTotal: ${eurC(T.tot)}`), '_blank', 'noopener');
 }
-
 
 /* ---------- gavetas, eventos ---------- */
 function drawer(sel, on) { const d = $(sel); d.classList.toggle('on', on); d.setAttribute('aria-hidden', !on); document.body.style.overflow = on ? 'hidden' : ''; }
@@ -246,5 +405,27 @@ document.addEventListener('click', e => {
 });
 addEventListener('hashchange', route);
 { const y = $('#yr'); if (y) y.textContent = new Date().getFullYear(); }
-(() => { const v = $('.hero-v'); if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); } })();
-load().catch(() => { $('#grid').innerHTML = '<p>Não foi possível carregar a coleção. Atualiza a página.</p>'; });
+
+/* ---------- animações de entrada e cabeçalho ---------- */
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .12 }) : null;
+function observe() { $$('.reveal:not(.in)').forEach(el => io ? io.observe(el) : el.classList.add('in')); }
+addEventListener('scroll', () => $('.hd').classList.toggle('sc', scrollY > 10), { passive: true });
+
+/* ---------- vídeo do topo: reel + fundo desfocado (só desktop), pausa fora do ecrã e com "reduzir movimento" ---------- */
+(() => {
+  const hero = $('.hero'), v = $('#heroVid'), pp = $('#reelPP'), bg = $('.hero-bg');
+  if (!hero || !v) return;
+  let parado = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (bg && matchMedia('(min-width: 901px)').matches && !parado) { bg.src = bg.dataset.src; bg.preload = 'auto'; bg.play().catch(() => {}); }
+  else if (bg) bg.remove();
+  const vids = [v, bg].filter(Boolean);
+  const sync = () => { pp.textContent = parado ? '▶' : '❚❚'; pp.setAttribute('aria-label', parado ? 'Ver vídeo' : 'Pausar vídeo'); };
+  const tocar = on => vids.forEach(x => on ? x.play().catch(() => {}) : x.pause());
+  if (parado) { v.removeAttribute('autoplay'); v.pause(); }
+  pp.onclick = () => { parado = !parado; tocar(!parado); sync(); };
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => tocar(e.isIntersecting && !parado)).observe(hero);
+  sync();
+})();
+
+setTimeout(() => document.body.classList.add('ready'), 3000); // segurança: nunca deixa o texto do topo escondido
+load().catch(() => { document.body.classList.add('ready'); $('#grid').innerHTML = '<p>Não foi possível carregar a coleção. Atualiza a página.</p>'; });

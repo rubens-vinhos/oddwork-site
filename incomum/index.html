@@ -9,12 +9,13 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="loja.css">
+<noscript><style>.hero .txt{opacity:1!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body>
+<body class="no-bf">
 
-<div class="bar"><div class="bar-in"><span>Envio para Portugal continental · até 7 dias úteis</span><span class="sep hide-s">·</span><span>Revendedor autorizado LIVE!</span><span class="sep hide-s">·</span><span class="hide-s">Loja em Aveiro</span></div></div>
+<div class="bar"><div class="bar-in"><span class="bf-only" id="tbName"></span><span class="t bf-only" id="tb">--</span><span id="tbAviso">Envio 10 € para Portugal continental · até 7 dias úteis</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Revendedor autorizado LIVE!</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Loja em Aveiro</span></div></div>
 
 <header class="hd">
   <div class="wrap hd-in">
@@ -30,24 +31,65 @@
 </header>
 
 <main id="home">
-  <section class="hero">
-    <video class="hero-v" autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg"><source src="hero.mp4" type="video/mp4"></video>
-    <div class="hero-shade"></div>
+  <section class="hero" id="top">
+    <video class="hero-bg" data-src="hero-bg.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
     <div class="wrap hero-in">
-      <p class="eyebrow light">Revendedor autorizado · Aveiro</p>
-      <h1>A LIVE! original,<br>agora em Portugal.</h1>
-      <p class="lead">Moda fitness premium do Brasil, com tecidos que se ajustam ao corpo. Experimenta na loja em Aveiro ou recebe em casa, em Portugal continental.</p>
-      <div class="row"><a class="btn light-fill" href="#loja">Ver a coleção</a><a class="btn ghost light" href="#visita">Visitar a loja</a></div>
+      <div class="txt">
+        <span class="kicker"><i></i><span id="kick">Revendedor autorizado · Aveiro</span></span>
+        <h1><span id="t1">A LIVE! original,</span><span class="gtext" id="t2">agora em Portugal.</span></h1>
+        <p class="lead" id="lead">Moda fitness premium do Brasil, com tecidos que se ajustam ao corpo. Experimenta na loja em Aveiro ou recebe em casa, em Portugal continental.</p>
+        <div class="cd bf-only" id="cd"><div><b>00</b><small>dias</small></div><div><b>00</b><small>horas</small></div><div><b>00</b><small>min</small></div><div><b>00</b><small>seg</small></div></div>
+        <div class="row">
+          <a class="btn g bf-only" href="#conjunto">Montar o meu conjunto →</a><a class="btn g nobf-only" href="#loja">Ver a coleção</a>
+          <a class="btn o light bf-only" href="#loja">Ver as peças</a><a class="btn o light nobf-only" href="#visita">Visitar a loja</a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <div class="reel">
+          <video id="heroVid" autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg" aria-label="Vídeo: a LIVE! na Incomum.eu em Aveiro"><source src="hero.mp4" type="video/mp4"></video>
+          <span class="reel-tag"><i></i>Loja de Aveiro · Incomum.eu</span>
+          <button class="reel-pp" id="reelPP" type="button" aria-label="Pausar vídeo">❚❚</button>
+        </div>
+        <div class="stamp bf-only"><div><small>até</small><b id="stampPct">-30%</b><small>em conjuntos</small></div></div>
+      </div>
     </div>
   </section>
 
-  <section class="wrap sec" id="destaques">
-    <div class="sh"><div><p class="eyebrow">As mais procuradas</p><h2>Six Pockets e Allure®</h2></div><p class="sh-p">Os bolsos que levam tudo e o tecido com brilho que se adapta ao corpo e não marca.</p></div>
-    <div class="rail" id="rail"></div>
-  </section>
+  <div class="marquee"><div id="mq"></div></div>
+
+  <div class="trust wrap">
+    <div><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><b>LIVE! 100% original</b>Revendedor autorizado em Portugal</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><span><b>Envio 10 €</b>Portugal continental · até 7 dias úteis</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><span><b>14 dias para devolver</b>Direito de livre resolução</span></div>
+    <div><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><span><b>Pagamento seguro</b>Cartão ou MB WAY</span></div>
+  </div>
+
+  <section class="sec" id="destaques"><div class="wrap">
+    <div class="sh reveal"><div><p class="eyebrow">As mais procuradas</p><h2>Six Pockets e Allure®</h2></div><p class="sh-p">Os bolsos que levam tudo e o tecido com brilho que se adapta ao corpo e não marca.</p></div>
+    <div class="champs" id="champs"></div>
+  </div></section>
+
+  <section class="sec" id="conjunto"><div class="wrap">
+    <div class="sim reveal">
+      <div class="sh"><div><p class="eyebrow bf-only">Simulador Black Friday</p><p class="eyebrow nobf-only">Look completo</p><h2 id="simH">Monta o teu conjunto</h2></div><p id="simTxt">Escolhe uma parte de cima e uma de baixo e vê o look completo.</p></div>
+      <div class="sim-grid">
+        <div class="pick"><h4>1 · Parte de cima</h4><div class="opts" id="tops"></div></div>
+        <div class="pick"><h4>2 · Parte de baixo</h4><div class="opts" id="bots"></div></div>
+        <div class="total">
+          <div class="look" id="look"></div>
+          <div class="bf-only"><div class="meter"><i id="meter"></i></div><div class="tiers" id="tiers"></div></div>
+          <div class="tl bf-only"><span>Preço normal</span><s id="sNorm">0,00 €</s></div>
+          <div class="tl save bf-only"><span id="sLbl">Poupas</span><span id="sSave">0,00 €</span></div>
+          <div class="tl sum"><span>Total das peças</span><span id="sTot">0,00 €</span></div>
+          <p class="tnote">Mais envio de 10,00 € para Portugal continental.</p>
+          <button class="add" id="simAdd">Escolher tamanhos</button>
+        </div>
+      </div>
+    </div>
+  </div></section>
 
   <section class="wrap sec" id="loja">
-    <div class="sh"><div><p class="eyebrow">Coleção</p><h2>Todas as peças</h2></div>
+    <div class="sh"><div><p class="eyebrow" id="lojaEye">Coleção</p><h2>Todas as peças</h2></div>
       <div class="tools"><label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input id="q" type="search" placeholder="Procurar peça…" autocomplete="off"></label>
       <select id="sort" aria-label="Ordenar"><option value="">Em destaque</option><option value="asc">Preço: mais baixo</option><option value="desc">Preço: mais alto</option><option value="az">Nome A–Z</option></select></div>
     </div>
@@ -63,24 +105,30 @@
   </section>
 
   <section class="wrap sec">
-    <div class="perks">
-      <div><b>LIVE! 100% original</b><span>Revendedor autorizado em Portugal</span></div>
-      <div><b>Envio 10 €</b><span>Portugal continental · até 7 dias úteis</span></div>
-      <div><b>14 dias para devolver</b><span>Direito de livre resolução</span></div>
-      <div><b>Pagamento seguro</b><span>Cartão ou MB WAY</span></div>
+    <div class="sh reveal"><div><p class="eyebrow">Sem complicações</p><h2>Comprar é simples</h2></div></div>
+    <div class="steps">
+      <div class="step reveal"><b>1</b><h4>Filtra pelo teu tamanho</h4><p>Só vês o que existe no teu tamanho.</p></div>
+      <div class="step reveal"><b>2</b><h4>Junta peças</h4><p id="stepTxt">Escolhe as peças que quiseres e junta-as ao saco.</p></div>
+      <div class="step reveal"><b>3</b><h4>Paga em segurança</h4><p>Cartão ou MB WAY.</p></div>
+      <div class="step reveal"><b>4</b><h4>Recebe em casa</h4><p>Envio 10 € para Portugal continental, até 7 dias úteis. 14 dias para devolver.</p></div>
     </div>
   </section>
 
   <section class="wrap sec" id="visita">
-    <div class="visit">
-      <div class="v-txt">
+    <div class="visit reveal">
+      <div class="v-info">
+        <div class="v-photo"><img src="loja-aveiro.webp" alt="Loja Incomum.eu em Aveiro" loading="lazy"></div>
         <p class="eyebrow light">Experimenta antes</p>
         <h2>Visita a nossa loja em Aveiro</h2>
         <p>Na Galeria Centro Avenida, em frente ao Fórum. Toda a coleção LIVE! para experimentar, com ajuda para encontrar o tamanho certo.</p>
-        <p class="addr"><b>Av. Dr. Lourenço Peixinho, 10, loja 23</b>3800-159 Aveiro</p>
-        <div class="row"><a class="btn light-fill" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener">Como chegar</a><a class="btn ghost light" data-wa="Olá! Gostava de visitar a loja." href="#">Falar connosco</a></div>
+        <ul class="v-list">
+          <li><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span><b>Galeria Centro Avenida</b>Av. Dr. Lourenço Peixinho, 10, loja 23 · 3800-159 Aveiro</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 7 9 18l-5-5"/></svg><span><b>Provador e ajuda com tamanhos</b>Toda a coleção LIVE! para experimentar</span></li>
+        </ul>
+        <div class="row"><a class="btn g" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener">Como chegar →</a><a class="btn o light" data-wa="Olá! Gostava de visitar a loja." href="#">Falar connosco</a></div>
       </div>
-      <div class="v-map"><iframe title="Mapa da loja Incomum.eu" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Av.+Dr.+Louren%C3%A7o+Peixinho+10,+3800-159+Aveiro&amp;z=16&amp;output=embed"></iframe></div>
+      <div class="v-map"><iframe title="Mapa da loja Incomum.eu" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Av.+Dr.+Louren%C3%A7o+Peixinho+10,+3800-159+Aveiro&amp;z=16&amp;output=embed"></iframe>
+        <div class="v-pin"><img src="logo.jpg" alt=""><span><b>Incomum.eu</b>Loja 23 · Galeria Centro Avenida</span></div></div>
     </div>
   </section>
 </main>
