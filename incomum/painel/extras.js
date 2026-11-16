@@ -154,6 +154,7 @@ function cupoesView() {
     if (error) return toast('Não foi possível apagar');
     toast('Cupão apagado'); carregarCupoes();
   });
+  envioCard();
 }
 // datetime-local <-> ISO (hora de Portugal do aparelho)
 const paraLocal = iso => { if (!iso) return ''; const d = new Date(iso); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
@@ -319,7 +320,7 @@ function campPecasView() {
   el.innerHTML = `
     <div class="cpz-h"><h3>Peças na campanha</h3>
       <p class="muted">${prodsDentro} produtos · ${dentro} de ${todos.length} tamanhos estão na campanha. Toca num tamanho para o tirar ou pôr: fica guardado logo.</p></div>
-    <p class="hint">As peças fora da campanha vendem-se ao preço normal e não contam para o nº de peças do desconto. Rosa = na campanha · cinzento riscado = fora · borda tracejada = sem stock agora.</p>
+    <p class="hint">Em cada produto podem pôr um «Desconto próprio» só para a Black Friday (ex.: 40%), para o produto todo ou por tamanho; vazio = usa os escalões. Conta sempre o maior, nunca somados. As peças fora da campanha vendem-se ao preço normal e não contam para o nº de peças do desconto. Rosa = na campanha · cinzento riscado = fora · borda tracejada = sem stock agora.</p>
     <div class="bar cpz-f">
       <input class="search" id="cpQ" placeholder="Procurar produto…" value="${esc(f.q)}">
       <select class="search" id="cpCat"><option value="">Todas as categorias</option>${C.cats.map(c => `<option value="${esc(c.slug)}" ${c.slug === f.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select>
@@ -329,10 +330,14 @@ function campPecasView() {
       <button class="ghost sm" id="cpTodos">✓ Pôr todos na campanha</button><button class="ghost sm" id="cpNenhum">✕ Tirar todos</button></div>
     <div class="cpz-l">${vis.map(p => {
       const vs = p.variantes.filter(v => v.ativo).sort((a, b) => String(a.cor).localeCompare(b.cor) || szOrd(a.tam, b.tam));
-      const d = vs.filter(naCamp).length;
+      const d = vs.filter(naCamp).length, pcs = [...new Set(vs.map(v => v.pct_campanha || 0))], aberto = X.cpAberto[p.id];
+      const pcTodos = pcs.length === 1 ? pcs[0] : null;
       return `<div class="cprow ${d ? '' : 'fora'}"><img src="${S.fotos[p.id] || ''}" alt="" loading="lazy">
         <div class="cp-i"><div class="cp-t"><b>${esc(p.nome)}</b><label class="sw"><input type="checkbox" data-cpp="${p.id}" ${d === vs.length ? 'checked' : ''}><span></span><small>${d === vs.length ? 'Tudo' : d ? d + ' de ' + vs.length : 'Fora'}</small></label></div>
-        <div class="cp-v">${vs.map(v => `<button class="cpv ${naCamp(v) ? 'on' : ''} ${v.stock <= 0 ? 'z' : ''}" data-cpvar="${v.id}" title="${v.stock <= 0 ? 'Sem stock' : 'Stock ' + v.stock}">${esc([v.cor, v.tam].filter(Boolean).join(' · ') || 'Único')}</button>`).join('')}</div></div></div>`;
+        <div class="cp-pc"><label>Desconto na campanha<span><input data-cppct="${p.id}" inputmode="numeric" value="${pcTodos ? pcTodos : ''}" placeholder="${pcTodos === null ? 'vários' : '–'}">%</span></label>
+          <button class="ghost sm" data-cpab="${p.id}">${aberto ? 'Fechar' : 'Por tamanho'}</button></div>
+        <div class="cp-v">${vs.map(v => `<button class="cpv ${naCamp(v) ? 'on' : ''} ${v.stock <= 0 ? 'z' : ''}" data-cpvar="${v.id}" title="${v.stock <= 0 ? 'Sem stock' : 'Stock ' + v.stock}">${esc([v.cor, v.tam].filter(Boolean).join(' · ') || 'Único')}${v.pct_campanha ? ` <b>-${v.pct_campanha}%</b>` : ''}</button>`).join('')}</div>
+        ${aberto ? `<div class="cp-tz">${vs.map(v => `<label>${esc([v.cor, v.tam].filter(Boolean).join(' · ') || 'Único')}<span><input data-cpvp="${v.id}" inputmode="numeric" value="${v.pct_campanha || ''}" placeholder="–">%</span></label>`).join('')}</div>` : ''}</div></div>`;
     }).join('') || '<div class="empty">Nenhum produto com estes filtros.</div>'}</div>
     ${lista.length > vis.length ? `<button class="ghost rmais" id="cpMais">Mostrar mais ${Math.min(60, lista.length - vis.length)} (faltam ${lista.length - vis.length})</button>` : ''}`;
   let t; $('#cpQ').oninput = e => { clearTimeout(t); t = setTimeout(() => { f.q = e.target.value; f.n = 60; campPecasView(); const i = $('#cpQ'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
@@ -342,6 +347,15 @@ function campPecasView() {
   const varDe = id => { for (const p of C.prods) { const v = p.variantes.find(x => x.id === id); if (v) return v; } return null; };
   $$('[data-cpvar]').forEach(b => b.onclick = () => { const v = varDe(b.dataset.cpvar); if (v) mudarCamp([v], !naCamp(v)); });
   $$('[data-cpp]').forEach(i => i.onchange = () => { const p = C.prods.find(x => x.id === i.dataset.cpp); if (p) mudarCamp(p.variantes.filter(v => v.ativo), i.checked); });
+  $$('[data-cpab]').forEach(b => b.onclick = () => { X.cpAberto[b.dataset.cpab] = !X.cpAberto[b.dataset.cpab]; campPecasView(); });
+  $$('[data-cppct]').forEach(i => i.onchange = () => {
+    const n = lerPct(i.value); if (n === null) return toast('O desconto tem de ser entre 0 e 90%');
+    const p = C.prods.find(x => x.id === i.dataset.cppct); if (p) mudarPct(p.variantes.filter(v => v.ativo), n);
+  });
+  $$('[data-cpvp]').forEach(i => i.onchange = () => {
+    const n = lerPct(i.value); if (n === null) return toast('O desconto tem de ser entre 0 e 90%');
+    const v = varDe(i.dataset.cpvp); if (v) mudarPct([v], n);
+  });
   const emMassa = val => {
     const vs = lista.flatMap(p => p.variantes.filter(v => v.ativo && naCamp(v) !== val));
     if (!vs.length) return toast(val ? 'Já estão todos na campanha' : 'Já estão todos fora');
@@ -362,3 +376,43 @@ async function mudarCamp(vs, val) {
   if (erro) { antes.forEach(([v, x]) => { v.na_campanha = x; }); campPecasView(); return toast('Não foi possível guardar. Tenta de novo.'); }
   if (vs.length > 1) toast(`${vs.length} tamanhos ${val ? 'na' : 'fora da'} campanha`);
 }
+
+/* =================== ENVIO (aba Cupões e envio) =================== */
+// Valor do envio, a partir de quanto é grátis e prazo. A loja e o pagamento leem daqui.
+async function envioCard() {
+  const el = document.createElement('section'); el.className = 'card cenv'; el.innerHTML = '<div class="empty">A carregar o envio…</div>';
+  $('#view').prepend(el);
+  const { data: l, error } = await sb.from('incomum_loja').select('*').eq('id', 1).maybeSingle();
+  if (error || !l) { el.innerHTML = '<div class="empty">Não foi possível carregar o envio.</div>'; return; }
+  const e2 = c => c == null ? '' : (c / 100).toFixed(2).replace('.', ',');
+  el.innerHTML = `<h3>🚚 Envio para Portugal continental</h3>
+    <div class="cenv-g">
+      <label>Valor do envio<span><input id="eV" inputmode="decimal" value="${e2(l.portes)}"> €</span></label>
+      <label>Grátis a partir de<span><input id="eG" inputmode="decimal" value="${e2(l.portes_gratis_acima)}" placeholder="nunca"> €</span><small>Vazio = nunca é grátis</small></label>
+      <label>Prazo de entrega<span><input id="eP" type="number" min="1" max="30" value="${l.prazo_dias}"> dias úteis</span><small>1–2 dias aparece como «48h»</small></label>
+    </div>
+    <button class="btn grad" id="eOk">Guardar envio</button>`;
+  $('#eOk').onclick = async () => {
+    const num = v => { v = String(v).trim().replace(',', '.'); return v === '' ? null : Math.round(parseFloat(v) * 100); };
+    const portes = num($('#eV').value), gr = num($('#eG').value), dias = Math.round(+$('#eP').value);
+    if (portes == null || isNaN(portes) || portes < 0) return toast('Escreve o valor do envio (ex.: 7)');
+    if (gr != null && (isNaN(gr) || gr <= 0)) return toast('«Grátis a partir de» tem de ser um valor (ex.: 100) ou vazio');
+    if (!(dias >= 1 && dias <= 30)) return toast('O prazo tem de ser entre 1 e 30 dias úteis');
+    $('#eOk').disabled = true;
+    const { error } = await sb.from('incomum_loja').update({ portes, portes_gratis_acima: gr, prazo_dias: dias, atualizado: new Date().toISOString() }).eq('id', 1);
+    $('#eOk').disabled = false;
+    toast(error ? 'Não foi possível guardar o envio' : 'Envio guardado (a loja e o pagamento já usam)');
+  };
+}
+
+/* ---- Black Friday: desconto próprio por produto e por tamanho (pct_campanha) ---- */
+X.cpAberto = {};
+async function mudarPct(vs, pct) {
+  const antes = vs.map(v => [v, v.pct_campanha]);
+  vs.forEach(v => { v.pct_campanha = pct; });
+  const { error } = await sb.from('incomum_variantes').update({ pct_campanha: pct }).in('id', vs.map(v => v.id));
+  if (error) { antes.forEach(([v, x]) => { v.pct_campanha = x; }); toast('Não foi possível guardar o desconto'); }
+  else toast(pct ? `-${pct}% na Black Friday (${vs.length} tamanho${vs.length === 1 ? '' : 's'})` : 'Desconto próprio tirado: usa os escalões');
+  campPecasView();
+}
+const lerPct = v => { const n = Math.round(+String(v).replace(',', '.') || 0); return n >= 0 && n <= 90 ? n : null; };

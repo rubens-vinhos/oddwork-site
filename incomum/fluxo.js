@@ -17,7 +17,7 @@ async function catalogo() {
   const c = await catalogoVivo();
   const porVar = {};
   for (const p of c.produtos) for (const v of p.variantes) {
-    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, desconto: v.desconto || 0, camp: v.camp !== false, stock: typeof v.stock === 'number' ? v.stock : (v.disp ? 1 : 0) };
+    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, desconto: v.desconto || 0, camp: v.camp !== false, pc: v.pc || 0, stock: typeof v.stock === 'number' ? v.stock : (v.disp ? 1 : 0) };
   }
   return { portes: c.portes, porVar };
 }
@@ -63,7 +63,7 @@ function linhaTempo(e) {
     const quando = e[col] || (feito && i === 0 ? e.criado : null);
     return `<li class="${feito ? 'feito' : ''}${atual ? ' atual' : ''}">
       <span class="tl-dot">${feito ? '<svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>' : ''}</span>
-      <span class="tl-txt"><b>${nome}</b><small>${feito ? (quando ? dataPT(quando) : txt) : atual ? txt : i === 3 ? 'Até 7 dias úteis depois de paga' : '&nbsp;'}</small>${id === 'enviada' && feito ? segHTML(e) : ''}</span>
+      <span class="tl-txt"><b>${nome}</b><small>${feito ? (quando ? dataPT(quando) : txt) : atual ? txt : i === 3 ? (ENVIO.dias <= 2 ? 'Em 48h (dias úteis) depois de paga' : `Até ${ENVIO.dias} dias úteis depois de paga`) : '&nbsp;'}</small>${id === 'enviada' && feito ? segHTML(e) : ''}</span>
     </li>`;
   }).join('')}</ol>`;
 }

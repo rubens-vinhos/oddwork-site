@@ -16,7 +16,7 @@ async function carregarCats() {
 }
 async function carregarProds() {
   const { data, error } = await sb.from('incomum_produtos')
-    .select('id, slug, nome, descricao, categorias, fotos, destaque, ativo, ordem, criado, variantes:incomum_variantes(id, cor, tam, preco, promo, desconto, stock, ativo, na_campanha)')
+    .select('id, slug, nome, descricao, categorias, fotos, destaque, ativo, ordem, criado, variantes:incomum_variantes(id, cor, tam, preco, promo, desconto, stock, ativo, na_campanha, pct_campanha)')
     .order('ordem');
   if (error) { toast('Não foi possível carregar os produtos'); return null; }
   C.prods = data;

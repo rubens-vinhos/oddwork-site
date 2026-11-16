@@ -15,7 +15,7 @@ function hex(c) {
 }
 
 
-const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 10, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
+const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 7, gratis: 100, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
 try { S.cart = JSON.parse(localStorage.getItem('incomum-saco') || '[]'); } catch {}
 S.cupao = cupaoGuardado();
 // confirma o cupão guardado (pode ter acabado entretanto)
@@ -30,22 +30,27 @@ const vPrice = v => v.promo && v.promo < v.preco ? v.promo : v.preco;
 const cent = v => Math.round(vPrice(v) * 100);                                   // preço atual da variante, em cêntimos
 const precoComDesconto = (c, pct) => Math.round(c * (100 - pct) / 100);         // preço unitário com desconto, em cêntimos
 const eurC = c => eur(c / 100);
-const pctV = (v, r) => Math.max(v && v.camp === false ? 0 : r || 0, (v && v.desconto) || 0);   // maior entre campanha (se o tamanho está nela) e desconto da variante
+// campanha: o maior entre o escalão (r) e o desconto próprio do produto na campanha (v.pc), só se o tamanho está na campanha
+const pctV = (v, r) => Math.max(!v || v.camp === false || !camp() ? 0 : Math.max(r || 0, v.pc || 0), (v && v.desconto) || 0);   // maior entre campanha (se o tamanho está nela) e desconto da variante
 // nº de peças do saco que estão na campanha (só essas contam para o escalão)
 const nCamp = () => S.cart.reduce((a, i) => a + (S.byVar[i.v] && S.byVar[i.v].v.camp !== false ? i.q : 0), 0);
 const unit = (v, r) => precoComDesconto(cent(v), pctV(v, r));                   // preço unitário final, em cêntimos
-const PORTES = () => Math.round((S.portes && S.portes.valor || 10) * 100);
+const PORTES = () => Math.round((S.portes && S.portes.valor != null ? S.portes.valor : 7) * 100);
+const GRATIS = () => S.portes && S.portes.gratis ? Math.round(S.portes.gratis * 100) : 0;   // envio grátis a partir de (cêntimos)
 
 let CAMP = null; // linha da tabela incomum_campanha (ou null)
 const semCamp = /[?&]semcampanha=1(&|$)/.test(location.search); // só para testes
 const camp = () => {
   const c = CAMP;
-  return !semCamp && c && c.ativa && Date.parse(c.fim) > Date.now() && tiersOf(c).length ? c : null;
+  return !semCamp && c && c.ativa && Date.parse(c.fim) > Date.now() && (tiersOf(c).length || maxPc() > 0) ? c : null;
 };
 const tiersOf = c => (Array.isArray(c && c.escaloes) ? c.escaloes : []).filter(t => t && t.pecas > 0 && t.pct > 0).sort((a, b) => a.pecas - b.pecas);
 const tiers = () => { const c = camp(); return c ? tiersOf(c) : []; };
 const taxa = n => tiers().reduce((r, t) => n >= t.pecas ? Math.max(r, t.pct) : r, 0);   // % de desconto para n peças
-const maxTaxa = () => tiers().reduce((r, t) => Math.max(r, t.pct), 0);
+const maxPc = () => S.prods.reduce((m, p) => p.variantes.reduce((a, v) => v.camp !== false && v.disp ? Math.max(a, v.pc || 0) : a, m), 0);
+const maxTaxa = () => Math.max(tiers().reduce((r, t) => Math.max(r, t.pct), 0), maxPc());
+// textos da campanha: escalões por nº de peças e/ou descontos em peças escolhidas
+const campTxts = () => { const ts = tiers(), l = ts.map(tierTxt), m = maxPc(); if (m > Math.max(0, ...ts.map(t => t.pct))) l.push(`até -${m}% em peças selecionadas`); return l; };
 const tierTxt = (t, i, a) => { const mais = a.length > 1 && i === a.length - 1; return `${t.pecas}${mais ? ' ou mais' : ''} peça${t.pecas > 1 || mais ? 's' : ''} -${t.pct}%`; };
 
 const TAM_EQ = { PP: 'XS', P: 'S', G: 'L', GG: 'XL' }, tamN = t => TAM_EQ[t] || t;
@@ -82,7 +87,7 @@ async function load() {
   const pc = campanha().then(() => { campaign(); document.body.classList.add('ready'); });   // o topo aparece assim que a campanha responde
   const d = await catalogoVivo();
   S.prods = d.produtos.sort((a, b) => (b.destaque - a.destaque) || (a.ordem - b.ordem));
-  S.cats = d.categorias; S.portes = d.portes || S.portes;
+  S.cats = d.categorias; S.portes = d.portes || S.portes; pintarEnvio(S.portes);
   for (const p of S.prods) { S.by[p.slug] = p; for (const v of p.variantes) S.byVar[v.id] = { p, v }; }
   await Promise.all([d.vivo ? null : stockAoVivo(), pc]);
   S.cart = S.cart.filter(i => S.byVar[i.v] && i.q > 0);
@@ -103,7 +108,7 @@ async function campanha() {
 async function stockAoVivo() {
   if (!CFG.supabaseUrl) return;
   try {
-    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,desconto,stock,na_campanha&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,desconto,stock,na_campanha,pct_campanha&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
     if (!r.ok) return;
     const vivos = new Map((await r.json()).map(x => [x.id, x]));
     if (!vivos.size) return;
@@ -111,7 +116,7 @@ async function stockAoVivo() {
       for (const v of p.variantes) {
         const x = vivos.get(v.id);
         if (!x) { v.disp = false; v.stock = 0; continue; }
-        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.desconto = x.desconto || 0; v.camp = x.na_campanha !== false; v.stock = x.stock; v.disp = x.stock > 0;
+        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.desconto = x.desconto || 0; v.camp = x.na_campanha !== false; v.pc = x.pct_campanha || 0; v.stock = x.stock; v.disp = x.stock > 0;
       }
       const ps = p.variantes.filter(v => v.disp).map(vPrice);
       if (ps.length) p.preco = Math.min(...ps);
@@ -136,17 +141,17 @@ function campaign() {
     const [a, ...b] = c.nome.trim().split(/\s+/);
     $('#t1').textContent = a; $('#t2').textContent = b.join(' ');
     $('#kick').textContent = `Só até ${fimTxt(c.fim)}`;
-    $('#lead').textContent = `A LIVE! original, em Portugal. Quanto mais peças levas, maior o desconto: ${ts.map(tierTxt).join(', ')}.`;
+    $('#lead').textContent = ts.length ? `A LIVE! original, em Portugal. Quanto mais peças levas, maior o desconto: ${campTxts().join(', ')}.` : `A LIVE! original, em Portugal, com descontos ${campTxts().join(', ')}.`;
     $('#stampPct').textContent = `-${maxTaxa()}%`;
     $('#tbName').textContent = `${c.nome} Incomum`;
   } else {
     $('#t1').textContent = DEF.t1; $('#t2').textContent = DEF.t2; $('#lead').textContent = DEF.lead; $('#kick').textContent = DEF.kick;
   }
   $('#simH').textContent = on ? 'Monta o teu conjunto' : 'Monta o teu look';
-  $('#simTxt').textContent = on ? `Escolhe uma parte de cima e uma de baixo e vê já quanto poupas: ${ts.slice(1).map(tierTxt).join(', ')}.` : 'Combina uma parte de cima e uma de baixo e vê o look completo.';
-  $('#stepTxt').textContent = on ? `${ts.map(tierTxt).join(' · ')}. O desconto é automático no saco.` : 'Escolhe as peças que quiseres e junta-as ao saco.';
+  $('#simTxt').textContent = on && ts.length > 1 ? `Escolhe uma parte de cima e uma de baixo e vê já quanto poupas: ${ts.slice(1).map(tierTxt).join(', ')}.` : 'Combina uma parte de cima e uma de baixo e vê o look completo.';
+  $('#stepTxt').textContent = on ? `${campTxts().join(' · ')}. O desconto é automático no saco.` : 'Escolhe as peças que quiseres e junta-as ao saco.';
   $('#lojaEye').textContent = on ? 'Tudo com desconto' : 'Coleção';
-  const items = on ? [c.nome, ...ts.map(tierTxt), 'LIVE! original', `Envio ${eurC(PORTES())}`] : ['LIVE! original', 'Revendedor autorizado', 'Envio para Portugal continental', '14 dias para devolver'];
+  const items = on ? [c.nome, ...campTxts(), 'LIVE! original', S.portes.gratis ? `Envio grátis a partir de ${eur(S.portes.gratis)}` : `Envio ${eurC(PORTES())}`] : ['LIVE! original', 'Revendedor autorizado', 'Envio para Portugal continental', '14 dias para devolver'];
   $('#mq').innerHTML = Array(2).fill(items.map(x => `<span>${esc(x)}</span><span>✦</span>`).join('')).join('');
   tick();
 }
@@ -331,13 +336,16 @@ document.addEventListener('touchend', e => {
 }, { passive: true });
 const P = { p: null, cor: '', tam: '', q: 1, i: 0, note: '' };
 function openP(slug, note = '') { S.note = note; S.expect = slug; if (location.hash !== '#p/' + slug) location.hash = 'p/' + slug; else route(); }
+// Se nessa cor só há um tamanho disponível (ou é tamanho único), já vem escolhido. Com 2 ou mais, a cliente escolhe.
+const tamAuto = (p, cor) => { const l = [...new Set(p.variantes.filter(v => v.disp && (!cor || v.cor === cor)).map(v => v.tam).filter(Boolean))]; return l.length === 1 ? l[0] : ''; };
 function route() {
   const m = location.hash.match(/^#p\/(.+)$/), p = m && S.by[decodeURIComponent(m[1])];
   document.body.classList.toggle('on-pp', !!p);
   $('#home').hidden = !!p; $('#pp').hidden = !p;
   if (p) {
     if (P.p !== p) {
-      Object.assign(P, { p, cor: (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '', tam: '', q: 1, i: 0, note: S.note });
+      const cor0 = (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '';
+      Object.assign(P, { p, cor: cor0, tam: tamAuto(p, cor0), q: 1, i: 0, note: S.note });
       if (S.expect !== p.slug) S.queue = [];
       S.note = ''; S.expect = '';
     }
@@ -379,7 +387,7 @@ function pp() {
         <h1>${esc(p.nome)}</h1>
         <p class="price">${sel ? fmtFS(unit(sel, r1), Math.round(sel.preco * 100), pctV(sel, r1)) : priceHTML(p)}</p>${(() => { const x = sel ? { f: unit(sel, r1), s: Math.round(sel.preco * 100) } : from(p); return x.s && x.s > x.f ? `<p class="psave">Poupas ${eurC(x.s - x.f)}</p>` : ''; })()}
         ${hint ? `<p class="hint">${hint}</p>` : ''}
-        <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental, ${S.portes.prazo}</p>
+        <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental${S.portes.gratis ? `, grátis a partir de ${eur(S.portes.gratis)}` : ''}, ${S.portes.prazo}</p>
         ${cores.length ? `<div class="opt"><div class="opt-h">Cor <span>${esc(P.cor)}</span></div><div class="sw">${cores.map(c => `<button class="${c === P.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-cor="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div></div>` : ''}
         ${tams.length ? `<div class="opt"><div class="opt-h">Tamanho <span>${P.tam ? esc(P.tam) : 'escolhe o teu'}</span></div><div class="sz">${tams.map(t => `<button data-tam="${esc(t)}" class="${t === P.tam ? 'on' : ''}" ${avail(p, P.cor, t) ? '' : 'disabled'}>${esc(tamN(t))}</button>`).join('')}</div></div>` : ''}
         <div class="stockmsg ${cls}">${msg}</div>
@@ -397,7 +405,7 @@ function pp() {
     <div class="sec"><div class="sh"><div><p class="eyebrow">Combina com</p><h2>Também vais gostar</h2></div></div><div class="related">${related(p).slice(0, 4).map(card).join('')}</div></div>
   </div>`;
   $$('#pp .thumbs button').forEach(b => b.onclick = () => { galPausa = Date.now() + 8000; P.i = +b.dataset.i; pp(); });
-  $$('#pp [data-cor]').forEach(b => b.onclick = () => { P.cor = b.dataset.cor; P.i = 0; if (P.tam && !avail(p, P.cor, P.tam)) P.tam = ''; pp(); });
+  $$('#pp [data-cor]').forEach(b => b.onclick = () => { P.cor = b.dataset.cor; P.i = 0; if (P.tam && !avail(p, P.cor, P.tam)) P.tam = ''; if (!P.tam) P.tam = tamAuto(p, P.cor); pp(); });
   $$('#pp [data-tam]').forEach(b => b.onclick = () => { P.tam = b.dataset.tam; pp(); });
   $$('#pp [data-q]:not(.qadd)').forEach(b => b.onclick = () => { P.q = Math.max(1, Math.min(10, P.q + +b.dataset.q)); pp(); });
   $$('#pp .crumbs [data-cat]').forEach(a => a.onclick = () => { S.F.cat = a.dataset.cat; filters(); grid(); });
@@ -434,8 +442,9 @@ function totals() {
   const cup = S.cupao, cupOn = !!(cup && n && (!cup.minimo || liq >= cup.minimo));
   let cdesc = 0;
   if (cupOn && cup.pct) { let l2 = 0; for (const i of S.cart) { const v = S.byVar[i.v].v; l2 += Math.round(unit(v, r) * (100 - cup.pct) / 100) * i.q; } cdesc = liq - l2; liq = l2; }
-  const portes = n && !(cupOn && cup.portes_gratis) ? PORTES() : 0;
-  return { n, nc, r, bruto, desc: bruto - liq - cdesc, liq, portes, tot: liq + portes, cup, cupOn, cdesc };
+  const gratisV = !!(GRATIS() && liq >= GRATIS());
+  const portes = n && !(cupOn && cup.portes_gratis) && !gratisV ? PORTES() : 0;
+  return { n, nc, gratisV, r, bruto, desc: bruto - liq - cdesc, liq, portes, tot: liq + portes, cup, cupOn, cdesc };
 }
 function cartUI() {
   const T = totals(), n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
@@ -444,7 +453,7 @@ function cartUI() {
   $('#ship').classList.toggle('g', !!(n && last));
   $('#ship').innerHTML = !n ? '' : last
     ? `<div class="goal"><span>${nx ? `Junta mais ${nx.pecas - nc} peça${nx.pecas - nc > 1 ? 's' : ''} da campanha e ficas com <b>-${nx.pct}%</b> ${tudo}` : `Tens o desconto máximo: <b>-${T.r}%</b> ${tudo} ✦`}</span><div class="meter"><i style="width:${Math.min(100, nc / last.pecas * 100)}%"></i></div></div>`
-    : `Envio para <b>Portugal continental</b> · entrega ${S.portes.prazo}`;
+    : GRATIS() && !T.gratisV ? `Faltam <b>${eurC(GRATIS() - T.liq)}</b> para o envio grátis` : `Envio para <b>Portugal continental</b> · ${S.portes.prazo}`;
   $('#ship').hidden = !n;
   $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu saco está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
     S.cart.map((i, k) => { const { p, v } = S.byVar[i.v], c = cent(v), u = unit(v, T.r), falta = typeof v.stock === 'number' && i.q > v.stock;

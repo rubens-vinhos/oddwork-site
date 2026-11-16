@@ -10,12 +10,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="loja.css?v=11162010">
+<link rel="stylesheet" href="loja.css?v=11162050">
 <noscript><style>.hero .txt{opacity:1!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body class="no-bf">
 
-<div class="bar"><div class="bar-in"><span class="bf-only" id="tbName"></span><span class="t bf-only" id="tb">--</span><span id="tbAviso">Envio 10 € para Portugal continental · até 7 dias úteis</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Revendedor autorizado LIVE!</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Loja em Aveiro</span></div></div>
+<div class="bar"><div class="bar-in"><span class="bf-only" id="tbName"></span><span class="t bf-only" id="tb">--</span><span id="tbAviso" data-env="aviso">Envio para Portugal continental</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Revendedor autorizado LIVE!</span><span class="sep hide-s nobf-only">·</span><span class="hide-s nobf-only">Loja em Aveiro</span></div></div>
 
 <header class="hd">
   <div class="wrap hd-in">
@@ -59,7 +59,7 @@
 
   <div class="trust wrap">
     <div><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><b>LIVE! 100% original</b>Revendedor autorizado em Portugal</span></div>
-    <div><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><span><b>Envio 10 €</b>Portugal continental · até 7 dias úteis</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><span><b data-env="titulo">Envio</b><span data-env="sub">Portugal continental</span></span></div>
     <div><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><span><b>14 dias para devolver</b>Direito de livre resolução</span></div>
     <div><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><span><b>Pagamento seguro</b>Cartão ou MB WAY</span></div>
   </div>
@@ -82,7 +82,7 @@
           <div class="tl bf-only"><span>Preço normal</span><s id="sNorm">0,00 €</s></div>
           <div class="tl save bf-only"><span id="sLbl">Poupas</span><span id="sSave">0,00 €</span></div>
           <div class="tl sum"><span>Total das peças</span><span id="sTot">0,00 €</span></div>
-          <p class="tnote">Mais envio de 10,00 € para Portugal continental.</p>
+          <p class="tnote" data-env="nota">Mais envio para Portugal continental.</p>
           <button class="add" id="simAdd">Escolher tamanhos</button>
         </div>
       </div>
@@ -111,7 +111,7 @@
       <div class="step reveal"><b>1</b><h4>Filtra pelo teu tamanho</h4><p>Só vês o que existe no teu tamanho.</p></div>
       <div class="step reveal"><b>2</b><h4>Junta peças</h4><p id="stepTxt">Escolhe as peças que quiseres e junta-as ao saco.</p></div>
       <div class="step reveal"><b>3</b><h4>Paga em segurança</h4><p>Cartão ou MB WAY.</p></div>
-      <div class="step reveal"><b>4</b><h4>Recebe em casa</h4><p>Envio 10 € para Portugal continental, até 7 dias úteis. 14 dias para devolver.</p></div>
+      <div class="step reveal"><b>4</b><h4>Recebe em casa</h4><p data-env="passo">Envio para Portugal continental. 14 dias para devolver.</p></div>
     </div>
   </section>
 
@@ -165,8 +165,8 @@
 </div>
 
 <div class="toast" id="toast" role="status"></div>
-<script src="config.js?v=11162010"></script>
-<script src="dados.js?v=11162010"></script>
-<script src="loja.js?v=11162010"></script>
+<script src="config.js?v=11162050"></script>
+<script src="dados.js?v=11162050"></script>
+<script src="loja.js?v=11162050"></script>
 </body>
 </html>

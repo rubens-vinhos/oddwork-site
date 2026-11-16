@@ -23,14 +23,14 @@
   try { cat = await catalogo(); } catch { return erro('<b>Não foi possível carregar o resumo.</b><p>Verifica a ligação e atualiza a página.</p>'); }
   const linhas = saco.filter(i => cat.porVar[i.v]).map(i => {
     const x = cat.porVar[i.v];
-    return { variante: i.v, qtd: i.q, produto: x.p.nome, cor: x.v.cor, tam: x.v.tam, preco: precoDe(x), dv: x.desconto || 0, nc: x.camp !== false, stock: x.stock };
+    return { variante: i.v, qtd: i.q, produto: x.p.nome, cor: x.v.cor, tam: x.v.tam, preco: precoDe(x), dv: x.desconto || 0, nc: x.camp !== false, pcp: x.pc || 0, stock: x.stock };
   });
   const n = linhas.reduce((a, l) => a + l.qtd, 0);
   const c = await camp, pct = pctPara(c, linhas.reduce((a, l) => a + (l.nc ? l.qtd : 0), 0));   // só peças da campanha contam
   const original = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
   // igual ao servidor: em cada peça conta o maior entre o desconto da campanha e o da própria variante (cor + tamanho)
-  for (const l of linhas) { const p = Math.max(l.nc ? pct : 0, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
-  const pctMax = Math.max(...linhas.map(l => Math.max(l.nc ? pct : 0, l.dv)));
+  for (const l of linhas) { l.pcamp = c && l.nc ? Math.max(pct, l.pcp) : 0; const p = Math.max(l.pcamp, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
+  const pctMax = Math.max(...linhas.map(l => Math.max(l.pcamp, l.dv)));
   const antesCupao = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
   // cupão guardado no saco: confirma de novo (pode ter acabado) e aplica igual ao servidor
   let cup = cupaoGuardado();
@@ -39,9 +39,11 @@
   for (const l of linhas) l.pa = l.preco;               // preço antes do cupão (para mostrar)
   if (cup?.pct) for (const l of linhas) l.preco = Math.round(l.preco * (100 - cup.pct) / 100);
   const subtotal = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
-  const portes = cup?.portes_gratis ? 0 : Math.round((cat.portes?.valor ?? 10) * 100);
+  pintarEnvio(cat.portes);
+  const gAcima = cat.portes?.gratis ? Math.round(cat.portes.gratis * 100) : 0;
+  const portes = cup?.portes_gratis || (gAcima && subtotal >= gAcima) ? 0 : Math.round((cat.portes?.valor ?? 7) * 100);
   $('#itens').innerHTML = itensHTML(linhas.map(l => ({ ...l, preco: l.pa })), cat.porVar);
-  $('#tots').innerHTML = totaisHTML({ subtotal: antesCupao, portes, total: subtotal + portes, desconto: original - antesCupao, desconto_pct: pct || pctMax, campanha: pct ? c?.nome : 'Promoção', cupao: cup?.portes_gratis ? cup.nome : '', cupDesc: antesCupao - subtotal, cupNome: cup?.nome, cupPct: cup?.pct });
+  $('#tots').innerHTML = totaisHTML({ subtotal: antesCupao, portes, total: subtotal + portes, desconto: original - antesCupao, desconto_pct: pct || pctMax, campanha: linhas.some(l => l.pcamp && l.pcamp >= l.dv) ? c?.nome : 'Promoção', cupao: cup?.portes_gratis ? cup.nome : '', cupDesc: antesCupao - subtotal, cupNome: cup?.nome, cupPct: cup?.pct });
   $('#resTit').textContent = `Ver resumo · ${n} peça${n > 1 ? 's' : ''}`;
   $('#resTot').textContent = eur(subtotal + portes);
   $('#wa').href = waLink(`Olá Incomum! Estou a pagar no site (${linhas.map(l => l.qtd + '× ' + l.produto + (l.tam ? ' tam. ' + l.tam : '')).join(', ')}) e tenho uma dúvida.`);
