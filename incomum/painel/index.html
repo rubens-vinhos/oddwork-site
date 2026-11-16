@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel Incomum</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d141a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="painel.css">
+</head>
+<body>
+
+<div class="login" id="login">
+  <form class="lcard" id="lform">
+    <img src="../logo.jpg" alt="Incomum.eu">
+    <h1>Painel da loja</h1>
+    <p class="muted">Encomendas, stock e clientes num só lugar.</p>
+    <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+    <label>Palavra-passe<input name="senha" type="password" autocomplete="current-password" required></label>
+    <p class="err" id="lerr" hidden></p>
+    <button class="btn">Entrar</button>
+  </form>
+</div>
+
+<div class="app" id="app" hidden>
+  <header class="top">
+    <div class="brand"><img src="../logo.jpg" alt="Incomum.eu"><span>Painel</span></div>
+    <nav class="tabs" id="tabs">
+      <a data-v="encomendas" class="on">Encomendas<b id="nNovas" hidden></b></a>
+      <a data-v="stock">Stock</a>
+      <a data-v="clientes">Clientes</a>
+    </nav>
+    <div class="topr"><a class="ghost sm" href="../" target="_blank" rel="noopener">Ver a loja ↗</a><button class="ghost sm" id="sair">Sair</button></div>
+  </header>
+  <main class="main" id="view"></main>
+</div>
+
+<div class="drawer" id="drawer" aria-hidden="true"><div class="scrim" data-x></div><aside class="dbox" id="dbox"></aside></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../config.js"></script>
+<script src="painel.js"></script>
+</body>
+</html>

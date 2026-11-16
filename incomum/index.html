@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Incomum.eu · LIVE! original em Portugal</title>
+<meta name="description" content="Loja Incomum.eu em Aveiro: revendedor autorizado LIVE! em Portugal. Leggings, tops, shorts e conjuntos fitness. Envio para Portugal continental.">
+<meta name="theme-color" content="#0d141a">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+</head>
+<body>
+
+<div class="bar"><div class="bar-in"><span>Envio para Portugal continental · até 7 dias úteis</span><span class="sep hide-s">·</span><span>Revendedor autorizado LIVE!</span><span class="sep hide-s">·</span><span class="hide-s">Loja em Aveiro</span></div></div>
+
+<header class="hd">
+  <div class="wrap hd-in">
+    <button class="ico only-s" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <nav class="nav hide-s" id="nav"></nav>
+    <a class="logo" href="#" aria-label="Incomum.eu — início"><img src="logo.jpg" alt="Incomum.eu"></a>
+    <div class="hd-r">
+      <a class="ico conta-btn" href="conta.html" aria-label="A minha conta e encomendas" title="A minha conta e encomendas"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>A minha conta</span></a>
+      <button class="ico" id="searchBtn" aria-label="Pesquisar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></button>
+      <button class="ico bag" id="bagBtn" aria-label="Saco de compras"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="badge" hidden>0</b></button>
+    </div>
+  </div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <video class="hero-v" autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg"><source src="hero.mp4" type="video/mp4"></video>
+    <div class="hero-shade"></div>
+    <div class="wrap hero-in">
+      <p class="eyebrow light">Revendedor autorizado · Aveiro</p>
+      <h1>A LIVE! original,<br>agora em Portugal.</h1>
+      <p class="lead">Moda fitness premium do Brasil, com tecidos que se ajustam ao corpo. Experimenta na loja em Aveiro ou recebe em casa, em Portugal continental.</p>
+      <div class="row"><a class="btn light-fill" href="#loja">Ver a coleção</a><a class="btn ghost light" href="#visita">Visitar a loja</a></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="destaques">
+    <div class="sh"><div><p class="eyebrow">As mais procuradas</p><h2>Six Pockets e Allure®</h2></div><p class="sh-p">Os bolsos que levam tudo e o tecido com brilho que se adapta ao corpo e não marca.</p></div>
+    <div class="rail" id="rail"></div>
+  </section>
+
+  <section class="wrap sec" id="loja">
+    <div class="sh"><div><p class="eyebrow">Coleção</p><h2>Todas as peças</h2></div>
+      <div class="tools"><label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input id="q" type="search" placeholder="Procurar peça…" autocomplete="off"></label>
+      <select id="sort" aria-label="Ordenar"><option value="">Em destaque</option><option value="asc">Preço: mais baixo</option><option value="desc">Preço: mais alto</option><option value="az">Nome A–Z</option></select></div>
+    </div>
+    <div class="filters">
+      <div class="chips" id="cats" role="group" aria-label="Categoria"></div>
+      <div class="frow"><span class="flabel">Coleção</span><div class="chips sm" id="cols"></div></div>
+      <div class="frow"><span class="flabel">Tamanho</span><div class="chips sm sizes" id="fsizes"></div></div>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden><p>Nenhuma peça com estes filtros.</p><button class="btn ghost" id="clearF">Limpar filtros</button></div>
+    <div class="more"><button class="btn ghost" id="moreBtn" hidden>Ver mais peças</button></div>
+  </section>
+
+  <section class="wrap sec">
+    <div class="perks">
+      <div><b>LIVE! 100% original</b><span>Revendedor autorizado em Portugal</span></div>
+      <div><b>Envio 10 €</b><span>Portugal continental · até 7 dias úteis</span></div>
+      <div><b>14 dias para devolver</b><span>Direito de livre resolução</span></div>
+      <div><b>Pagamento seguro</b><span>Cartão ou MB WAY</span></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="visita">
+    <div class="visit">
+      <div class="v-txt">
+        <p class="eyebrow light">Experimenta antes</p>
+        <h2>Visita a nossa loja em Aveiro</h2>
+        <p>Na Galeria Centro Avenida, em frente ao Fórum. Toda a coleção LIVE! para experimentar, com ajuda para encontrar o tamanho certo.</p>
+        <p class="addr"><b>Av. Dr. Lourenço Peixinho, 10, loja 23</b>3800-159 Aveiro</p>
+        <div class="row"><a class="btn light-fill" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener">Como chegar</a><a class="btn ghost light" data-wa="Olá! Gostava de visitar a loja." href="#">Falar connosco</a></div>
+      </div>
+      <div class="v-map"><iframe title="Mapa da loja Incomum.eu" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Av.+Dr.+Louren%C3%A7o+Peixinho+10,+3800-159+Aveiro&amp;z=16&amp;output=embed"></iframe></div>
+    </div>
+  </section>
+</main>
+
+<!-- página de produto -->
+<main id="pp" hidden></main>
+
+<footer class="ft">
+  <div class="wrap ft-in">
+    <div><img src="logo.jpg" alt="Incomum.eu" class="ft-logo"><p>Revendedor autorizado LIVE! em Portugal.</p></div>
+    <div><b>Loja</b><p>Av. Dr. Lourenço Peixinho, 10, loja 23<br>3800-159 Aveiro</p></div>
+    <div><b>Contacto</b><p><a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a><br><a href="#" data-wa="Olá Incomum! Vim do vosso site e tenho uma pergunta.">WhatsApp da loja +351 910 202 105</a></p></div>
+    <div><b>Informação</b><p><a href="termos.html">Termos de venda e devoluções</a><br><a href="privacidade.html">Privacidade</a><br><a href="https://www.livroreclamacoes.pt/Inicio/" target="_blank" rel="noopener">Livro de Reclamações</a></p></div>
+  </div>
+  <div class="wrap ft-b"><span>Venda online: Oddwork · Rubens Bayard de Mello Silveiro, NIF 320510832, Porto · <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a></span><span class="pay">Pagamentos: Cartão · MB WAY</span></div>
+</footer>
+
+<a class="wa" href="#" data-wa="Olá Incomum! Estou no vosso site e preciso de ajuda." aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9c-1.2-.5-2.3-1.6-2.8-2.8l.9-1-1-2L9 8.5Z"/></svg><span>Ajuda</span></a>
+
+<!-- saco -->
+<div class="drawer" id="cart" aria-hidden="true"><div class="scrim" data-close></div>
+  <aside class="dbox" role="dialog" aria-label="Saco de compras">
+    <div class="dh"><h3>O teu saco</h3><button class="ico" data-close aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="ship" id="ship"></div>
+    <div class="items" id="items"></div>
+    <div class="df" id="cfoot"></div>
+  </aside>
+</div>
+
+<!-- menu móvel -->
+<div class="drawer left" id="mnav" aria-hidden="true"><div class="scrim" data-close></div>
+  <aside class="dbox"><div class="dh"><img src="logo.jpg" alt="Incomum.eu" class="m-logo"><button class="ico" data-close aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><nav class="mlinks" id="mlinks"></nav></aside>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="config.js"></script>
+<script src="loja.js"></script>
+</body>
+</html>

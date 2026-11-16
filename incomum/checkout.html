@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pagamento · Incomum.eu</title>
+<meta name="theme-color" content="#0d141a">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<link rel="stylesheet" href="fluxo.css">
+</head>
+<body class="fluxo">
+
+<header class="hd">
+  <div class="wrap hd-in">
+    <a class="voltar" href="./#saco"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="hide-s">Voltar ao saco</span></a>
+    <a class="logo" href="./" aria-label="Incomum.eu — início"><img src="logo.jpg" alt="Incomum.eu"></a>
+    <span class="seguro"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="hide-s">Pagamento seguro</span></span>
+  </div>
+</header>
+
+<main class="wrap co">
+  <ol class="etapas" aria-label="Etapas">
+    <li class="feito"><span>1</span>Saco</li>
+    <li class="atual"><span>2</span>Pagamento</li>
+    <li><span>3</span>Confirmação</li>
+  </ol>
+
+  <div class="co-grid">
+    <aside class="co-res" id="res">
+      <button class="res-tog" id="resTog" aria-expanded="false" aria-controls="resCorpo">
+        <span><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span id="resTit">Resumo da encomenda</span></span>
+        <b id="resTot"></b>
+      </button>
+      <div class="res-corpo" id="resCorpo">
+        <h2 class="hide-s">Resumo da encomenda</h2>
+        <div id="itens"><div class="sk"></div><div class="sk"></div></div>
+        <div id="tots"></div>
+        <ul class="garantias">
+          <li><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg><span><b>Entrega em até 7 dias úteis</b>Envio para Portugal continental</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><span><b>14 dias para devolver</b>Depois de receberes a encomenda</span></li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><b>LIVE! original</b>Revendedor autorizado em Aveiro</span></li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="co-pay">
+      <h1>Pagamento</h1>
+      <p class="muted co-sub">Cartão ou MB WAY. Os dados do pagamento vão diretamente para o Stripe, nunca passam por nós.</p>
+      <div id="erro" class="co-erro" hidden></div>
+      <div id="checkout" class="co-stripe"><div class="carrega"><span class="spin"></span>A preparar o pagamento…</div></div>
+      <p class="co-ajuda">Dúvidas antes de pagar? <a id="wa" href="#" target="_blank" rel="noopener">Fala connosco no WhatsApp</a></p>
+      <p class="co-legal">Venda feita por Oddwork (Rubens Bayard de Mello Silveiro, NIF 320510832, Porto) em nome da Incomum.eu. Ao pagar aceitas os <a href="termos.html" target="_blank">termos de venda</a> e a <a href="privacidade.html" target="_blank">política de privacidade</a>.</p>
+    </section>
+  </div>
+</main>
+
+<script src="https://js.stripe.com/endive/stripe.js"></script>
+<script src="config.js"></script>
+<script src="fluxo.js"></script>
+<script src="checkout.js"></script>
+</body>
+</html>

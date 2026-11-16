@@ -2,5 +2,6 @@ User-agent: *
 Disallow: /obrigado.html
 Disallow: /painel.html
 Disallow: /p/
+Disallow: /incomum/
 
 Sitemap: https://theoddwork.com/sitemap.xml

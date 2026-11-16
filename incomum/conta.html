@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>As minhas encomendas · Incomum.eu</title>
+<meta name="theme-color" content="#0d141a">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<link rel="stylesheet" href="fluxo.css">
+</head>
+<body class="fluxo">
+
+<header class="hd">
+  <div class="wrap hd-in">
+    <a class="voltar" href="./"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="hide-s">Loja</span></a>
+    <a class="logo" href="./" aria-label="Incomum.eu — início"><img src="logo.jpg" alt="Incomum.eu"></a>
+    <span class="hd-acc"><button class="link" id="sair" hidden>Sair</button></span>
+  </div>
+</header>
+
+<main class="wrap conta">
+  <div class="conta-topo">
+    <p class="eyebrow">A minha conta</p>
+    <h1 id="titulo">As minhas encomendas</h1>
+    <p class="muted" id="sub"></p>
+  </div>
+
+  <!-- Entrar com link mágico -->
+  <section class="cartao entrar" id="entrar" hidden>
+    <h2>Entra com o teu e-mail</h2>
+    <p class="muted">Usa o e-mail com que fizeste a compra. Enviamos-te um link para entrares, sem palavra-passe.</p>
+    <form id="fEntrar" novalidate>
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="o.teu@email.com" required>
+      <button class="btn" type="submit" id="bEntrar">Enviar link de entrada</button>
+    </form>
+    <div class="aviso ok" id="enviado" hidden></div>
+    <div class="aviso" id="eEntrar" hidden></div>
+  </section>
+
+  <div id="lista"></div>
+  <p class="conta-ajuda muted">Dúvidas sobre uma encomenda? Fala connosco no <a href="#" id="wa">WhatsApp</a> ou escreve para <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>.</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="fluxo.js"></script>
+<script src="conta.js"></script>
+</body>
+</html>
