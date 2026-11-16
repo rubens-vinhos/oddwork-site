@@ -61,7 +61,7 @@ function go(v) {
   if (!['encomendas', 'venda', 'produtos', 'repor', 'cupoes', 'analise', 'categorias', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
   S.v = v; history.replaceState(null, '', '#' + v);
   $$('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-  marcarMais();
+  if (typeof marcarMais === "function") marcarMais();
   ({ encomendas: carregarEnc, venda: carregarVenda, produtos: carregarProdutos, repor: carregarRepor, cupoes: carregarCupoes, analise: carregarAnalise, categorias: carregarCategorias, clientes: carregarClientes, campanha: carregarCampanha })[v]();
 }
 
