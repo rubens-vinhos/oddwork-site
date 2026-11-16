@@ -250,7 +250,7 @@ select{height:48px;padding:0 36px 0 16px;font-weight:600;font-size:13.5px;border
 .ft b{display:block;margin-bottom:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 .ft p{color:var(--ink2)}
 .ft a:hover{text-decoration:underline}
-.ft-logo{height:28px;mix-blend-mode:multiply;margin-bottom:10px}
+.ft-logo{height:28px;margin-bottom:10px}
 .ft-b{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;flex-wrap:wrap}
 
 /* whatsapp */
@@ -336,7 +336,7 @@ select{height:48px;padding:0 36px 0 16px;font-weight:600;font-size:13.5px;border
 .it .err{color:#c0392b;font-size:12px;font-weight:600;margin-top:4px}
 .paynote{font-size:12px;color:var(--muted);text-align:center}
 .cempty{text-align:center;padding:60px 10px;color:var(--muted);display:grid;gap:16px;justify-items:center}
-.m-logo{height:24px;mix-blend-mode:multiply}
+.m-logo{height:24px}
 .mlinks{display:grid;padding:12px 22px}
 .mlinks a{padding:16px 0;border-bottom:1px solid var(--line);font-weight:600;font-size:15px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);text-align:center;background:#000;color:#fff;padding:12px 20px;border-radius:99px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .3s var(--ease);z-index:80;max-width:calc(100% - 32px)}

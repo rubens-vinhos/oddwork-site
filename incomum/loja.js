@@ -65,7 +65,7 @@ const DEF = { t1: '', t2: '', lead: '', kick: '' };
 /* ---------- arranque ---------- */
 async function load() {
   const pc = campanha().then(() => { campaign(); document.body.classList.add('ready'); });   // o topo aparece assim que a campanha responde
-  const d = await (await fetch('catalogo.json?v=hd2')).json();
+  const d = await (await fetch('catalogo.json?v=cor3')).json();
   S.prods = d.produtos.sort((a, b) => (b.destaque - a.destaque) || (a.ordem - b.ordem));
   S.cats = d.categorias; S.portes = d.portes || S.portes;
   for (const p of S.prods) { S.by[p.slug] = p; for (const v of p.variantes) S.byVar[v.id] = { p, v }; }
@@ -286,6 +286,31 @@ document.addEventListener('click', e => {
 });
 
 /* ---------- página de produto ---------- */
+// Galeria: passa sozinha para a foto seguinte (pára com o rato por cima e alguns segundos depois de mexer).
+let galPausa = 0;
+function galGo(i) {
+  const th = $$('#pp .thumbs button'), big = $('#pp .big img'); if (th.length < 2 || !big) return;
+  P.i = (i + th.length) % th.length;
+  th.forEach((b, k) => b.classList.toggle('on', k === P.i));
+  big.src = th[P.i].querySelector('img').src;
+  big.style.animation = 'none'; void big.offsetWidth; big.style.animation = '';
+  const t = th[P.i], box = t.parentElement, tr = t.getBoundingClientRect(), br = box.getBoundingClientRect();
+  box.scrollBy({ top: tr.top - br.top - (br.height - tr.height) / 2, left: tr.left - br.left - (br.width - tr.width) / 2, behavior: 'smooth' });
+  const nx = th[(P.i + 1) % th.length].querySelector('img'); if (nx) new Image().src = nx.src;
+}
+const galHover = matchMedia('(hover:hover)');
+setInterval(() => {
+  if ($('#pp').hidden || document.hidden || Date.now() < galPausa) return;
+  if (galHover.matches && $('#pp .gal')?.matches(':hover')) return;
+  galGo(P.i + 1);
+}, 3500);
+// Telemóvel: arrastar a foto grande para o lado muda de foto.
+let galX = null;
+document.addEventListener('touchstart', e => { galX = e.target.closest('#pp .big') ? e.touches[0].clientX : null; }, { passive: true });
+document.addEventListener('touchend', e => {
+  if (galX === null) return; const dx = e.changedTouches[0].clientX - galX; galX = null;
+  galPausa = Date.now() + 8000; if (Math.abs(dx) > 40) galGo(P.i + (dx < 0 ? 1 : -1));
+}, { passive: true });
 const P = { p: null, cor: '', tam: '', q: 1, i: 0, note: '' };
 function openP(slug, note = '') { S.note = note; S.expect = slug; if (location.hash !== '#p/' + slug) location.hash = 'p/' + slug; else route(); }
 function route() {
@@ -310,7 +335,7 @@ function route() {
 function pp() {
   const p = P.p, cores = [...new Set(p.variantes.map(v => v.cor).filter(Boolean))];
   const vImg = (p.variantes.find(v => v.cor === P.cor && v.img) || {}).img;
-  const imgs = [...new Set([vImg, ...p.imgs].filter(Boolean))];
+  const imgs = [...new Set([vImg, ...((p.fotos && p.fotos[P.cor]) || p.imgs)].filter(Boolean))];
   if (P.i >= imgs.length) P.i = 0;
   const tams = [...new Set(p.variantes.filter(v => !P.cor || v.cor === P.cor).map(v => v.tam).filter(Boolean))].sort(szOrd);
   const sel = p.variantes.find(v => (!cores.length || v.cor === P.cor) && (!tams.length || v.tam === P.tam));
@@ -353,7 +378,7 @@ function pp() {
     </div>
     <div class="sec"><div class="sh"><div><p class="eyebrow">Combina com</p><h2>Também vais gostar</h2></div></div><div class="related">${related(p).slice(0, 4).map(card).join('')}</div></div>
   </div>`;
-  $$('#pp .thumbs button').forEach(b => b.onclick = () => { P.i = +b.dataset.i; pp(); });
+  $$('#pp .thumbs button').forEach(b => b.onclick = () => { galPausa = Date.now() + 8000; P.i = +b.dataset.i; pp(); });
   $$('#pp [data-cor]').forEach(b => b.onclick = () => { P.cor = b.dataset.cor; P.i = 0; if (P.tam && !avail(p, P.cor, P.tam)) P.tam = ''; pp(); });
   $$('#pp [data-tam]').forEach(b => b.onclick = () => { P.tam = b.dataset.tam; pp(); });
   $$('#pp [data-q]:not(.qadd)').forEach(b => b.onclick = () => { P.q = Math.max(1, Math.min(10, P.q + +b.dataset.q)); pp(); });
