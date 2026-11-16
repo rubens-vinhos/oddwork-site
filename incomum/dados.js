@@ -8,7 +8,7 @@ async function catalogoVivo(prefixo = '') {
   try {
     if (!C.supabaseUrl) throw new Error('sem base de dados');
     const h = { headers: { apikey: C.supabaseChave } };
-    const sel = 'id,slug,nome,descricao,categorias,fotos,destaque,ordem,variantes:incomum_variantes(id,cor,tam,preco,promo,desconto,stock)';
+    const sel = 'id,slug,nome,descricao,categorias,fotos,destaque,ordem,variantes:incomum_variantes(id,cor,tam,preco,promo,desconto,stock,na_campanha)';
     const [rp, rc] = await Promise.all([
       fetch(`${C.supabaseUrl}/rest/v1/incomum_produtos?select=${sel}&ativo=eq.true&order=ordem&limit=2000`, h),
       fetch(`${C.supabaseUrl}/rest/v1/incomum_categorias?select=slug,nome,grupo,parte,ordem&ativo=eq.true&order=ordem`, h),
@@ -26,7 +26,7 @@ async function catalogoVivo(prefixo = '') {
       for (const k of cores) { const l = fotos.filter(f => f.cor === k).map(f => url(f.url)); porCor[k] = l.length ? l : soltas; }
       const variantes = p.variantes.map(v => ({
         id: v.id, cor: v.cor || '', tam: v.tam || '', preco: v.preco / 100, promo: v.promo ? v.promo / 100 : null,
-        desconto: v.desconto || 0, stock: v.stock, disp: v.stock > 0, img: (porCor[v.cor] || [])[0] || null,
+        desconto: v.desconto || 0, camp: v.na_campanha !== false, stock: v.stock, disp: v.stock > 0, img: (porCor[v.cor] || [])[0] || null,
       }));
       const tamanhos = [...new Set(variantes.map(v => v.tam).filter(Boolean))];
       const ps = variantes.filter(v => v.disp).map(v => (v.promo && v.promo < v.preco ? v.promo : v.preco));

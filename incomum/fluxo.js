@@ -17,7 +17,7 @@ async function catalogo() {
   const c = await catalogoVivo();
   const porVar = {};
   for (const p of c.produtos) for (const v of p.variantes) {
-    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, desconto: v.desconto || 0, stock: typeof v.stock === 'number' ? v.stock : (v.disp ? 1 : 0) };
+    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, desconto: v.desconto || 0, camp: v.camp !== false, stock: typeof v.stock === 'number' ? v.stock : (v.disp ? 1 : 0) };
   }
   return { portes: c.portes, porVar };
 }

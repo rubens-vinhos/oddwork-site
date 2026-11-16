@@ -23,14 +23,14 @@
   try { cat = await catalogo(); } catch { return erro('<b>Não foi possível carregar o resumo.</b><p>Verifica a ligação e atualiza a página.</p>'); }
   const linhas = saco.filter(i => cat.porVar[i.v]).map(i => {
     const x = cat.porVar[i.v];
-    return { variante: i.v, qtd: i.q, produto: x.p.nome, cor: x.v.cor, tam: x.v.tam, preco: precoDe(x), dv: x.desconto || 0, stock: x.stock };
+    return { variante: i.v, qtd: i.q, produto: x.p.nome, cor: x.v.cor, tam: x.v.tam, preco: precoDe(x), dv: x.desconto || 0, nc: x.camp !== false, stock: x.stock };
   });
   const n = linhas.reduce((a, l) => a + l.qtd, 0);
-  const c = await camp, pct = pctPara(c, n);
+  const c = await camp, pct = pctPara(c, linhas.reduce((a, l) => a + (l.nc ? l.qtd : 0), 0));   // só peças da campanha contam
   const original = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
   // igual ao servidor: em cada peça conta o maior entre o desconto da campanha e o da própria variante (cor + tamanho)
-  for (const l of linhas) { const p = Math.max(pct, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
-  const pctMax = Math.max(pct, ...linhas.map(l => l.dv));
+  for (const l of linhas) { const p = Math.max(l.nc ? pct : 0, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
+  const pctMax = Math.max(...linhas.map(l => Math.max(l.nc ? pct : 0, l.dv)));
   const antesCupao = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
   // cupão guardado no saco: confirma de novo (pode ter acabado) e aplica igual ao servidor
   let cup = cupaoGuardado();

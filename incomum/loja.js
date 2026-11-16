@@ -30,7 +30,9 @@ const vPrice = v => v.promo && v.promo < v.preco ? v.promo : v.preco;
 const cent = v => Math.round(vPrice(v) * 100);                                   // preço atual da variante, em cêntimos
 const precoComDesconto = (c, pct) => Math.round(c * (100 - pct) / 100);         // preço unitário com desconto, em cêntimos
 const eurC = c => eur(c / 100);
-const pctV = (v, r) => Math.max(r || 0, (v && v.desconto) || 0);              // maior entre campanha e desconto da variante
+const pctV = (v, r) => Math.max(v && v.camp === false ? 0 : r || 0, (v && v.desconto) || 0);   // maior entre campanha (se o tamanho está nela) e desconto da variante
+// nº de peças do saco que estão na campanha (só essas contam para o escalão)
+const nCamp = () => S.cart.reduce((a, i) => a + (S.byVar[i.v] && S.byVar[i.v].v.camp !== false ? i.q : 0), 0);
 const unit = (v, r) => precoComDesconto(cent(v), pctV(v, r));                   // preço unitário final, em cêntimos
 const PORTES = () => Math.round((S.portes && S.portes.valor || 10) * 100);
 
@@ -101,7 +103,7 @@ async function campanha() {
 async function stockAoVivo() {
   if (!CFG.supabaseUrl) return;
   try {
-    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,desconto,stock&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,desconto,stock,na_campanha&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
     if (!r.ok) return;
     const vivos = new Map((await r.json()).map(x => [x.id, x]));
     if (!vivos.size) return;
@@ -109,7 +111,7 @@ async function stockAoVivo() {
       for (const v of p.variantes) {
         const x = vivos.get(v.id);
         if (!x) { v.disp = false; v.stock = 0; continue; }
-        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.desconto = x.desconto || 0; v.stock = x.stock; v.disp = x.stock > 0;
+        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.desconto = x.desconto || 0; v.camp = x.na_campanha !== false; v.stock = x.stock; v.disp = x.stock > 0;
       }
       const ps = p.variantes.filter(v => v.disp).map(vPrice);
       if (ps.length) p.preco = Math.min(...ps);
@@ -247,7 +249,7 @@ $('#simAdd').onclick = () => {
     if (it) it.q = Math.min(max, it.q + 1); else S.cart.push({ v: v.id, q: 1 });
   }
   save(); cartUI();
-  const nTot = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(nTot);
+  const r = taxa(nCamp());
   toast(`Conjunto no saco${r ? ` · -${r}% em todas as peças` : ''}`);
   setTimeout(() => drawer('#cart', true), 300);
 };
@@ -357,7 +359,7 @@ function pp() {
   const sel = p.variantes.find(v => (!cores.length || v.cor === P.cor) && (!tams.length || v.tam === P.tam));
   const need = tams.length && !P.tam;
   const cat = S.cats.find(c => c.grupo === 'tipo' && p.categorias.includes(c.slug));
-  const r1 = taxa(1), n = S.cart.reduce((a, i) => a + i.q, 0);
+  const r1 = p.variantes.some(v => v.camp !== false) ? taxa(1) : 0, n = nCamp();
   let hint = '';
   if (r1) { const after = n + 1, ra = taxa(after), nx = tiers().find(t => t.pecas > after);
     if (ra > r1) hint = `Com ${after} peças no saco pagas <b>-${ra}%</b> em todas.`;
@@ -417,7 +419,7 @@ function add(vid, q) {
   const max = Math.min(10, S.byVar[vid].v.stock ?? 10);
   if (it) it.q = Math.min(max, it.q + q); else S.cart.push({ v: vid, q: Math.min(max, q) });
   save(); cartUI();
-  const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n), nx = tiers().find(t => t.pecas > n);
+  const n = nCamp(), r = taxa(n), nx = tiers().find(t => t.pecas > n);
   toast(`Adicionado ao saco${nx ? ` · junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com -${nx.pct}%` : r ? ` · tens o desconto máximo de -${r}%` : ''}`);
   const b = $('#badge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
   if (S.queue.length) { const nxt = S.queue.shift(); setTimeout(() => openP(nxt, 'Agora a parte de baixo'), 450); }
@@ -425,7 +427,7 @@ function add(vid, q) {
 }
 // Mesma conta do servidor, em cêntimos: escalão pelo nº total de peças, aplicado a todas, preço unitário arredondado ao cêntimo.
 function totals() {
-  const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n);
+  const n = S.cart.reduce((a, i) => a + i.q, 0), nc = nCamp(), r = taxa(nc);
   let bruto = 0, liq = 0;
   for (const i of S.cart) { const v = S.byVar[i.v].v; bruto += cent(v) * i.q; liq += unit(v, r) * i.q; }
   // cupão: % em cada peça (já com promoções) e/ou envio grátis; respeita a compra mínima
@@ -433,15 +435,15 @@ function totals() {
   let cdesc = 0;
   if (cupOn && cup.pct) { let l2 = 0; for (const i of S.cart) { const v = S.byVar[i.v].v; l2 += Math.round(unit(v, r) * (100 - cup.pct) / 100) * i.q; } cdesc = liq - l2; liq = l2; }
   const portes = n && !(cupOn && cup.portes_gratis) ? PORTES() : 0;
-  return { n, r, bruto, desc: bruto - liq - cdesc, liq, portes, tot: liq + portes, cup, cupOn, cdesc };
+  return { n, nc, r, bruto, desc: bruto - liq - cdesc, liq, portes, tot: liq + portes, cup, cupOn, cdesc };
 }
 function cartUI() {
   const T = totals(), n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
   b.hidden = !n; b.textContent = n;
-  const nx = ts.find(t => t.pecas > n);
+  const nc = T.nc, tudo = nc === n ? 'em tudo' : 'nas peças da campanha', nx = ts.find(t => t.pecas > nc);
   $('#ship').classList.toggle('g', !!(n && last));
   $('#ship').innerHTML = !n ? '' : last
-    ? `<div class="goal"><span>${nx ? `Junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com <b>-${nx.pct}%</b> em tudo` : `Tens o desconto máximo: <b>-${T.r}%</b> em tudo ✦`}</span><div class="meter"><i style="width:${Math.min(100, n / last.pecas * 100)}%"></i></div></div>`
+    ? `<div class="goal"><span>${nx ? `Junta mais ${nx.pecas - nc} peça${nx.pecas - nc > 1 ? 's' : ''} da campanha e ficas com <b>-${nx.pct}%</b> ${tudo}` : `Tens o desconto máximo: <b>-${T.r}%</b> ${tudo} ✦`}</span><div class="meter"><i style="width:${Math.min(100, nc / last.pecas * 100)}%"></i></div></div>`
     : `Envio para <b>Portugal continental</b> · entrega ${S.portes.prazo}`;
   $('#ship').hidden = !n;
   $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu saco está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
@@ -450,7 +452,7 @@ function cartUI() {
       <div><h4>${esc(p.nome)}</h4><small>${[v.cor, v.tam && 'Tam. ' + v.tam].filter(Boolean).map(esc).join(' · ')}</small>
       ${falta ? `<div class="err">${v.stock > 0 ? 'Stock insuficiente: reduz a quantidade' : 'Esgotou entretanto'}</div>` : ''}
       <div class="qty"><button data-k="${k}" data-d="-1" aria-label="Menos">−</button><span>${i.q}</span><button data-k="${k}" data-d="1" aria-label="Mais">+</button></div></div>
-      <div class="r"><span>${eurC(u * i.q)}${T.r ? `<s>${eurC(c * i.q)}</s>` : ''}</span><button class="rm" data-rm="${k}">Remover</button></div></div>`; }).join('');
+      <div class="r"><span>${eurC(u * i.q)}${u < c ? `<s>${eurC(c * i.q)}</s>` : ''}</span><button class="rm" data-rm="${k}">Remover</button></div></div>`; }).join('');
   $('#cfoot').innerHTML = !n ? '' : `<div class="ln"><span>Subtotal (${n} peça${n === 1 ? '' : 's'})</span><span>${eurC(T.bruto)}</span></div>
     ${T.r ? `<div class="ln save"><span>${esc(camp().nome)} -${T.r}%</span><span>-${eurC(T.desc)}</span></div>` : ''}
     ${T.cdesc ? `<div class="ln save"><span>Cupão ${esc(T.cup.nome)} -${T.cup.pct}%</span><span>-${eurC(T.cdesc)}</span></div>` : ''}

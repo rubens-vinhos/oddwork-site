@@ -298,7 +298,9 @@ async function carregarCampanha() {
     <div class="esc">${esc3.slice(0, 3).map((t, i) => `<label>${i === 2 ? '3 ou mais peças' : (i + 1) + ' peça' + (i ? 's' : '')}<span><input type="number" min="0" max="90" step="1" data-pct="${i}" value="${t.pct}">%</span></label>`).join('')}</div>
     <p class="muted">O desconto aplica-se a todas as peças do saco e é cobrado automaticamente no pagamento. Põe 0% para não haver desconto nesse escalão.</p>
     <button class="btn grad" id="cGuardar">Guardar campanha</button>
-  </section>`;
+  </section>
+  <section class="card cpz" id="campPecas"><div class="empty">A carregar as peças…</div></section>`;
+  campPecas();
   $('#cGuardar').onclick = async () => {
     const pcts = $$('[data-pct]').map(i => Math.round(+i.value || 0));
     if (pcts.some(p => p < 0 || p > 90)) return toast('Cada desconto tem de estar entre 0% e 90%');

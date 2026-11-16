@@ -290,3 +290,75 @@ function abrirMais() {
   $$('#dbox [data-x]').forEach(b => b.onclick = fechar);
   $$('#dbox [data-mv]').forEach(b => b.onclick = () => { fechar(); go(b.dataset.mv); });
 }
+
+/* =================== CAMPANHA: que peças entram =================== */
+// Cada tamanho tem "na_campanha". Fora da campanha: não tem o desconto e não conta para o nº de peças do escalão.
+X.cp = { q: '', cat: '', ver: '', n: 60 };
+async function campPecas() {
+  if (!C.prods.length) await carregarProds();
+  if (!C.cats.length) await carregarCats();
+  campPecasView();
+}
+const naCamp = v => v.na_campanha !== false;
+function campPecasLista() {
+  const f = X.cp, q = f.q.trim().toLowerCase();
+  return C.prods.filter(p => p.ativo && p.variantes.some(v => v.ativo)).filter(p => {
+    if (q && !p.nome.toLowerCase().includes(q)) return false;
+    if (f.cat && !p.categorias.includes(f.cat)) return false;
+    const vs = p.variantes.filter(v => v.ativo), dentro = vs.filter(naCamp).length;
+    if (f.ver === 'dentro' && !dentro) return false;
+    if (f.ver === 'fora' && dentro === vs.length) return false;
+    return true;
+  });
+}
+function campPecasView() {
+  const el = $('#campPecas'); if (!el) return;
+  const f = X.cp, todos = C.prods.filter(p => p.ativo).flatMap(p => p.variantes.filter(v => v.ativo));
+  const dentro = todos.filter(naCamp).length, lista = campPecasLista(), vis = lista.slice(0, f.n);
+  const prodsDentro = C.prods.filter(p => p.ativo && p.variantes.some(v => v.ativo && naCamp(v))).length;
+  el.innerHTML = `
+    <div class="cpz-h"><h3>Peças na campanha</h3>
+      <p class="muted">${prodsDentro} produtos · ${dentro} de ${todos.length} tamanhos estão na campanha. Toca num tamanho para o tirar ou pôr: fica guardado logo.</p></div>
+    <p class="hint">As peças fora da campanha vendem-se ao preço normal e não contam para o nº de peças do desconto. Rosa = na campanha · cinzento riscado = fora · borda tracejada = sem stock agora.</p>
+    <div class="bar cpz-f">
+      <input class="search" id="cpQ" placeholder="Procurar produto…" value="${esc(f.q)}">
+      <select class="search" id="cpCat"><option value="">Todas as categorias</option>${C.cats.map(c => `<option value="${esc(c.slug)}" ${c.slug === f.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select>
+      <div class="chips">${[['', 'Todos'], ['dentro', 'Na campanha'], ['fora', 'Fora']].map(([k, t]) => `<button class="chip ${f.ver === k ? 'on' : ''}" data-cpv="${k}">${t}</button>`).join('')}</div>
+    </div>
+    <div class="cpz-bulk"><span class="muted">${lista.length} produto${lista.length === 1 ? '' : 's'} nesta lista:</span>
+      <button class="ghost sm" id="cpTodos">✓ Pôr todos na campanha</button><button class="ghost sm" id="cpNenhum">✕ Tirar todos</button></div>
+    <div class="cpz-l">${vis.map(p => {
+      const vs = p.variantes.filter(v => v.ativo).sort((a, b) => String(a.cor).localeCompare(b.cor) || szOrd(a.tam, b.tam));
+      const d = vs.filter(naCamp).length;
+      return `<div class="cprow ${d ? '' : 'fora'}"><img src="${S.fotos[p.id] || ''}" alt="" loading="lazy">
+        <div class="cp-i"><div class="cp-t"><b>${esc(p.nome)}</b><label class="sw"><input type="checkbox" data-cpp="${p.id}" ${d === vs.length ? 'checked' : ''}><span></span><small>${d === vs.length ? 'Tudo' : d ? d + ' de ' + vs.length : 'Fora'}</small></label></div>
+        <div class="cp-v">${vs.map(v => `<button class="cpv ${naCamp(v) ? 'on' : ''} ${v.stock <= 0 ? 'z' : ''}" data-cpvar="${v.id}" title="${v.stock <= 0 ? 'Sem stock' : 'Stock ' + v.stock}">${esc([v.cor, v.tam].filter(Boolean).join(' · ') || 'Único')}</button>`).join('')}</div></div></div>`;
+    }).join('') || '<div class="empty">Nenhum produto com estes filtros.</div>'}</div>
+    ${lista.length > vis.length ? `<button class="ghost rmais" id="cpMais">Mostrar mais ${Math.min(60, lista.length - vis.length)} (faltam ${lista.length - vis.length})</button>` : ''}`;
+  let t; $('#cpQ').oninput = e => { clearTimeout(t); t = setTimeout(() => { f.q = e.target.value; f.n = 60; campPecasView(); const i = $('#cpQ'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
+  $('#cpCat').onchange = e => { f.cat = e.target.value; f.n = 60; campPecasView(); };
+  $$('[data-cpv]').forEach(b => b.onclick = () => { f.ver = b.dataset.cpv; f.n = 60; campPecasView(); });
+  if ($('#cpMais')) $('#cpMais').onclick = () => { f.n += 60; campPecasView(); };
+  const varDe = id => { for (const p of C.prods) { const v = p.variantes.find(x => x.id === id); if (v) return v; } return null; };
+  $$('[data-cpvar]').forEach(b => b.onclick = () => { const v = varDe(b.dataset.cpvar); if (v) mudarCamp([v], !naCamp(v)); });
+  $$('[data-cpp]').forEach(i => i.onchange = () => { const p = C.prods.find(x => x.id === i.dataset.cpp); if (p) mudarCamp(p.variantes.filter(v => v.ativo), i.checked); });
+  const emMassa = val => {
+    const vs = lista.flatMap(p => p.variantes.filter(v => v.ativo && naCamp(v) !== val));
+    if (!vs.length) return toast(val ? 'Já estão todos na campanha' : 'Já estão todos fora');
+    if (!confirm(`${val ? 'Pôr' : 'Tirar'} ${vs.length} tamanho${vs.length === 1 ? '' : 's'} (${lista.length} produtos) ${val ? 'na' : 'da'} campanha?`)) return;
+    mudarCamp(vs, val);
+  };
+  $('#cpTodos').onclick = () => emMassa(true);
+  $('#cpNenhum').onclick = () => emMassa(false);
+}
+async function mudarCamp(vs, val) {
+  const antes = vs.map(v => [v, v.na_campanha]);
+  vs.forEach(v => { v.na_campanha = val; }); campPecasView();          // muda logo no ecrã
+  const ids = vs.map(v => v.id); let erro = null;
+  for (let i = 0; i < ids.length && !erro; i += 150) {
+    const { error } = await sb.from('incomum_variantes').update({ na_campanha: val }).in('id', ids.slice(i, i + 150));
+    erro = error;
+  }
+  if (erro) { antes.forEach(([v, x]) => { v.na_campanha = x; }); campPecasView(); return toast('Não foi possível guardar. Tenta de novo.'); }
+  if (vs.length > 1) toast(`${vs.length} tamanhos ${val ? 'na' : 'fora da'} campanha`);
+}
