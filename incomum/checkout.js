@@ -32,9 +32,10 @@
   for (const l of linhas) { const p = Math.max(pct, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
   const pctMax = Math.max(pct, ...linhas.map(l => l.dv));
   const subtotal = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
-  const portes = Math.round((cat.portes?.valor ?? 10) * 100);
+  const cup = cupaoValido(cupaoGuardado());
+  const portes = cup?.portesGratis ? 0 : Math.round((cat.portes?.valor ?? 10) * 100);
   $('#itens').innerHTML = itensHTML(linhas, cat.porVar);
-  $('#tots').innerHTML = totaisHTML({ subtotal, portes, total: subtotal + portes, desconto: original - subtotal, desconto_pct: pct || pctMax, campanha: pct ? c?.nome : 'Promoção' });
+  $('#tots').innerHTML = totaisHTML({ subtotal, portes, total: subtotal + portes, desconto: original - subtotal, desconto_pct: pct || pctMax, campanha: pct ? c?.nome : 'Promoção', cupao: cup?.nome });
   $('#resTit').textContent = `Ver resumo · ${n} peça${n > 1 ? 's' : ''}`;
   $('#resTot').textContent = eur(subtotal + portes);
   $('#wa').href = waLink(`Olá Incomum! Estou a pagar no site (${linhas.map(l => l.qtd + '× ' + l.produto + (l.tam ? ' tam. ' + l.tam : '')).join(', ')}) e tenho uma dúvida.`);
@@ -48,7 +49,7 @@
   const fetchClientSecret = async () => {
     const r = await fetch(CFG.checkoutUrl, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ modo: 'embedded', itens: linhas.map(l => ({ variante: l.variante, qtd: l.qtd })) }),
+      body: JSON.stringify({ modo: 'embedded', cupao: cup ? cupaoGuardado() : '', itens: linhas.map(l => ({ variante: l.variante, qtd: l.qtd })) }),
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok || !d.clientSecret) throw Object.assign(new Error(d.erro || 'Não foi possível abrir o pagamento.'), { esgotados: d.esgotados });

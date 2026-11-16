@@ -46,3 +46,9 @@ async function catalogoVivo(prefixo = '') {
     return c;
   }
 }
+
+// Cupões (o servidor confirma sempre; isto só serve para mostrar). Código normalizado: maiúsculas, só letras e números.
+const CUPOES = { FIGO: { nome: 'FIGO!', portesGratis: true } };
+const normCupao = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const cupaoValido = c => CUPOES[normCupao(c)] || null;
+const cupaoGuardado = () => { try { return localStorage.getItem('incomum-cupao') || ''; } catch { return ''; } };

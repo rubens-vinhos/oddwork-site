@@ -459,3 +459,11 @@ html{scroll-padding-top:80px}
 .info .price .poff{font-size:14px;padding:5px 12px}
 .ph .disc{position:absolute;top:10px;left:10px;z-index:2;background:var(--grad);color:#fff;font-weight:900;font-size:14px;padding:6px 11px;border-radius:99px;box-shadow:0 8px 20px rgba(241,63,123,.4)}
 .psave{display:inline-block;margin:2px 0 6px;color:var(--magenta);background:rgba(241,63,123,.08);border:1px solid rgba(241,63,123,.25);font-weight:800;font-size:13px;padding:5px 12px;border-radius:99px}
+
+.cupao{display:flex;gap:8px;align-items:center;margin:10px 0 4px}
+.cupao input{flex:1;min-width:0;height:42px;border:1px solid #ddd;border-radius:10px;padding:0 12px;font:inherit;font-size:14px;text-transform:uppercase}
+.cupao .btn{height:42px;padding:0 16px}
+.cup-ok{flex:1;color:#1f7a4d;background:#e8f6ee;border-radius:10px;padding:10px 12px;font-size:13.5px}
+.cup-x{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:12.5px}
+.cup-err{color:#b3261e;font-size:12.5px;margin-bottom:6px}
+.gratis{color:#1f7a4d}

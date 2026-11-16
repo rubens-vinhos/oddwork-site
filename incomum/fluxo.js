@@ -79,7 +79,7 @@ function totaisHTML(e) {
   return `<div class="tots">
     <div><span>Subtotal</span><span>${eur(e.subtotal)}</span></div>
     ${e.desconto > 0 ? `<div class="poup"><span>Inclui ${esc(e.campanha || 'desconto')} −${e.desconto_pct}%</span><span>poupas ${eur(e.desconto)}</span></div>` : ''}
-    <div><span>Envio Portugal continental</span><span>${eur(e.portes)}</span></div>
+    <div><span>Envio Portugal continental${e.cupao ? ` · cupão ${esc(e.cupao)}` : ''}</span><span>${e.portes ? eur(e.portes) : '<b class="gratis">Grátis</b>'}</span></div>
     <div class="t"><span>Total</span><span>${eur(e.total)}</span></div>
     <p class="iva">IVA incluído</p></div>`;
 }

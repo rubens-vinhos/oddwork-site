@@ -17,6 +17,7 @@ function hex(c) {
 
 const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 10, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
 try { S.cart = JSON.parse(localStorage.getItem('incomum-saco') || '[]'); } catch {}
+S.cupao = (() => { try { return localStorage.getItem('incomum-cupao') || ''; } catch { return ''; } })();
 const save = () => { try { localStorage.setItem('incomum-saco', JSON.stringify(S.cart)); } catch {} };
 
 /* ---------- preços e campanha ----------
@@ -425,8 +426,9 @@ function totals() {
   const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n);
   let bruto = 0, liq = 0;
   for (const i of S.cart) { const v = S.byVar[i.v].v; bruto += cent(v) * i.q; liq += unit(v, r) * i.q; }
-  const portes = n ? PORTES() : 0;
-  return { n, r, bruto, desc: bruto - liq, liq, portes, tot: liq + portes };
+  const cup = cupaoValido(S.cupao);
+  const portes = n && !cup?.portesGratis ? PORTES() : 0;
+  return { n, r, bruto, desc: bruto - liq, liq, portes, tot: liq + portes, cup };
 }
 function cartUI() {
   const T = totals(), n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
@@ -446,7 +448,10 @@ function cartUI() {
       <div class="r"><span>${eurC(u * i.q)}${T.r ? `<s>${eurC(c * i.q)}</s>` : ''}</span><button class="rm" data-rm="${k}">Remover</button></div></div>`; }).join('');
   $('#cfoot').innerHTML = !n ? '' : `<div class="ln"><span>Subtotal (${n} peça${n === 1 ? '' : 's'})</span><span>${eurC(T.bruto)}</span></div>
     ${T.r ? `<div class="ln save"><span>${esc(camp().nome)} -${T.r}%</span><span>-${eurC(T.desc)}</span></div>` : ''}
-    <div class="ln"><span>Envio Portugal continental</span><span>${eurC(T.portes)}</span></div>
+    <div class="ln${T.cup ? ' save' : ''}"><span>Envio Portugal continental${T.cup ? ` · cupão ${esc(T.cup.nome)}` : ''}</span><span>${T.portes ? eurC(T.portes) : 'Grátis'}</span></div>
+    <div class="cupao">${T.cup ? `<span class="cup-ok">✓ Cupão <b>${esc(T.cup.nome)}</b>: envio grátis</span><button class="cup-x" id="cupX">Remover</button>`
+      : `<input id="cupIn" placeholder="Tens um cupão?" autocomplete="off" autocapitalize="characters" value="${esc(S.cupao || '')}"><button class="btn line" id="cupOk">Aplicar</button>`}</div>
+    <div class="cup-err" id="cupErr" hidden>Este cupão não existe.</div>
     <div class="ln tot"><span>Total</span><span>${eurC(T.tot)}</span></div>
     <button class="btn block grad" id="checkout">Finalizar compra</button>
     <p class="paynote">Pagamento seguro com cartão ou MB WAY · IVA incluído<br>Ao continuar aceitas os <a href="termos.html" style="text-decoration:underline">termos de venda</a></p>`;
@@ -454,6 +459,10 @@ function cartUI() {
   $$('#items [data-rm]').forEach(x => x.onclick = () => { S.cart.splice(+x.dataset.rm, 1); save(); cartUI(); if (P.p) pp(); });
   $$('#cart [data-close]').forEach(x => x.addEventListener('click', () => drawer('#cart', false)));
   const c = $('#checkout'); if (c) c.onclick = checkout;
+  const setCup = v => { S.cupao = v; try { v ? localStorage.setItem('incomum-cupao', v) : localStorage.removeItem('incomum-cupao'); } catch {} };
+  const ap = () => { const v = $('#cupIn').value.trim(); if (!v) return; if (cupaoValido(v)) { setCup(v); cartUI(); toast('Cupão aplicado: envio grátis'); } else { $('#cupErr').hidden = false; } };
+  if ($('#cupOk')) { $('#cupOk').onclick = ap; $('#cupIn').onkeydown = e => { if (e.key === 'Enter') ap(); }; $('#cupIn').oninput = () => { $('#cupErr').hidden = true; }; }
+  if ($('#cupX')) $('#cupX').onclick = () => { setCup(''); cartUI(); };
 }
 // Etapa 2: com CFG.checkoutUrl definido, o servidor valida preços/stock e devolve o link do Stripe Checkout.
 async function checkout() {
