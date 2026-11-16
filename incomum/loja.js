@@ -295,7 +295,10 @@ function galGo(i) {
   big.src = th[P.i].querySelector('img').src;
   big.style.animation = 'none'; void big.offsetWidth; big.style.animation = '';
   const t = th[P.i], box = t.parentElement, tr = t.getBoundingClientRect(), br = box.getBoundingClientRect();
-  box.scrollBy({ top: tr.top - br.top - (br.height - tr.height) / 2, left: tr.left - br.left - (br.width - tr.width) / 2, behavior: 'smooth' });
+  // Só mexe na coluna de miniaturas se a miniatura ativa estiver fora de vista (sem saltos).
+  const dy = tr.top < br.top ? tr.top - br.top : tr.bottom > br.bottom ? tr.bottom - br.bottom : 0;
+  const dx = tr.left < br.left ? tr.left - br.left : tr.right > br.right ? tr.right - br.right : 0;
+  if (dy || dx) box.scrollBy({ top: dy, left: dx, behavior: 'smooth' });
   const nx = th[(P.i + 1) % th.length].querySelector('img'); if (nx) new Image().src = nx.src;
 }
 const galHover = matchMedia('(hover:hover)');
