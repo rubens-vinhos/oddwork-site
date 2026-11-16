@@ -27,6 +27,8 @@ const vPrice = v => v.promo && v.promo < v.preco ? v.promo : v.preco;
 const cent = v => Math.round(vPrice(v) * 100);                                   // preço atual da variante, em cêntimos
 const precoComDesconto = (c, pct) => Math.round(c * (100 - pct) / 100);         // preço unitário com desconto, em cêntimos
 const eurC = c => eur(c / 100);
+const pctV = (v, r) => Math.max(r || 0, (v && v.desconto) || 0);              // maior entre campanha e desconto da variante
+const unit = (v, r) => precoComDesconto(cent(v), pctV(v, r));                   // preço unitário final, em cêntimos
 const PORTES = () => Math.round((S.portes && S.portes.valor || 10) * 100);
 
 let CAMP = null; // linha da tabela incomum_campanha (ou null)
@@ -47,29 +49,30 @@ const sizes = p => [...new Set(p.variantes.map(v => v.tam).filter(Boolean))].sor
 const units = p => p.variantes.filter(v => v.disp).length;
 const lowStock = p => { const t = p.variantes.filter(v => typeof v.stock === 'number').reduce((a, v) => a + v.stock, 0); return p.variantes.some(v => typeof v.stock === 'number') && t > 0 && t <= 2; };
 // preço atual mais baixo entre as variantes disponíveis (em cêntimos) e o preço riscado, se houver promoção
-function from(p) {
+function from(p, r = taxa(1)) {
   const vs = p.variantes.filter(v => v.disp), l = vs.length ? vs : p.variantes;
-  const v = l.slice().sort((a, b) => cent(a) - cent(b))[0];
-  return v ? { c: cent(v), pre: Math.round(v.preco * 100) } : { c: Math.round(p.preco * 100), pre: Math.round(p.preco * 100) };
+  const v = l.slice().sort((a, b) => unit(a, r) - unit(b, r))[0];
+  if (!v) { const c = Math.round(p.preco * 100); return { f: c, s: null, c, pre: c, v: null }; }
+  const f = unit(v, r), n = Math.round(v.preco * 100);
+  return { f, s: n > f ? n : null, c: cent(v), pre: n, v };
 }
-// [preço final, preço riscado ou null] para um preço atual c (cêntimos) com taxa r e preço pré-promoção
-const show = (c, pre, r) => r ? [precoComDesconto(c, r), c] : [c, pre > c ? pre : null];
-const priceFmt = (c, pre, r) => { const [f, s] = show(c, pre, r); return `${eurC(f)}${s ? `<s>${eurC(s)}</s>` : ''}`; };
-const priceHTML = p => { const x = from(p); return priceFmt(x.c, x.pre, taxa(1)); };
+const fmtFS = (f, s) => `${eurC(f)}${s && s > f ? `<s>${eurC(s)}</s>` : ''}`;
+const priceHTML = p => { const x = from(p); return fmtFS(x.f, x.s); };
 const wa = t => `https://wa.me/${CFG.whatsapp || '351910202105'}?text=${encodeURIComponent(t)}`;
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2800); }
-const isTop = p => p.categorias.includes('tops-croppeds-camisolas');
-const isBot = p => p.categorias.includes('leggings-calcas') || p.categorias.includes('shorts-bermudas');
+const parte = (p, x) => p.categorias.some(c => S.cats.some(k => k.slug === c && k.parte === x));
+const isTop = p => parte(p, 'cima');
+const isBot = p => parte(p, 'baixo');
 const DEF = { t1: '', t2: '', lead: '', kick: '' };
 
 /* ---------- arranque ---------- */
 async function load() {
   const pc = campanha().then(() => { campaign(); document.body.classList.add('ready'); });   // o topo aparece assim que a campanha responde
-  const d = await (await fetch('catalogo.json?v=cor4')).json();
+  const d = await catalogoVivo();
   S.prods = d.produtos.sort((a, b) => (b.destaque - a.destaque) || (a.ordem - b.ordem));
   S.cats = d.categorias; S.portes = d.portes || S.portes;
   for (const p of S.prods) { S.by[p.slug] = p; for (const v of p.variantes) S.byVar[v.id] = { p, v }; }
-  await Promise.all([stockAoVivo(), pc]);
+  await Promise.all([d.vivo ? null : stockAoVivo(), pc]);
   S.cart = S.cart.filter(i => S.byVar[i.v] && i.q > 0);
   paint(); filters(); route();
   document.body.classList.add('ready');
@@ -88,7 +91,7 @@ async function campanha() {
 async function stockAoVivo() {
   if (!CFG.supabaseUrl) return;
   try {
-    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,stock&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,desconto,stock&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
     if (!r.ok) return;
     const vivos = new Map((await r.json()).map(x => [x.id, x]));
     if (!vivos.size) return;
@@ -96,7 +99,7 @@ async function stockAoVivo() {
       for (const v of p.variantes) {
         const x = vivos.get(v.id);
         if (!x) { v.disp = false; v.stock = 0; continue; }
-        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.stock = x.stock; v.disp = x.stock > 0;
+        v.preco = x.preco / 100; v.promo = x.promo ? x.promo / 100 : null; v.desconto = x.desconto || 0; v.stock = x.stock; v.disp = x.stock > 0;
       }
       const ps = p.variantes.filter(v => v.disp).map(vPrice);
       if (ps.length) p.preco = Math.min(...ps);
@@ -161,7 +164,7 @@ function champs() {
   const all = S.prods.filter(p => /allu?re/i.test(p.nome) && avail(p)).sort((a, b) => units(b) - units(a));
   const L = [six[0], ...all.slice(0, 4)].filter(Boolean);
   while (L.length < 5) { const x = S.prods.find(p => avail(p) && !L.includes(p)); if (!x) break; L.push(x); }
-  $('#champs').innerHTML = L.map((p, i) => { const x = from(p), r = taxa(1), [f, s] = show(x.c, x.pre, r);
+  $('#champs').innerHTML = L.map((p, i) => { const x = from(p), r = taxa(1), f = x.f, s = x.s;
     return `<a class="champ reveal" href="#p/${p.slug}"><img src="${p.imgs[i === 0 ? 1 : 0] || p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">
     <div class="ci"><div><span class="ctag">${i === 0 ? 'Mais procurada' : /allu?re/i.test(p.nome) ? 'Tecido Allure' : 'Destaque'}</span><h3>${esc(p.nome)}</h3></div>
     <div class="pp"><b>${eurC(f)}</b>${s ? `<s>${eurC(s)}</s>` : ''}</div><span class="go">→</span></div></a>`; }).join('');
@@ -178,11 +181,11 @@ function sim() {
   simDraw();
 }
 function simDraw() {
-  const opt = (p, on) => `<button class="sopt ${on ? 'on' : ''}" data-s="${p.slug}"><img src="${p.imgs[0]}" alt="" loading="lazy"><span><b>${esc(p.nome)}</b><small>${eurC(from(p).c)}</small></span><span class="ck"></span></button>`;
+  const opt = (p, on) => `<button class="sopt ${on ? 'on' : ''}" data-s="${p.slug}"><img src="${p.imgs[0]}" alt="" loading="lazy"><span><b>${esc(p.nome)}</b><small>${eurC(from(p, 0).f)}</small></span><span class="ck"></span></button>`;
   $('#tops').innerHTML = simTops.map(p => opt(p, p === simT)).join('');
   $('#bots').innerHTML = simBots.map(p => opt(p, p === simB)).join('');
   const sel = [simT, simB].filter(Boolean), n = sel.length, r = taxa(n);
-  const norm = sel.reduce((a, p) => a + from(p).c, 0), tot = sel.reduce((a, p) => a + precoComDesconto(from(p).c, r), 0);
+  const norm = sel.reduce((a, p) => a + (simVar(p) ? unit(simVar(p), 0) : from(p, 0).f), 0), tot = sel.reduce((a, p) => a + (simVar(p) ? unit(simVar(p), r) : from(p, r).f), 0);
   const fotoSim = p => (p.variantes.find(v => v.cor === (simSz[p.slug] || {}).cor && v.img) || {}).img || p.imgs[0];
   $('#look').innerHTML = (simT ? `<img src="${fotoSim(simT)}" alt="">` : '<div class="ph">Escolhe um top</div>') + (simB ? `<img src="${fotoSim(simB)}" alt="">` : '<div class="ph">Escolhe a parte de baixo</div>');
   const ts = tiers();
@@ -362,7 +365,7 @@ function pp() {
       <div class="info">
         ${P.note ? `<span class="pill">${esc(P.note)}</span>` : '<p class="eyebrow">LIVE! · Original</p>'}
         <h1>${esc(p.nome)}</h1>
-        <p class="price">${sel ? priceFmt(cent(sel), Math.round(sel.preco * 100), r1) : priceHTML(p)}${r1 ? `<span class="off">-${r1}%</span>` : ''}</p>
+        <p class="price">${sel ? fmtFS(unit(sel, r1), Math.round(sel.preco * 100)) : priceHTML(p)}${(sel ? pctV(sel, r1) : r1) ? `<span class="off">-${sel ? pctV(sel, r1) : r1}%</span>` : ''}</p>
         ${hint ? `<p class="hint">${hint}</p>` : ''}
         <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental, ${S.portes.prazo}</p>
         ${cores.length ? `<div class="opt"><div class="opt-h">Cor <span>${esc(P.cor)}</span></div><div class="sw">${cores.map(c => `<button class="${c === P.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-cor="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div></div>` : ''}
@@ -414,7 +417,7 @@ function add(vid, q) {
 function totals() {
   const n = S.cart.reduce((a, i) => a + i.q, 0), r = taxa(n);
   let bruto = 0, liq = 0;
-  for (const i of S.cart) { const c = cent(S.byVar[i.v].v); bruto += c * i.q; liq += precoComDesconto(c, r) * i.q; }
+  for (const i of S.cart) { const v = S.byVar[i.v].v; bruto += cent(v) * i.q; liq += unit(v, r) * i.q; }
   const portes = n ? PORTES() : 0;
   return { n, r, bruto, desc: bruto - liq, liq, portes, tot: liq + portes };
 }
@@ -428,7 +431,7 @@ function cartUI() {
     : `Envio para <b>Portugal continental</b> · entrega ${S.portes.prazo}`;
   $('#ship').hidden = !n;
   $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu saco está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
-    S.cart.map((i, k) => { const { p, v } = S.byVar[i.v], c = cent(v), u = precoComDesconto(c, T.r), falta = typeof v.stock === 'number' && i.q > v.stock;
+    S.cart.map((i, k) => { const { p, v } = S.byVar[i.v], c = cent(v), u = unit(v, T.r), falta = typeof v.stock === 'number' && i.q > v.stock;
       return `<div class="it"><a href="#p/${p.slug}" data-close><img src="${v.img || p.imgs[0]}" alt=""></a>
       <div><h4>${esc(p.nome)}</h4><small>${[v.cor, v.tam && 'Tam. ' + v.tam].filter(Boolean).map(esc).join(' · ')}</small>
       ${falta ? `<div class="err">${v.stock > 0 ? 'Stock insuficiente: reduz a quantidade' : 'Esgotou entretanto'}</div>` : ''}
@@ -450,7 +453,7 @@ async function checkout() {
   if (CFG.checkoutUrl && CFG.stripeChave) { save(); location.href = 'checkout.html'; return; }
   // Ainda sem pagamentos online: encomenda pelo WhatsApp com o resumo do saco.
   const T = totals(), r = T.r;
-  const linhas = S.cart.map(i => { const { p, v } = S.byVar[i.v]; return `• ${i.q}× ${p.nome}${v.cor ? ' · ' + v.cor : ''}${v.tam ? ' · ' + v.tam : ''} — ${eurC(precoComDesconto(cent(v), r) * i.q)}`; });
+  const linhas = S.cart.map(i => { const { p, v } = S.byVar[i.v]; return `• ${i.q}× ${p.nome}${v.cor ? ' · ' + v.cor : ''}${v.tam ? ' · ' + v.tam : ''} — ${eurC(unit(v, r) * i.q)}`; });
   open(wa(`Olá! Quero encomendar:\n${linhas.join('\n')}\n${r ? `Desconto: -${r}%\n` : ''}Envio: ${eurC(T.portes)}\nTotal: ${eurC(T.tot)}`), '_blank', 'noopener');
 }
 

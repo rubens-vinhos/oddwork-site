@@ -27,7 +27,7 @@ async function entrar() {
   const { data: ok } = await sb.rpc('incomum_e_equipa');
   if (!ok) { await sb.auth.signOut(); $('#lerr').textContent = 'Este e-mail não tem acesso ao painel da Incomum.'; $('#lerr').hidden = false; return; }
   $('#login').hidden = true; $('#app').hidden = false;
-  try { const c = await (await fetch('../catalogo.json')).json(); for (const p of c.produtos) { S.fotos[p.id] = p.imgs[0] ? '../' + p.imgs[0] : ''; for (const v of p.variantes) S.fotoVar[v.id] = '../' + (v.img || p.imgs[0] || ''); } } catch {}
+  try { await carregarProds(); } catch { /* fotos das encomendas ficam vazias */ }
   go(location.hash.slice(1) || 'encomendas');
   setInterval(() => { if (S.v === 'encomendas' && !$('#drawer').classList.contains('on')) carregarEnc(); }, 60000);
   // Tempo real: encomendas novas ou mudadas noutro aparelho aparecem logo.
@@ -41,10 +41,11 @@ sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').
 /* ---------- navegação ---------- */
 $$('#tabs a').forEach(a => a.onclick = () => go(a.dataset.v));
 function go(v) {
-  if (!['encomendas', 'stock', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
+  if (v === 'stock') v = 'produtos';
+  if (!['encomendas', 'venda', 'produtos', 'categorias', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
   S.v = v; history.replaceState(null, '', '#' + v);
   $$('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-  ({ encomendas: carregarEnc, stock: carregarStock, clientes: carregarClientes, campanha: carregarCampanha })[v]();
+  ({ encomendas: carregarEnc, venda: carregarVenda, produtos: carregarProdutos, categorias: carregarCategorias, clientes: carregarClientes, campanha: carregarCampanha })[v]();
 }
 
 /* ---------- encomendas ---------- */

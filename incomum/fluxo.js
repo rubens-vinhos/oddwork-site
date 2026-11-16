@@ -14,15 +14,11 @@ const Saco = {
 
 // Catálogo (fotos e nomes) + preço e stock reais da base de dados.
 async function catalogo() {
-  const c = await (await fetch('catalogo.json?v=cor4')).json();
+  const c = await catalogoVivo();
   const porVar = {};
   for (const p of c.produtos) for (const v of p.variantes) {
-    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, stock: v.disp ? 1 : 0 };
+    porVar[v.id] = { p, v, img: v.img || p.imgs[0] || '', preco: Math.round(v.preco * 100), promo: v.promo ? Math.round(v.promo * 100) : null, desconto: v.desconto || 0, stock: typeof v.stock === 'number' ? v.stock : (v.disp ? 1 : 0) };
   }
-  try {
-    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_variantes?select=id,preco,promo,stock&limit=5000`, { headers: { apikey: CFG.supabaseChave } });
-    if (r.ok) for (const x of await r.json()) if (porVar[x.id]) Object.assign(porVar[x.id], { preco: x.preco, promo: x.promo, stock: x.stock });
-  } catch { /* fica o catálogo */ }
   return { portes: c.portes, porVar };
 }
 // Campanha ativa (ex.: Black Friday): desconto pelo nº total de peças. O servidor faz a mesma conta.
