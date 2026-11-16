@@ -157,3 +157,6 @@ body.fluxo{background:var(--soft);min-height:100vh}
 /* Seguimento da transportadora */
 .tl-seg{display:block;margin-top:6px;font-size:12.5px;color:var(--ink2,#2b3238)}
 .tl-seg a{color:#cd507a;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* Desconto de campanha nos totais */
+.tots .poup{color:#cd507a;font-weight:700;font-size:13px}

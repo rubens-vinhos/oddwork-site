@@ -134,6 +134,7 @@ function emailHTML(e: any, f: Record<string, string>) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${pecas}</table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:4px;${FONTE}">
       <tr><td style="padding:5px 2px;font-size:14px;color:#6c7278">Subtotal</td><td align="right" style="padding:5px 2px;font-size:14px;color:#2b3238">${eur(e.subtotal)}</td></tr>
+      ${e.desconto > 0 ? `<tr><td style="padding:5px 2px;font-size:13px;font-weight:700;color:#cd507a">Inclui ${esc(e.campanha || "desconto")} −${e.desconto_pct}%</td><td align="right" style="padding:5px 2px;font-size:13px;font-weight:700;color:#cd507a">poupaste ${eur(e.desconto)}</td></tr>` : ""}
       <tr><td style="padding:5px 2px;font-size:14px;color:#6c7278">Envio Portugal continental</td><td align="right" style="padding:5px 2px;font-size:14px;color:#2b3238">${eur(e.portes)}</td></tr>
       <tr><td style="padding:14px 2px 4px;border-top:1px solid #e9e3e6;font-size:17px;font-weight:800;color:#0d141a">Total pago</td><td align="right" style="padding:14px 2px 4px;border-top:1px solid #e9e3e6;font-size:17px;font-weight:800;color:#0d141a">${eur(e.total)}</td></tr>
       <tr><td colspan="2" style="padding:0 2px 14px;font-size:11.5px;color:#8a8f94">IVA incluído</td></tr>

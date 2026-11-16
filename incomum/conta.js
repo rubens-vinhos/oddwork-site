@@ -46,7 +46,7 @@
     $('#titulo').textContent = 'As minhas encomendas';
     $('#sub').textContent = session.user.email;
     const { data, error } = await sb.from('incomum_encomendas')
-      .select('numero, estado, total, subtotal, portes, nome, morada, criado, pago_em, preparacao_em, enviado_em, entregue_em, transportadora, seguimento, itens:incomum_itens(variante_id, produto, cor, tam, qtd, preco)')
+      .select('numero, estado, total, subtotal, portes, nome, morada, criado, pago_em, preparacao_em, enviado_em, entregue_em, transportadora, seguimento, desconto, desconto_pct, campanha, itens:incomum_itens(variante_id, produto, cor, tam, qtd, preco)')
       .eq('email', session.user.email.toLowerCase())
       .in('estado', ['paga', 'preparacao', 'enviada', 'entregue', 'cancelada'])
       .order('criado', { ascending: false });

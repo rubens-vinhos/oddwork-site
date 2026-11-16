@@ -19,16 +19,20 @@
 
   // 1. Resumo com preços e stock reais.
   let cat;
+  const camp = campanha();
   try { cat = await catalogo(); } catch { return erro('<b>Não foi possível carregar o resumo.</b><p>Verifica a ligação e atualiza a página.</p>'); }
   const linhas = saco.filter(i => cat.porVar[i.v]).map(i => {
     const x = cat.porVar[i.v];
     return { variante: i.v, qtd: i.q, produto: x.p.nome, cor: x.v.cor, tam: x.v.tam, preco: precoDe(x), stock: x.stock };
   });
+  const n = linhas.reduce((a, l) => a + l.qtd, 0);
+  const c = await camp, pct = pctPara(c, n);
+  const original = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
+  if (pct) for (const l of linhas) l.preco = Math.round(l.preco * (100 - pct) / 100); // igual ao servidor
   const subtotal = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
   const portes = Math.round((cat.portes?.valor ?? 10) * 100);
-  const n = linhas.reduce((a, l) => a + l.qtd, 0);
   $('#itens').innerHTML = itensHTML(linhas, cat.porVar);
-  $('#tots').innerHTML = totaisHTML({ subtotal, portes, total: subtotal + portes });
+  $('#tots').innerHTML = totaisHTML({ subtotal, portes, total: subtotal + portes, desconto: original - subtotal, desconto_pct: pct, campanha: c?.nome });
   $('#resTit').textContent = `Ver resumo · ${n} peça${n > 1 ? 's' : ''}`;
   $('#resTot').textContent = eur(subtotal + portes);
   $('#wa').href = waLink(`Olá Incomum! Estou a pagar no site (${linhas.map(l => l.qtd + '× ' + l.produto + (l.tam ? ' tam. ' + l.tam : '')).join(', ')}) e tenho uma dúvida.`);

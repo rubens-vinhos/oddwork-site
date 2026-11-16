@@ -152,3 +152,22 @@ a{color:inherit;text-decoration:none}
 .seg label{display:block;font-size:12px;font-weight:600;margin:0 0 10px}
 .seg select,.seg input{display:block;width:100%;margin-top:5px;padding:10px 12px;border:1px solid #e8e5e7;border-radius:10px;font:inherit;font-size:14px;background:#fff}
 .seg .btn{margin-top:4px}
+
+/* Campanha */
+.camp{padding:22px;max-width:560px}
+.camp-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.camp h2{font-size:20px;font-weight:800}
+.camp h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin:18px 0 8px}
+.camp>label{display:block;font-size:12px;font-weight:600;margin:0 0 12px}
+.camp>label input{display:block;width:100%;margin-top:5px;padding:10px 12px;border:1px solid #e8e5e7;border-radius:10px;font:inherit;font-size:14px}
+.camp .esc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.camp .esc label{font-size:12px;font-weight:600;display:block}
+.camp .esc span{display:flex;align-items:center;gap:6px;margin-top:5px}
+.camp .esc input{width:100%;padding:10px 12px;border:1px solid #e8e5e7;border-radius:10px;font:inherit;font-size:16px;font-weight:700}
+.camp .btn{margin-top:14px}
+.sw{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer}
+.sw input{position:absolute;opacity:0}
+.sw span{width:42px;height:24px;border-radius:99px;background:#e2dde0;position:relative;transition:background .2s}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw input:checked+span{background:#cd507a}
+.sw input:checked+span::after{transform:translateX(18px)}

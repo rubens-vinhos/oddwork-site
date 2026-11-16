@@ -25,6 +25,15 @@ async function catalogo() {
   } catch { /* fica o catálogo */ }
   return { portes: c.portes, porVar };
 }
+// Campanha ativa (ex.: Black Friday): desconto pelo nº total de peças. O servidor faz a mesma conta.
+async function campanha() {
+  try {
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/incomum_campanha?select=ativa,nome,fim,escaloes`, { headers: { apikey: CFG.supabaseChave } });
+    const c = r.ok ? (await r.json())[0] : null;
+    return c && c.ativa && Date.now() < new Date(c.fim).getTime() ? c : null;
+  } catch { return null; }
+}
+const pctPara = (c, n) => (c?.escaloes || []).reduce((r, t) => n >= t.pecas ? Math.max(r, t.pct) : r, 0);
 const precoDe = x => (x.promo && x.promo < x.preco ? x.promo : x.preco);
 
 async function rpc(nome, corpo) {
@@ -73,6 +82,7 @@ function itensHTML(itens, porVar) {
 function totaisHTML(e) {
   return `<div class="tots">
     <div><span>Subtotal</span><span>${eur(e.subtotal)}</span></div>
+    ${e.desconto > 0 ? `<div class="poup"><span>Inclui ${esc(e.campanha || 'desconto')} −${e.desconto_pct}%</span><span>poupas ${eur(e.desconto)}</span></div>` : ''}
     <div><span>Envio Portugal continental</span><span>${eur(e.portes)}</span></div>
     <div class="t"><span>Total</span><span>${eur(e.total)}</span></div>
     <p class="iva">IVA incluído</p></div>`;

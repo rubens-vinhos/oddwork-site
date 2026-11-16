@@ -75,12 +75,26 @@ Deno.serve(async (req) => {
   }
   if (esgotados.length) return resposta({ erro: "Sem stock suficiente: " + esgotados.join("; ") + ".", esgotados }, 409, h);
 
+  // Campanha (ex.: Black Friday): desconto pelo nº total de peças, aplicado a todas, calculado só aqui.
+  const { data: camp } = await admin.from("incomum_campanha").select("ativa, nome, fim, escaloes").eq("id", 1).maybeSingle();
+  const nPecas = linhas.reduce((a, l) => a + l.qtd, 0);
+  let pct = 0;
+  if (camp?.ativa && Date.now() < new Date(camp.fim).getTime() && Array.isArray(camp.escaloes)) {
+    for (const t of camp.escaloes) {
+      const pecas = Number(t?.pecas), p = Number(t?.pct);
+      if (Number.isInteger(pecas) && Number.isInteger(p) && p > 0 && p <= 90 && nPecas >= pecas) pct = Math.max(pct, p);
+    }
+  }
+  const original = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
+  if (pct) for (const l of linhas) l.preco = Math.round(l.preco * (100 - pct) / 100);
   const subtotal = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
+  const desconto = original - subtotal;
+  const campanha = pct ? String(camp!.nome).slice(0, 40) : null;
   const portes = PORTES;
 
   // 3. Encomenda pendente (o webhook passa-a a paga e baixa o stock).
   const { data: enc, error: e1 } = await admin.from("incomum_encomendas")
-    .insert({ subtotal, portes, total: subtotal + portes }).select("id, numero").single();
+    .insert({ subtotal, portes, total: subtotal + portes, desconto, desconto_pct: pct || null, campanha }).select("id, numero").single();
   if (e1 || !enc) { console.error("encomenda", e1); return resposta({ erro: "Não foi possível criar a encomenda." }, 500, h); }
   const { error: e2 } = await admin.from("incomum_itens").insert(linhas.map((l) => ({
     encomenda_id: enc.id, variante_id: l.id, produto: l.nome, cor: l.cor, tam: l.tam, qtd: l.qtd, preco: l.preco,
@@ -107,7 +121,7 @@ Deno.serve(async (req) => {
           currency: "eur",
           unit_amount: l.preco,
           tax_behavior: "inclusive",
-          product_data: { name: "Incomum · " + l.nome, ...(l.desc ? { description: l.desc } : {}), metadata: { loja: "incomum", variante: l.id } },
+          product_data: { name: "Incomum · " + l.nome, ...(l.desc || pct ? { description: [l.desc, pct ? `${campanha} -${pct}%` : ""].filter(Boolean).join(" · ") } : {}), metadata: { loja: "incomum", variante: l.id } },
         },
       })),
       shipping_address_collection: { allowed_countries: ["PT"] },

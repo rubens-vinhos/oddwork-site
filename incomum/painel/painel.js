@@ -41,10 +41,10 @@ sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').
 /* ---------- navegação ---------- */
 $$('#tabs a').forEach(a => a.onclick = () => go(a.dataset.v));
 function go(v) {
-  if (!['encomendas', 'stock', 'clientes'].includes(v)) v = 'encomendas';
+  if (!['encomendas', 'stock', 'clientes', 'campanha'].includes(v)) v = 'encomendas';
   S.v = v; history.replaceState(null, '', '#' + v);
   $$('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.v === v));
-  ({ encomendas: carregarEnc, stock: carregarStock, clientes: carregarClientes })[v]();
+  ({ encomendas: carregarEnc, stock: carregarStock, clientes: carregarClientes, campanha: carregarCampanha })[v]();
 }
 
 /* ---------- encomendas ---------- */
@@ -151,7 +151,7 @@ function abrirEnc(id) {
     ${pill(e.estado)}
     ${k >= 0 ? `<div class="steps">${ordem.map((_, i) => `<span class="${i <= k ? 'on' : ''}"></span>`).join('')}</div>` : ''}
     <div class="sec"><h4>Peças</h4>${e.itens.map(i => `<div class="it"><span><b>${i.qtd}× ${esc(i.produto)}</b><small>${[i.cor, i.tam && 'Tam. ' + i.tam].filter(Boolean).map(esc).join(' · ')}</small></span><span>${eur(i.preco * i.qtd)}</span></div>`).join('')}
-      <div class="tot"><span>Subtotal</span><span>${eur(e.subtotal)}</span></div><div class="tot"><span>Portes</span><span>${e.portes ? eur(e.portes) : 'Grátis'}</span></div><div class="tot b"><span>Total</span><span>${eur(e.total)}</span></div></div>
+      <div class="tot"><span>Subtotal</span><span>${eur(e.subtotal)}</span></div>${e.desconto > 0 ? `<div class="tot"><span>Inclui ${esc(e.campanha || 'desconto')} −${e.desconto_pct}%</span><span>−${eur(e.desconto)}</span></div>` : ''}<div class="tot"><span>Portes</span><span>${e.portes ? eur(e.portes) : 'Grátis'}</span></div><div class="tot b"><span>Total</span><span>${eur(e.total)}</span></div></div>
     <div class="sec"><h4>Cliente e morada de envio</h4>${clienteHTML(e)}</div>
     ${e.pago_em ? `<div class="sec"><h4>Histórico</h4><p class="muted">Paga: ${data(e.pago_em)}${e.preparacao_em ? '<br>Em preparação: ' + data(e.preparacao_em) : ''}${e.enviado_em ? '<br>Enviada: ' + data(e.enviado_em) : ''}${e.entregue_em ? '<br>Entregue: ' + data(e.entregue_em) : ''}</p></div>` : ''}
     ${[...PREP, 'enviada'].includes(e.estado) ? `<div class="sec seg"><h4>Envio</h4>
@@ -256,4 +256,38 @@ async function carregarClientes() {
   if (error) return toast('Não foi possível carregar os clientes');
   $('#view').innerHTML = `<div class="kpis"><div class="kpi"><small>Clientes</small><b>${cl.length}</b></div><div class="kpi"><small>Voltaram a comprar</small><b>${cl.filter(c => c.encomendas > 1).length}</b></div></div>
     <div class="card">${cl.length ? cl.map(c => `<div class="row" style="cursor:default"><span class="n">${c.encomendas}×</span><span>${esc(c.nome || '—')}<small>${esc(c.email)}</small></span><span class="muted">${esc(c.telefone || '')}</span><span class="muted">${data(c.ultima)}</span><span class="t">${eur(c.gasto)}</span><span></span></div>`).join('') : '<div class="empty">Ainda não há clientes online.</div>'}</div>`;
+}
+
+/* ---------- campanha (desconto por nº de peças; o servidor aplica-o no pagamento) ---------- */
+async function carregarCampanha() {
+  $('#view').innerHTML = '<p class="muted">A carregar…</p>';
+  const { data: c, error } = await sb.from('incomum_campanha').select('*').eq('id', 1).maybeSingle();
+  if (error || !c) { $('#view').innerHTML = '<p class="muted">Não foi possível carregar a campanha.</p>'; return; }
+  const fim = new Date(c.fim), local = new Date(fim.getTime() - fim.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const aDecorrer = c.ativa && Date.now() < fim.getTime();
+  const esc3 = [...(c.escaloes || [])].sort((a, b) => a.pecas - b.pecas);
+  while (esc3.length < 3) esc3.push({ pecas: esc3.length + 1, pct: 0 });
+  $('#view').innerHTML = `<section class="card camp">
+    <div class="camp-h"><div><h2>${esc(c.nome)}</h2><p class="muted">${aDecorrer ? `A decorrer · acaba ${data(c.fim)}` : c.ativa ? 'Terminou (a data de fim já passou)' : 'Desligada'}</p></div>
+      <label class="sw"><input type="checkbox" id="cAtiva" ${c.ativa ? 'checked' : ''}><span></span>Ligada</label></div>
+    <label>Nome<input id="cNome" value="${esc(c.nome)}" maxlength="40"></label>
+    <label>Acaba em<input id="cFim" type="datetime-local" value="${local}"></label>
+    <h4>Desconto por número de peças no saco</h4>
+    <div class="esc">${esc3.slice(0, 3).map((t, i) => `<label>${i === 2 ? '3 ou mais peças' : (i + 1) + ' peça' + (i ? 's' : '')}<span><input type="number" min="0" max="90" step="1" data-pct="${i}" value="${t.pct}">%</span></label>`).join('')}</div>
+    <p class="muted">O desconto aplica-se a todas as peças do saco e é cobrado automaticamente no pagamento. Põe 0% para não haver desconto nesse escalão.</p>
+    <button class="btn grad" id="cGuardar">Guardar campanha</button>
+  </section>`;
+  $('#cGuardar').onclick = async () => {
+    const pcts = $$('[data-pct]').map(i => Math.round(+i.value || 0));
+    if (pcts.some(p => p < 0 || p > 90)) return toast('Cada desconto tem de estar entre 0% e 90%');
+    const escaloes = pcts.map((pct, i) => ({ pecas: i + 1, pct })).filter(t => t.pct > 0);
+    const fimN = new Date($('#cFim').value);
+    if (isNaN(fimN)) return toast('Escolhe a data de fim');
+    const nome = $('#cNome').value.trim() || 'Campanha';
+    $('#cGuardar').disabled = true;
+    const { error } = await sb.from('incomum_campanha').update({ ativa: $('#cAtiva').checked, nome, fim: fimN.toISOString(), escaloes, atualizado: new Date().toISOString() }).eq('id', 1);
+    $('#cGuardar').disabled = false;
+    if (error) return toast('Não foi possível guardar');
+    toast('Campanha guardada (a loja já mostra)'); carregarCampanha();
+  };
 }
