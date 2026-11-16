@@ -40,6 +40,7 @@
   $('#resTot').textContent = eur(subtotal + portes);
   $('#wa').href = waLink(`Olá Incomum! Estou a pagar no site (${linhas.map(l => l.qtd + '× ' + l.produto + (l.tam ? ' tam. ' + l.tam : '')).join(', ')}) e tenho uma dúvida.`);
 
+  if (subtotal + portes < 50) return erro('<b>O total mínimo para pagar online é 0,50 €.</b><p>Junta mais uma peça ao saco ou fala connosco no WhatsApp.</p>');
   const sem = linhas.filter(l => l.stock < l.qtd);
   if (sem.length) return erro(`<b>Algumas peças já não têm stock suficiente:</b><ul>${sem.map(l => `<li>${esc(l.produto)} (${desc(l)})</li>`).join('')}</ul><p>Ajusta o saco e tenta de novo.</p>`);
 

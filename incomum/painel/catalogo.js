@@ -236,6 +236,7 @@ async function guardarProduto() {
   const ativas = e.variantes.filter(v => !v.apagada);
   if (!ativas.length) return toast('Adiciona pelo menos uma cor/tamanho');
   if (ativas.some(v => !(v.preco > 0))) return toast('Há uma linha sem preço');
+  if (ativas.some(v => final(v) < 50) && !confirm('Atenção: há peças que ficam abaixo de 0,50 € para o cliente. O pagamento online não aceita valores tão baixos (com o cupão de envio grátis falha). Guardar mesmo assim?')) return;
   const dup = new Set();
   for (const v of ativas) { const k = (v.cor || '') + '|' + (v.tam || ''); if (dup.has(k)) return toast(`Repetido: ${v.cor} ${v.tam}`); dup.add(k); }
   const btns = $$('#guardarP, #guardarP2'); btns.forEach(b => { b.disabled = true; b.textContent = 'A guardar…'; });
