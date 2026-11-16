@@ -56,8 +56,15 @@ function from(p, r = taxa(1)) {
   const f = unit(v, r), n = Math.round(v.preco * 100);
   return { f, s: n > f ? n : null, c: cent(v), pre: n, v };
 }
-const fmtFS = (f, s) => `${eurC(f)}${s && s > f ? `<s>${eurC(s)}</s>` : ''}`;
+// com desconto: preço antigo riscado, preço novo em destaque e a percentagem
+const fmtFS = (f, s, pct) => {
+  if (!(s && s > f)) return `<span class="pnow">${eurC(f)}</span>`;
+  const k = pct || Math.round((s - f) / s * 100);
+  return `<s class="pold">${eurC(s)}</s><span class="pnow sale">${eurC(f)}</span>${k ? `<span class="poff">-${k}%</span>` : ''}`;
+};
 const priceHTML = p => { const x = from(p); return fmtFS(x.f, x.s); };
+// maior desconto entre as variantes disponíveis (campanha ou desconto do painel)
+const maxDesc = (p, r = taxa(1)) => { const vs = p.variantes.filter(v => v.disp); return (vs.length ? vs : p.variantes).reduce((m, v) => Math.max(m, pctV(v, r)), 0); };
 const wa = t => `https://wa.me/${CFG.whatsapp || '351910202105'}?text=${encodeURIComponent(t)}`;
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2800); }
 const parte = (p, x) => p.categorias.some(c => S.cats.some(k => k.slug === c && k.parte === x));
@@ -265,7 +272,7 @@ function card(p, i = 0) {
   const ok = avail(p), cores = p.cores.slice(0, 6), r1 = taxa(1), href = `#p/${p.slug}`;
   return `<article class="card${ok ? '' : ' soldout'}" style="animation-delay:${(i % 24) * 30}ms">
     <div class="ph"><a class="cl" href="${href}" aria-label="${esc(p.nome)}"><img class="a" src="${p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">${p.imgs[1] ? `<img class="b" src="${p.imgs[1]}" alt="" loading="lazy">` : ''}
-      ${r1 && ok ? `<span class="disc">-${r1}%</span>` : ''}
+      ${ok && maxDesc(p, r1) ? `<span class="disc">-${maxDesc(p, r1)}%</span>` : ''}
       ${!ok ? '<span class="flag dark">Esgotado</span>' : lowStock(p) ? '<span class="flag">Últimas unidades</span>' : p.destaque ? '<span class="tag">Mais procurado</span>' : ''}</a>
       ${ok ? `<button class="qadd" data-q="${p.slug}" aria-label="Adicionar ${esc(p.nome)} ao saco">+</button>` : ''}</div>
     <a class="cb" href="${href}"><div class="ci"><h3>${esc(p.nome)}</h3></div><p class="price">${priceHTML(p)}</p>
@@ -365,7 +372,7 @@ function pp() {
       <div class="info">
         ${P.note ? `<span class="pill">${esc(P.note)}</span>` : '<p class="eyebrow">LIVE! · Original</p>'}
         <h1>${esc(p.nome)}</h1>
-        <p class="price">${sel ? fmtFS(unit(sel, r1), Math.round(sel.preco * 100)) : priceHTML(p)}${(sel ? pctV(sel, r1) : r1) ? `<span class="off">-${sel ? pctV(sel, r1) : r1}%</span>` : ''}</p>
+        <p class="price">${sel ? fmtFS(unit(sel, r1), Math.round(sel.preco * 100), pctV(sel, r1)) : priceHTML(p)}</p>${(() => { const x = sel ? { f: unit(sel, r1), s: Math.round(sel.preco * 100) } : from(p); return x.s && x.s > x.f ? `<p class="psave">Poupas ${eurC(x.s - x.f)}</p>` : ''; })()}
         ${hint ? `<p class="hint">${hint}</p>` : ''}
         <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental, ${S.portes.prazo}</p>
         ${cores.length ? `<div class="opt"><div class="opt-h">Cor <span>${esc(P.cor)}</span></div><div class="sw">${cores.map(c => `<button class="${c === P.cor ? 'on' : ''}${avail(p, c) ? '' : ' no'}" data-cor="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}" style="background:${hex(c)}"></button>`).join('')}</div></div>` : ''}
