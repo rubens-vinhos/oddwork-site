@@ -294,9 +294,9 @@ async function carregarCampanha() {
       <label class="sw"><input type="checkbox" id="cAtiva" ${c.ativa ? 'checked' : ''}><span></span>Ligada</label></div>
     <label>Nome<input id="cNome" value="${esc(c.nome)}" maxlength="40"></label>
     <label>Acaba em<input id="cFim" type="datetime-local" value="${local}"></label>
-    <h4>Desconto por número de peças no saco</h4>
+    <h4>Desconto por número de peças no carrinho</h4>
     <div class="esc">${esc3.slice(0, 3).map((t, i) => `<label>${i === 2 ? '3 ou mais peças' : (i + 1) + ' peça' + (i ? 's' : '')}<span><input type="number" min="0" max="90" step="1" data-pct="${i}" value="${t.pct}">%</span></label>`).join('')}</div>
-    <p class="muted">O desconto do escalão aplica-se às peças da campanha no saco e é cobrado automaticamente no pagamento. Põe 0% em todos para usar só o desconto por produto (em baixo, em «Peças na campanha»).</p>
+    <p class="muted">O desconto do escalão aplica-se às peças da campanha no carrinho e é cobrado automaticamente no pagamento. Põe 0% em todos para usar só o desconto por produto (em baixo, em «Peças na campanha»).</p>
     <button class="btn grad" id="cGuardar">Guardar campanha</button>
   </section>
   <section class="card cpz" id="campPecas"><div class="empty">A carregar as peças…</div></section>`;

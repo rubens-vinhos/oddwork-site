@@ -15,15 +15,19 @@ function hex(c) {
 }
 
 
-const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 7, gratis: 100, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
+const S = { prods: [], cats: [], by: {}, byVar: {}, shown: 24, F: { cat: '', col: '', size: '', q: '', sort: '', fav: '' }, cart: [], queue: [], note: '', expect: '', on: null, portes: { valor: 7, gratis: 100, nome: 'Envio Portugal continental', prazo: 'até 7 dias úteis' } };
 try { S.cart = JSON.parse(localStorage.getItem('incomum-saco') || '[]'); } catch {}
 S.cupao = cupaoGuardado();
 // confirma o cupão guardado (pode ter acabado entretanto)
 if (S.cupao) validarCupao(S.cupao.codigo).then(c => { S.cupao = c.ok ? c : null; guardarCupao(S.cupao); if (typeof cartUI === 'function' && S.prods.length) cartUI(); });
+const lsGet = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || d); } catch { return JSON.parse(d); } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const FAV = new Set(lsGet('incomum-fav', '[]'));
+const heart = slug => `<button class="fav${FAV.has(slug) ? ' on' : ''}" data-fav="${slug}" aria-label="${FAV.has(slug) ? 'Tirar das favoritas' : 'Guardar nas favoritas'}" aria-pressed="${FAV.has(slug)}"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg></button>`;
 const save = () => { try { localStorage.setItem('incomum-saco', JSON.stringify(S.cart)); } catch {} };
 
 /* ---------- preços e campanha ----------
-   O desconto real é calculado no servidor: nº total de peças do saco -> escalão mais alto atingido, aplicado a todas
+   O desconto real é calculado no servidor: nº total de peças do carrinho -> escalão mais alto atingido, aplicado a todas
    as peças, sobre o preço atual (promo se existir e for menor, senão preço), com cada preço unitário arredondado ao cêntimo.
    Aqui mostra-se exatamente a mesma conta (cêntimos inteiros). */
 const vPrice = v => v.promo && v.promo < v.preco ? v.promo : v.preco;
@@ -32,7 +36,7 @@ const precoComDesconto = (c, pct) => Math.round(c * (100 - pct) / 100);         
 const eurC = c => eur(c / 100);
 // campanha: o maior entre o escalão (r) e o desconto próprio do produto na campanha (v.pc), só se o tamanho está na campanha
 const pctV = (v, r) => Math.max(!v || v.camp === false || !camp() ? 0 : Math.max(r || 0, v.pc || 0), (v && v.desconto) || 0);   // maior entre campanha (se o tamanho está nela) e desconto da variante
-// nº de peças do saco que estão na campanha (só essas contam para o escalão)
+// nº de peças do carrinho que estão na campanha (só essas contam para o escalão)
 const nCamp = () => S.cart.reduce((a, i) => a + (S.byVar[i.v] && S.byVar[i.v].v.camp !== false ? i.q : 0), 0);
 const unit = (v, r) => precoComDesconto(cent(v), pctV(v, r));                   // preço unitário final, em cêntimos
 const PORTES = () => Math.round((S.portes && S.portes.valor != null ? S.portes.valor : 7) * 100);
@@ -149,7 +153,7 @@ function campaign() {
   }
   $('#simH').textContent = on ? 'Monta o teu conjunto' : 'Monta o teu look';
   $('#simTxt').textContent = on && ts.length > 1 ? `Escolhe uma parte de cima e uma de baixo e vê já quanto poupas: ${ts.slice(1).map(tierTxt).join(', ')}.` : 'Combina uma parte de cima e uma de baixo e vê o look completo.';
-  $('#stepTxt').textContent = on ? `${campTxts().join(' · ')}. O desconto é automático no saco.` : 'Escolhe as peças que quiseres e junta-as ao saco.';
+  $('#stepTxt').textContent = on ? `${campTxts().join(' · ')}. O desconto é automático no carrinho.` : 'Escolhe as peças que quiseres e junta-as ao carrinho.';
   $('#lojaEye').textContent = on ? 'Tudo com desconto' : 'Coleção';
   const items = on ? [c.nome, ...campTxts(), 'LIVE! original', S.portes.gratis ? `Envio grátis a partir de ${eur(S.portes.gratis)}` : `Envio ${eurC(PORTES())}`] : ['LIVE! original', 'Revendedor autorizado', 'Envio para Portugal continental', '14 dias para devolver'];
   $('#mq').innerHTML = Array(2).fill(items.map(x => `<span>${esc(x)}</span><span>✦</span>`).join('')).join('');
@@ -222,7 +226,7 @@ function simDraw() {
   }).join('');
   const falta = sel.filter(p => !simVar(p));
   $('#simAdd').disabled = !n;
-  $('#simAdd').textContent = !n ? 'Escolhe pelo menos 1 peça' : falta.length ? (n > 1 ? 'Escolhe o tamanho de cada peça' : 'Escolhe o tamanho') : `Juntar ao saco · ${eurC(tot)}`;
+  $('#simAdd').textContent = !n ? 'Escolhe pelo menos 1 peça' : falta.length ? (n > 1 ? 'Escolhe os tamanhos' : 'Escolhe o tamanho') : `Juntar ao carrinho · ${eurC(tot)}`;
 }
 // Variante escolhida no simulador (só se tiver cor/tamanho definidos e disponível).
 function simVar(p) {
@@ -255,7 +259,7 @@ $('#simAdd').onclick = () => {
   }
   save(); cartUI();
   const r = taxa(nCamp());
-  toast(`Conjunto no saco${r ? ` · -${r}% em todas as peças` : ''}`);
+  toast(`Conjunto no carrinho${r ? ` · -${r}% em todas as peças` : ''}`);
   setTimeout(() => drawer('#cart', true), 300);
 };
 
@@ -263,7 +267,7 @@ $('#simAdd').onclick = () => {
 function filters() {
   const tipos = S.cats.filter(c => c.grupo === 'tipo'), cols = S.cats.filter(c => c.grupo === 'colecao');
   const chip = (k, v, t) => `<button class="chip${S.F[k] === v ? ' on' : ''}" data-k="${k}" data-v="${esc(v)}">${esc(t)}</button>`;
-  $('#cats').innerHTML = chip('cat', '', 'Tudo') + tipos.map(c => chip('cat', c.slug, c.nome)).join('');
+  $('#cats').innerHTML = chip('cat', '', 'Tudo') + tipos.map(c => chip('cat', c.slug, c.nome)).join('') + (FAV.size || S.F.fav ? `<button class="chip favc${S.F.fav ? ' on' : ''}" data-k="fav" data-v="1">♥ Favoritas · ${FAV.size}</button>` : '');
   $('#cols').innerHTML = chip('col', '', 'Todas') + cols.map(c => chip('col', c.slug, c.nome)).join('');
   const all = [...new Set(S.prods.flatMap(p => p.variantes.filter(v => v.disp).map(v => tamN(v.tam))).filter(Boolean))].sort(szOrd);
   $('#fsizes').innerHTML = chip('size', '', 'Todos') + all.map(s => chip('size', s, s)).join('');
@@ -272,6 +276,7 @@ function filters() {
 function list() {
   const { cat, col, size, q, sort } = S.F, n = q.trim().toLowerCase();
   let L = S.prods.filter(p => (!cat || p.categorias.includes(cat)) && (!col || p.categorias.includes(col)) && (!size || avail(p, '', size)) && (!n || (p.nome + ' ' + p.cores.join(' ')).toLowerCase().includes(n)));
+  if (S.F.fav) L = L.filter(p => FAV.has(p.slug));
   if (sort === 'asc') L = [...L].sort((a, b) => from(a).c - from(b).c);
   if (sort === 'desc') L = [...L].sort((a, b) => from(b).c - from(a).c);
   if (sort === 'az') L = [...L].sort((a, b) => a.nome.localeCompare(b.nome, 'pt'));
@@ -284,7 +289,7 @@ function card(p, i = 0) {
     <div class="ph"><a class="cl" href="${href}" aria-label="${esc(p.nome)}"><img class="a" src="${p.imgs[0]}" alt="${esc(p.nome)}" loading="lazy">${p.imgs[1] ? `<img class="b" src="${p.imgs[1]}" alt="" loading="lazy">` : ''}
       ${ok && maxDesc(p, r1) ? `<span class="disc">-${maxDesc(p, r1)}%</span>` : ''}
       ${!ok ? '<span class="flag dark">Esgotado</span>' : lowStock(p) ? '<span class="flag">Últimas unidades</span>' : p.destaque ? '<span class="tag">Mais procurado</span>' : ''}</a>
-      ${ok ? `<button class="qadd" data-q="${p.slug}" aria-label="Adicionar ${esc(p.nome)} ao saco">+</button>` : ''}</div>
+      ${heart(p.slug)}${ok ? `<button class="qadd" data-q="${p.slug}" aria-label="Adicionar ${esc(p.nome)} ao carrinho">+</button>` : ''}</div>
     <a class="cb" href="${href}"><div class="ci"><h3>${esc(p.nome)}</h3></div><p class="price">${priceHTML(p)}</p>
       ${cores.length > 1 ? `<div class="dots">${cores.map(c => `<span class="dot" title="${esc(c)}" style="background:${hex(c)}"></span>`).join('')}${p.cores.length > 6 ? ` +${p.cores.length - 6}` : ''}</div>` : ''}
       <div class="szs">${sizes(p).map(s => `<span class="${avail(p, '', s) ? (s === S.F.size ? 'hit' : '') : 'no'}">${esc(s)}</span>`).join('')}</div></a></article>`;
@@ -346,6 +351,7 @@ function route() {
     if (P.p !== p) {
       const cor0 = (p.variantes.find(v => v.disp) || p.variantes[0] || {}).cor || '';
       Object.assign(P, { p, cor: cor0, tam: tamAuto(p, cor0), q: 1, i: 0, note: S.note });
+      vista(p.slug);
       if (S.expect !== p.slug) S.queue = [];
       S.note = ''; S.expect = '';
     }
@@ -370,7 +376,7 @@ function pp() {
   const r1 = p.variantes.some(v => v.camp !== false) ? taxa(1) : 0, n = nCamp();
   let hint = '';
   if (r1) { const after = n + 1, ra = taxa(after), nx = tiers().find(t => t.pecas > after);
-    if (ra > r1) hint = `Com ${after} peças no saco pagas <b>-${ra}%</b> em todas.`;
+    if (ra > r1) hint = `Com ${after} peças no carrinho pagas <b>-${ra}%</b> em todas.`;
     else if (nx) hint = `Leva ${nx.pecas} peças e paga <b>-${nx.pct}%</b> em todas.`; }
   let msg = '', cls = '';
   if (!avail(p)) { msg = 'Esgotado de momento. Pergunta-nos quando volta.'; cls = 'no'; }
@@ -384,7 +390,7 @@ function pp() {
         <div class="big"><img src="${imgs[P.i]}" alt="${esc(p.nome)}"></div></div>
       <div class="info">
         ${P.note ? `<span class="pill">${esc(P.note)}</span>` : '<p class="eyebrow">LIVE! · Original</p>'}
-        <h1>${esc(p.nome)}</h1>
+        <div class="pt"><h1>${esc(p.nome)}</h1><div class="pt-b">${heart(p.slug)}<button class="share" id="shareBtn" aria-label="Partilhar"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg></button></div></div>
         <p class="price">${sel ? fmtFS(unit(sel, r1), Math.round(sel.preco * 100), pctV(sel, r1)) : priceHTML(p)}</p>${(() => { const x = sel ? { f: unit(sel, r1), s: Math.round(sel.preco * 100) } : from(p); return x.s && x.s > x.f ? `<p class="psave">Poupas ${eurC(x.s - x.f)}</p>` : ''; })()}
         ${hint ? `<p class="hint">${hint}</p>` : ''}
         <p class="note">IVA incluído · Envio ${eur(S.portes.valor)} para Portugal continental${S.portes.gratis ? `, grátis a partir de ${eur(S.portes.gratis)}` : ''}, ${S.portes.prazo}</p>
@@ -392,7 +398,7 @@ function pp() {
         ${tams.length ? `<div class="opt"><div class="opt-h">Tamanho <span>${P.tam ? esc(P.tam) : 'escolhe o teu'}</span></div><div class="sz">${tams.map(t => `<button data-tam="${esc(t)}" class="${t === P.tam ? 'on' : ''}" ${avail(p, P.cor, t) ? '' : 'disabled'}>${esc(tamN(t))}</button>`).join('')}</div></div>` : ''}
         <div class="stockmsg ${cls}">${msg}</div>
         <div class="buy"><div class="qty"><button data-q="-1" aria-label="Menos">−</button><span>${P.q}</span><button data-q="1" aria-label="Mais">+</button></div>
-          <button class="btn${avail(p) && !need ? ' grad' : ''}" id="addBtn" ${!avail(p) ? 'disabled' : ''}>${!avail(p) ? 'Esgotado' : need ? 'Escolhe o tamanho' : 'Adicionar ao saco'}</button></div>
+          <button class="btn${avail(p) && !need ? ' grad' : ''}" id="addBtn" ${!avail(p) ? 'disabled' : ''}>${!avail(p) ? 'Esgotado' : need ? 'Escolhe o tamanho' : 'Adicionar ao carrinho'}</button></div>
         <a class="btn ghost ask" href="${wa(`Olá Incomum! Estou a ver *${p.nome}*${P.cor ? ' (' + P.cor + ')' : ''} no site. Que tamanho me aconselham?`)}" target="_blank" rel="noopener">Dúvidas de tamanho? WhatsApp</a>
         <div class="assure">
           <div><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>Revendedor autorizado LIVE! em Portugal</div>
@@ -412,7 +418,12 @@ function pp() {
   $('#addBtn').onclick = () => {
     if (need) { $('.sz').animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], { duration: 260 }); toast('Escolhe primeiro o tamanho'); return; }
     if (!sel || !sel.disp) return toast('Esta combinação está esgotada');
-    const q = P.q; P.q = 1; add(sel.id, q); if (!S.queue.length) pp();
+    const q = P.q; P.q = 1; add(sel.id, q); if (!S.queue.length) { pp(); feito($('#addBtn')); }
+  };
+  $('#shareBtn').onclick = async () => {
+    const url = location.href, t = `${p.nome} · Incomum.eu`;
+    if (navigator.share) { try { await navigator.share({ title: t, url }); } catch {} return; }
+    try { await navigator.clipboard.writeText(url); toast('Link copiado: já o podes colar e enviar'); } catch { open(wa(`Olha esta peça: ${p.nome} ${url}`), '_blank', 'noopener'); }
   };
 }
 function related(p) {
@@ -428,8 +439,8 @@ function add(vid, q) {
   if (it) it.q = Math.min(max, it.q + q); else S.cart.push({ v: vid, q: Math.min(max, q) });
   save(); cartUI();
   const n = nCamp(), r = taxa(n), nx = tiers().find(t => t.pecas > n);
-  toast(`Adicionado ao saco${nx ? ` · junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com -${nx.pct}%` : r ? ` · tens o desconto máximo de -${r}%` : ''}`);
-  const b = $('#badge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  toast(`Adicionado ao carrinho${nx ? ` · junta mais ${nx.pecas - n} peça${nx.pecas - n > 1 ? 's' : ''} e ficas com -${nx.pct}%` : r ? ` · tens o desconto máximo de -${r}%` : ''}`);
+  const b = $('#badge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); voar();
   if (S.queue.length) { const nxt = S.queue.shift(); setTimeout(() => openP(nxt, 'Agora a parte de baixo'), 450); }
   else setTimeout(() => drawer('#cart', true), 350);
 }
@@ -447,15 +458,16 @@ function totals() {
   return { n, nc, gratisV, r, bruto, desc: bruto - liq - cdesc, liq, portes, tot: liq + portes, cup, cupOn, cdesc };
 }
 function cartUI() {
-  const T = totals(), n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
+  const T = totals(); festaGratis(T);
+  const n = T.n, b = $('#badge'), ts = tiers(), last = ts[ts.length - 1];
   b.hidden = !n; b.textContent = n;
   const nc = T.nc, tudo = nc === n ? 'em tudo' : 'nas peças da campanha', nx = ts.find(t => t.pecas > nc);
   $('#ship').classList.toggle('g', !!(n && last));
   $('#ship').innerHTML = !n ? '' : last
     ? `<div class="goal"><span>${nx ? `Junta mais ${nx.pecas - nc} peça${nx.pecas - nc > 1 ? 's' : ''} da campanha e ficas com <b>-${nx.pct}%</b> ${tudo}` : `Tens o desconto máximo: <b>-${T.r}%</b> ${tudo} ✦`}</span><div class="meter"><i style="width:${Math.min(100, nc / last.pecas * 100)}%"></i></div></div>`
-    : GRATIS() && !T.gratisV ? `Faltam <b>${eurC(GRATIS() - T.liq)}</b> para o envio grátis` : `Envio para <b>Portugal continental</b> · ${S.portes.prazo}`;
+    : GRATIS() && !T.gratisV ? `Faltam <b>${eurC(GRATIS() - T.liq)}</b> para o envio grátis` : T.gratisV ? `🎉 Tens <b>envio grátis</b> · ${S.portes.prazo}` : `Envio para <b>Portugal continental</b> · ${S.portes.prazo}`;
   $('#ship').hidden = !n;
-  $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu saco está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
+  $('#items').innerHTML = !n ? `<div class="cempty"><p>O teu carrinho está vazio.</p><a class="btn" href="#loja" data-close>Ver a coleção</a></div>` :
     S.cart.map((i, k) => { const { p, v } = S.byVar[i.v], c = cent(v), u = unit(v, T.r), falta = typeof v.stock === 'number' && i.q > v.stock;
       return `<div class="it"><a href="#p/${p.slug}" data-close><img src="${v.img || p.imgs[0]}" alt=""></a>
       <div><h4>${esc(p.nome)}</h4><small>${[v.cor, v.tam && 'Tam. ' + v.tam].filter(Boolean).map(esc).join(' · ')}</small>
@@ -490,7 +502,7 @@ function cartUI() {
 // Etapa 2: com CFG.checkoutUrl definido, o servidor valida preços/stock e devolve o link do Stripe Checkout.
 async function checkout() {
   if (CFG.checkoutUrl && CFG.stripeChave) { save(); location.href = 'checkout.html'; return; }
-  // Ainda sem pagamentos online: encomenda pelo WhatsApp com o resumo do saco.
+  // Ainda sem pagamentos online: encomenda pelo WhatsApp com o resumo do carrinho.
   const T = totals(), r = T.r;
   const linhas = S.cart.map(i => { const { p, v } = S.byVar[i.v]; return `• ${i.q}× ${p.nome}${v.cor ? ' · ' + v.cor : ''}${v.tam ? ' · ' + v.tam : ''} — ${eurC(unit(v, r) * i.q)}`; });
   open(wa(`Olá! Quero encomendar:\n${linhas.join('\n')}\n${r ? `Desconto: -${r}%\n` : ''}Envio: ${eurC(T.portes)}\nTotal: ${eurC(T.tot)}`), '_blank', 'noopener');
@@ -506,14 +518,14 @@ $('#searchBtn').onclick = () => { if (location.hash.startsWith('#p/')) location.
 let qt; $('#q').oninput = e => { clearTimeout(qt); qt = setTimeout(() => { S.F.q = e.target.value; S.shown = 24; grid(); }, 180); };
 $('#sort').onchange = e => { S.F.sort = e.target.value; grid(); };
 $('#moreBtn').onclick = () => { S.shown += 24; grid(); };
-$('#clearF').onclick = () => { S.F = { cat: '', col: '', size: '', q: '', sort: '' }; $('#q').value = ''; $('#sort').value = ''; filters(); grid(); };
+$('#clearF').onclick = () => { S.F = { cat: '', col: '', size: '', q: '', sort: '', fav: '' }; $('#q').value = ''; $('#sort').value = ''; filters(); grid(); };
 document.addEventListener('click', e => {
   const a = e.target.closest('[data-wa]'); if (!a) return;
   e.preventDefault();
   let t = a.dataset.wa;
   if (a.classList.contains('wa')) {
     if (P.p) t = `Olá Incomum! Estou a ver *${P.p.nome}*${P.cor ? ' (' + P.cor + ')' : ''} no site e tenho uma dúvida.`;
-    else if ($('#cart').classList.contains('on') && S.cart.length) t = `Olá Incomum! Tenho ${S.cart.reduce((n, i) => n + i.q, 0)} peça(s) no saco do site e tenho uma dúvida antes de comprar.`;
+    else if ($('#cart').classList.contains('on') && S.cart.length) t = `Olá Incomum! Tenho ${S.cart.reduce((n, i) => n + i.q, 0)} peça(s) no carrinho do site e tenho uma dúvida antes de comprar.`;
   }
   open(wa(t), '_blank', 'noopener');
 });
@@ -543,3 +555,97 @@ addEventListener('scroll', () => $('.hd').classList.toggle('sc', scrollY > 10), 
 
 setTimeout(() => document.body.classList.add('ready'), 3000); // segurança: nunca deixa o texto do topo escondido
 load().catch(() => { document.body.classList.add('ready'); $('#grid').innerHTML = '<p>Não foi possível carregar a coleção. Atualiza a página.</p>'; });
+
+
+/* =================== interação e animações =================== */
+const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// barra de progresso da página
+{ const pg = $('#prog'); if (pg) { const f = () => { const h = document.documentElement.scrollHeight - innerHeight; pg.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`; }; addEventListener('scroll', f, { passive: true }); f(); } }
+
+// favoritas (♥) nos cartões e na página da peça
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-fav]'); if (!f) return;
+  e.preventDefault(); e.stopPropagation();
+  const s = f.dataset.fav, on = !FAV.has(s);
+  on ? FAV.add(s) : FAV.delete(s); lsSet('incomum-fav', [...FAV]);
+  $$(`[data-fav="${s}"]`).forEach(b => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', on ? 'Tirar das favoritas' : 'Guardar nas favoritas'); if (on && !calmo) { b.classList.remove('beat'); void b.offsetWidth; b.classList.add('beat'); } });
+  toast(on ? '♥ Guardada nas favoritas (filtro «Favoritas» na coleção)' : 'Tirada das favoritas');
+  if (S.prods.length) { filters(); if (S.F.fav) grid(); }
+}, true);
+
+// vistas recentemente
+function vista(slug) { const l = lsGet('incomum-vistas', '[]').filter(x => x !== slug); l.unshift(slug); lsSet('incomum-vistas', l.slice(0, 12)); recentes(); }
+function recentes() {
+  const sec = $('#recentes'); if (!sec || !S.prods.length) return;
+  const l = lsGet('incomum-vistas', '[]').map(s => S.by[s]).filter(Boolean).slice(0, 8);
+  sec.hidden = l.length < 2; if (sec.hidden) return;
+  $('#rrow').innerHTML = l.map(card).join(''); observe();
+}
+
+// o botão confirma que juntou
+function feito(btn) { if (!btn) return; btn.classList.add('done'); btn.textContent = '✓ Adicionado'; setTimeout(() => { if (btn.isConnected) { btn.classList.remove('done'); btn.textContent = 'Adicionar ao carrinho'; } }, 1600); }
+
+// foto voa até ao carrinho
+let voarDe = null;
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest('.qadd,#addBtn,#simAdd'); if (!b) return;
+  voarDe = b.closest('.card')?.querySelector('.ph img.a') || (b.id === 'addBtn' ? $('#pp .big img') : $('.look img')) || null;
+}, true);
+function voar() {
+  const alvo = $('.bag'), src = voarDe; voarDe = null;
+  if (alvo) { alvo.classList.remove('jump'); void alvo.offsetWidth; alvo.classList.add('jump'); }
+  if (calmo || !src || !alvo || !src.getBoundingClientRect) return;
+  const a = src.getBoundingClientRect(), z = alvo.getBoundingClientRect(); if (!a.width) return;
+  const im = src.cloneNode(); im.className = 'fly'; im.removeAttribute('loading');
+  Object.assign(im.style, { left: a.left + 'px', top: a.top + 'px', width: a.width + 'px', height: a.height + 'px' });
+  document.body.appendChild(im);
+  const dx = z.left + z.width / 2 - (a.left + a.width / 2), dy = z.top + z.height / 2 - (a.top + a.height / 2);
+  im.animate([{ transform: 'none', opacity: 1, borderRadius: '16px' }, { transform: `translate(${dx * .6}px,${dy * .4 - 60}px) scale(.45)`, opacity: .95, offset: .55 }, { transform: `translate(${dx}px,${dy}px) scale(.06)`, opacity: .2, borderRadius: '50%' }],
+    { duration: 750, easing: 'cubic-bezier(.5,0,.3,1)' }).onfinish = () => im.remove();
+}
+
+// confetes quando a cliente chega ao envio grátis
+let jaGratis = null;
+function festaGratis(T) {
+  const g = !!(T.n && T.gratisV);
+  if (jaGratis === false && g) { confetes($('#ship') || $('.bag')); }
+  jaGratis = g;
+}
+function confetes(el) {
+  if (calmo || !el) return;
+  const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, cs = ['#f13f7b', '#cd507a', '#7a2e55', '#ffd166', '#06d6a0', '#fff'];
+  for (let i = 0; i < 46; i++) {
+    const c = document.createElement('i'); c.className = 'conf'; c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.background = cs[i % cs.length];
+    document.body.appendChild(c);
+    const ang = Math.random() * Math.PI * 2, d = 90 + Math.random() * 160;
+    c.animate([{ transform: 'translate(-50%,-50%) rotate(0)', opacity: 1 }, { transform: `translate(${Math.cos(ang) * d}px,${Math.sin(ang) * d + 140}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }],
+      { duration: 1000 + Math.random() * 700, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = () => c.remove();
+  }
+}
+
+// destaques inclinam com o rato (só computador)
+if (!calmo && matchMedia('(hover:hover) and (pointer:fine)').matches) {
+  document.addEventListener('pointermove', e => {
+    const c = e.target.closest('.champ'); if (!c) return;
+    const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    c.style.transform = `perspective(900px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+    c.style.setProperty('--mx', `${(x + .5) * 100}%`); c.style.setProperty('--my', `${(y + .5) * 100}%`);
+  }, { passive: true });
+  document.addEventListener('pointerout', e => { const c = e.target.closest('.champ'); if (c && !c.contains(e.relatedTarget)) c.style.transform = ''; });
+}
+
+// a coleção aparece por ondas ao fazer scroll
+{ const gObs = 'IntersectionObserver' in window && !calmo ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('vis'); gObs.unobserve(x.target); } }), { rootMargin: '0px 0px -8% 0px' }) : null;
+  const ver = () => $$('#grid .card:not(.vis),#rrow .card:not(.vis)').forEach((c, i) => { if (!gObs) return c.classList.add('vis'); c.style.setProperty('--d', `${(i % 4) * 70}ms`); gObs.observe(c); });
+  ['#grid', '#rrow'].forEach(s => { const g = $(s); if (g) new MutationObserver(ver).observe(g, { childList: true }); });
+  document.documentElement.classList.add('js-anim'); ver(); }
+
+// vistas recentemente aparecem quando o catálogo chega
+{ let t = setInterval(() => { if (S.prods.length) { clearInterval(t); recentes(); } }, 300); }
+
+// Topo v2: barra fina com o progresso do vídeo (só existe se a secção tiver a classe v2)
+(() => {
+  const h = $('.hero.v2'), v = $('#heroVid'), r = $('.hero.v2 .reel'); if (!h || !v || !r) return;
+  const bar = document.createElement('span'); bar.className = 'reel-bar'; bar.innerHTML = '<i></i>'; r.appendChild(bar);
+  const i = bar.firstChild; v.addEventListener('timeupdate', () => { if (v.duration) i.style.transform = `scaleX(${v.currentTime / v.duration})`; });
+})();

@@ -1,9 +1,9 @@
-/* Página de pagamento: resumo do saco + Stripe Embedded Checkout */
+/* Página de pagamento: resumo do carrinho + Stripe Embedded Checkout */
 (async () => {
   const saco = Saco.ler();
   const erro = (html, voltar = true) => {
     $('#checkout').innerHTML = '';
-    $('#erro').innerHTML = html + (voltar ? '<a class="btn" href="./#saco">Voltar ao saco</a>' : '');
+    $('#erro').innerHTML = html + (voltar ? '<a class="btn" href="./#saco">Voltar ao carrinho</a>' : '');
     $('#erro').hidden = false;
   };
   $('#resTog').onclick = () => {
@@ -14,7 +14,7 @@
   if (!saco.length) {
     $('#itens').innerHTML = '';
     $('#res').hidden = true;
-    return erro('<b>O teu saco está vazio.</b><p>Escolhe as tuas peças e volta aqui para pagar.</p><a class="btn" href="./#loja">Ver a coleção</a>', false);
+    return erro('<b>O teu carrinho está vazio.</b><p>Escolhe as tuas peças e volta aqui para pagar.</p><a class="btn" href="./#loja">Ver a coleção</a>', false);
   }
 
   // 1. Resumo com preços e stock reais.
@@ -32,7 +32,7 @@
   for (const l of linhas) { l.pcamp = c && l.nc ? Math.max(pct, l.pcp) : 0; const p = Math.max(l.pcamp, l.dv); if (p) l.preco = Math.round(l.preco * (100 - p) / 100); }
   const pctMax = Math.max(...linhas.map(l => Math.max(l.pcamp, l.dv)));
   const antesCupao = linhas.reduce((a, l) => a + l.preco * l.qtd, 0);
-  // cupão guardado no saco: confirma de novo (pode ter acabado) e aplica igual ao servidor
+  // cupão guardado no carrinho: confirma de novo (pode ter acabado) e aplica igual ao servidor
   let cup = cupaoGuardado();
   if (cup) { const c2 = await validarCupao(cup.codigo); cup = c2.ok ? c2 : null; guardarCupao(cup); }
   if (cup && cup.minimo && antesCupao < cup.minimo) cup = null;
@@ -48,9 +48,9 @@
   $('#resTot').textContent = eur(subtotal + portes);
   $('#wa').href = waLink(`Olá Incomum! Estou a pagar no site (${linhas.map(l => l.qtd + '× ' + l.produto + (l.tam ? ' tam. ' + l.tam : '')).join(', ')}) e tenho uma dúvida.`);
 
-  if (subtotal + portes < 50) return erro('<b>O total mínimo para pagar online é 0,50 €.</b><p>Junta mais uma peça ao saco ou fala connosco no WhatsApp.</p>');
+  if (subtotal + portes < 50) return erro('<b>O total mínimo para pagar online é 0,50 €.</b><p>Junta mais uma peça ao carrinho ou fala connosco no WhatsApp.</p>');
   const sem = linhas.filter(l => l.stock < l.qtd);
-  if (sem.length) return erro(`<b>Algumas peças já não têm stock suficiente:</b><ul>${sem.map(l => `<li>${esc(l.produto)} (${desc(l)})</li>`).join('')}</ul><p>Ajusta o saco e tenta de novo.</p>`);
+  if (sem.length) return erro(`<b>Algumas peças já não têm stock suficiente:</b><ul>${sem.map(l => `<li>${esc(l.produto)} (${desc(l)})</li>`).join('')}</ul><p>Ajusta o carrinho e tenta de novo.</p>`);
 
   // 2. Pagamento embutido.
   if (!CFG.stripeChave || !window.Stripe) return erro('<b>O pagamento não está disponível neste momento.</b><p>Tenta daqui a pouco ou fala connosco no WhatsApp.</p>');
@@ -69,6 +69,6 @@
     $('#checkout').innerHTML = '';
     checkout.mount('#checkout');
   } catch (e) {
-    erro(`<b>${esc(e.message)}</b><p>${e.esgotados ? 'Ajusta o saco e tenta de novo.' : 'Tenta de novo daqui a pouco.'}</p>`);
+    erro(`<b>${esc(e.message)}</b><p>${e.esgotados ? 'Ajusta o carrinho e tenta de novo.' : 'Tenta de novo daqui a pouco.'}</p>`);
   }
 })();

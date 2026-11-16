@@ -125,7 +125,7 @@ async function carregarCupoes() {
 function cupoesView() {
   const L = X.cupoes;
   $('#view').innerHTML = `
-  <div class="bar"><button class="btn grad" id="novoCup">+ Novo cupão</button><p class="hint" style="margin:0">O cliente escreve o código no saco de compras. Maiúsculas e "!" não contam: FIGO! = figo.</p></div>
+  <div class="bar"><button class="btn grad" id="novoCup">+ Novo cupão</button><p class="hint" style="margin:0">O cliente escreve o código no carrinho de compras. Maiúsculas e "!" não contam: FIGO! = figo.</p></div>
   ${L.length ? `<div class="cgrid">${L.map(c => {
     const [k, t] = estadoCupao(c), u = X.usos[c.codigo] || 0;
     return `<article class="ccard ${k}">

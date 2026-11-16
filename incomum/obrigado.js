@@ -25,7 +25,7 @@
   } else if (e.estado === 'pendente') {
     topo('a-confirmar', `Encomenda n.º ${e.numero} registada`, 'O pagamento ainda está a ser confirmado (com MB WAY pode demorar um pouco). Assim que estiver, recebes o e-mail de confirmação.');
   } else {
-    return topo('erro', 'O pagamento não foi concluído', 'Não te foi cobrado nada. Podes voltar ao saco e tentar de novo.');
+    return topo('erro', 'O pagamento não foi concluído', 'Não te foi cobrado nada. Podes voltar ao carrinho e tentar de novo.');
   }
 
   $('#tl').innerHTML = linhaTempo({ ...e, pago_em: pago ? new Date().toISOString() : null });

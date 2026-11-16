@@ -473,3 +473,157 @@ html,body{overflow-x:hidden;max-width:100%}
 @supports (overflow:clip){html,body{overflow-x:clip}}
 .drawer{overflow:hidden}
 .cup-ok.falta{color:#8a5a00;background:#fff6e5}
+
+
+/* ===== correções de design ===== */
+.ft{padding-bottom:104px}
+.add{white-space:nowrap}
+@media (max-width:900px){
+  .hero .txt{margin-top:-24px}
+  .kicker{background:rgba(0,0,0,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-color:rgba(255,255,255,.22);font-size:11px;letter-spacing:.1em;padding:6px 12px}
+}
+@media (max-width:760px){
+  .trust{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  .trust::-webkit-scrollbar{display:none}
+  .trust>div{flex:none;width:76%;max-width:300px;scroll-snap-align:start;border:1px solid var(--line)!important;border-radius:14px;padding:14px;font-size:12.5px}
+}
+
+/* ===== interação e animações ===== */
+#prog{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0);z-index:100;pointer-events:none}
+/* topo: entrada em cascata */
+body.ready .hero .txt>*{animation:riseIn .8s var(--ease) both}
+body.ready .hero .txt>:nth-child(2){animation-delay:.12s}
+body.ready .hero .txt>:nth-child(3){animation-delay:.24s}
+body.ready .hero .txt>:nth-child(4){animation-delay:.34s}
+body.ready .hero .txt>:nth-child(5){animation-delay:.44s}
+body.ready .hero h1 span{animation:riseIn .9s var(--ease) both}
+body.ready .hero h1 span+span{animation:riseIn .9s .18s var(--ease) both,shine 6s 1s linear infinite}
+@keyframes riseIn{from{opacity:0;transform:translateY(26px)}}
+.hero .btn.g{position:relative;overflow:hidden}
+.hero .btn.g::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:sweep 3.6s 1.5s ease-in-out infinite}
+@keyframes sweep{40%,100%{transform:translateX(120%)}}
+/* coleção: cartões aparecem por ondas */
+.js-anim #grid .card,.js-anim #rrow .card{animation:none;opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease) var(--d,0ms),transform .6s var(--ease) var(--d,0ms)}
+.js-anim #grid .card.vis,.js-anim #rrow .card.vis{opacity:1;transform:none}
+.card .ph{transition:box-shadow .35s,transform .35s var(--ease)}
+.card:hover .ph{box-shadow:0 16px 36px rgba(60,20,40,.16);transform:translateY(-3px)}
+.qadd{transition:transform .25s var(--ease),background .2s,color .2s}
+/* favoritas */
+.fav{position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.12);transition:transform .2s var(--ease)}
+.fav svg{width:19px;height:19px;fill:none;stroke:#222;stroke-width:1.8;transition:fill .2s,stroke .2s}
+.fav:hover{transform:scale(1.1)}
+.fav.on svg{fill:var(--magenta);stroke:var(--magenta)}
+.fav.beat{animation:beat .5s var(--ease)}
+@keyframes beat{30%{transform:scale(1.35)}60%{transform:scale(.9)}}
+.chip.favc{border-color:rgba(241,63,123,.4);color:var(--magenta)}
+.chip.favc.on{background:var(--magenta);color:#fff;border-color:var(--magenta)}
+/* página da peça: título + favoritas + partilhar */
+.pt{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pt-b{display:flex;gap:8px;flex:none;padding-top:4px}
+.pt .fav{position:static;border:1px solid var(--line);box-shadow:none}
+.share{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;transition:transform .2s var(--ease)}
+.share:hover{transform:scale(1.1)}
+.share svg{width:18px;height:18px;fill:none;stroke:#222;stroke-width:1.8}
+#addBtn.done{background:#1f7a4d;color:#fff}
+/* saco salta quando recebe peças */
+.bag.jump svg{animation:jump .55s var(--ease)}
+@keyframes jump{30%{transform:translateY(-6px) rotate(-8deg)}60%{transform:translateY(0) rotate(5deg)}}
+.fly{position:fixed;z-index:200;object-fit:cover;pointer-events:none;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.conf{position:fixed;z-index:300;width:8px;height:12px;border-radius:2px;pointer-events:none}
+/* destaques: inclinação e brilho com o rato */
+.champ{transition:transform .35s var(--ease);will-change:transform}
+.champ::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16),transparent 60%)}
+.champ:hover::before{opacity:1}
+/* vistas recentemente: fila que se arrasta */
+.rrow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:thin}
+.rrow .card{flex:none;width:220px;scroll-snap-align:start}
+@media (max-width:760px){.rrow .card{width:160px}.fav{width:34px;height:34px;top:8px;right:8px}.fav svg{width:17px;height:17px}}
+/* passos e secções: um pouco mais de vida */
+.step.reveal.in{transition-delay:calc(var(--i,0) * 90ms)}
+@media (prefers-reduced-motion:reduce){#prog{display:none}.js-anim #grid .card,.js-anim #rrow .card{opacity:1;transform:none}.hero .btn.g::after{display:none}}
+
+
+/* ===== Loja física (Aveiro): fotos reais da loja + informação clara ===== */
+.vst{background:linear-gradient(180deg,#fff 0,#f7f1ee 18%,#f7f1ee 100%);padding-bottom:80px;margin-bottom:-96px}
+.vst-in{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+.vst-fotos{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:620px}
+.vf{position:relative;margin:0;border-radius:22px;overflow:hidden;background:#e9e1dc}
+.vf1{grid-row:1/3}
+.vf img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.vf:hover img{transform:scale(1.05)}
+.vf figcaption{position:absolute;left:12px;bottom:12px;right:12px;width:max-content;max-width:calc(100% - 24px);background:rgba(255,255,255,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--ink);font-size:12px;font-weight:700;padding:7px 12px;border-radius:99px}
+.vst-txt h2{font-size:clamp(34px,4.2vw,58px);line-height:.98;letter-spacing:-.035em;margin:4px 0 18px}
+.vst-lead{font-size:17px;color:var(--ink2,#444);max-width:470px;margin-bottom:26px}
+.vst-dl{display:grid;border-top:1px solid #e3d9d4;margin:0 0 28px}
+.vst-dl>div{display:grid;grid-template-columns:110px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid #e3d9d4}
+.vst-dl dt{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);padding-top:2px}
+.vst-dl dd{margin:0;font-size:15px;font-weight:600;color:var(--ink);line-height:1.45}
+.vst-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.vst-cta .btn{height:52px;font-weight:700}
+.vst-map{position:relative;display:block;height:170px;border-radius:18px;overflow:hidden;background:#e9e1dc;border:1px solid #e3d9d4}
+/* esconde o cartão branco do Google (fica fora da área visível) e deixa o mapa sem ruído */
+.vst-map iframe{position:absolute;left:0;top:-150px;width:100%;height:calc(100% + 300px);border:0;filter:grayscale(.35) contrast(1.05);pointer-events:none}
+.vst-pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-130%);display:flex;align-items:center;gap:8px;background:#000;color:#fff;font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:99px;box-shadow:0 10px 24px rgba(0,0,0,.25);white-space:nowrap}
+.vst-pin::after{content:"";position:absolute;left:50%;bottom:-6px;width:12px;height:12px;background:#000;transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.vst-pin i{width:8px;height:8px;border-radius:50%;background:var(--magenta);box-shadow:0 0 0 0 rgba(241,63,123,.6);animation:ping2 1.8s infinite}
+@keyframes ping2{70%{box-shadow:0 0 0 10px rgba(241,63,123,0)}100%{box-shadow:0 0 0 0 rgba(241,63,123,0)}}
+.vst-map:hover .vst-pin{transform:translate(-50%,-145%)}
+.vst-pin{transition:transform .3s var(--ease)}
+@media (max-width:900px){
+  .vst-in{grid-template-columns:1fr;gap:36px}
+  .vst-fotos{display:flex;height:auto;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+  .vst-fotos::-webkit-scrollbar{display:none}
+  .vf{flex:none;width:72%;aspect-ratio:3/4;scroll-snap-align:center}
+  .vst-dl>div{grid-template-columns:86px 1fr;gap:12px}
+  .vst-cta .btn{flex:1}
+}
+
+/* loja física sem fotos: texto à esquerda, mapa grande à direita */
+@media (min-width:901px){.vst-in{grid-template-columns:1fr 1fr;align-items:stretch}}
+.vst-txt{align-self:center}
+.vst-map{height:auto;min-height:480px;border-radius:24px}
+@media (max-width:900px){.vst-map{min-height:280px}}
+
+
+/* ===== TOPO v2 (vídeo em painel, sem moldura de telemóvel) =====
+   Para voltar ao topo antigo basta tirar a classe "v2" de <section class="hero v2"> no index.html. */
+.hero.v2 .hero-bg{display:none}
+.hero.v2 .hero-img{opacity:0;transition:opacity .9s var(--ease) .15s}
+body.ready .hero.v2 .hero-img{opacity:1}
+.hero.v2 .reel{animation:none;transform:none;box-shadow:none;padding:0;background:#000}
+.hero.v2 .reel::before{display:none}
+.hero.v2 .reel video{border-radius:0}
+.hero.v2 .reel-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18);z-index:3}
+.hero.v2 .reel-bar i{display:block;height:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0);transition:transform .25s linear}
+@media (min-width:901px){
+  .hero.v2::before{background:radial-gradient(50% 60% at 62% 50%,rgba(205,80,122,.22),transparent 70%)}
+  .hero.v2 .hero-in{position:static;grid-template-columns:1fr;min-height:min(86vh,760px)}
+  .hero.v2 .txt{max-width:min(54%,640px);padding:56px 0;position:relative;z-index:3}
+  .hero.v2 .hero-img{position:absolute;top:0;right:0;bottom:0;width:min(46%,720px);min-height:0;padding:0;display:block;z-index:2}
+  .hero.v2 .reel{width:100%;height:100%;aspect-ratio:auto;border-radius:0}
+  .hero.v2 .reel video{-webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.6) 12%,#000 32%);mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.6) 12%,#000 32%)}
+  .hero.v2 .reel-tag{top:24px;left:auto;right:76px;font-size:12px;padding:9px 14px}
+  .hero.v2 .reel-pp{top:20px;bottom:auto;right:24px;width:42px;height:42px}
+  .hero.v2 .reel video{object-position:50% 58%}
+  .hero.v2 .stamp{right:auto;left:-60px;top:14%}
+  .hero.v2 .lead{font-size:18px;max-width:500px}
+}
+@media (max-width:900px){
+  .hero.v2 .reel{height:min(74vh,620px)}
+  .hero.v2 .reel-bar{bottom:auto;top:0}
+}
+@media (min-width:901px){.hero.v2 .reel::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#000 0,rgba(0,0,0,.55) 16%,transparent 38%)}.hero.v2 .reel-tag,.hero.v2 .reel-pp{z-index:3}}
+
+/* topo (antigo): vídeo direito e sem flutuar na diagonal, para não perder nitidez */
+.reel{transform:none;animation:reelIn2 1s var(--ease) both,reelFloat2 7s 1s ease-in-out infinite}
+@keyframes reelIn2{from{opacity:0;transform:translateY(40px)}}
+@keyframes reelFloat2{50%{transform:translateY(-10px)}}
+.reel video{transform:translateZ(0);backface-visibility:hidden}
+@media (max-width:900px){.reel{animation:none}}
+
+/* botão do Instagram (rodapé) */
+.ig-btn{display:inline-flex;align-items:center;gap:10px;margin-top:16px;padding:10px 16px 10px 10px;border-radius:99px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:700;transition:transform .2s var(--ease),box-shadow .2s}
+.ig-btn svg{width:34px;height:34px;padding:7px;border-radius:50%;color:#fff;fill:none;stroke:currentColor;stroke-width:1.9;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.ig-btn small{color:var(--muted);font-weight:600;font-size:12px}
+.ig-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(214,36,159,.18)}
+.ig-btn{white-space:nowrap}

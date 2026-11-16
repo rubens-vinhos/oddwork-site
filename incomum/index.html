@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="loja.css?v=11162050">
+<link rel="stylesheet" href="loja.css?v=11162390">
 <noscript><style>.hero .txt{opacity:1!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body class="no-bf">
@@ -25,14 +25,15 @@
     <div class="hd-r">
       <a class="ico conta-btn" href="conta.html" aria-label="A minha conta e encomendas" title="A minha conta e encomendas"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>A minha conta</span></a>
       <button class="ico" id="searchBtn" aria-label="Pesquisar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></button>
-      <button class="ico bag" id="bagBtn" aria-label="Saco de compras"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="badge" hidden>0</b></button>
+      <button class="ico bag" id="bagBtn" aria-label="Carrinho de compras"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="badge" hidden>0</b></button>
     </div>
   </div>
 </header>
 
+<div id="prog" aria-hidden="true"></div>
 <main id="home">
   <section class="hero" id="top">
-    <video class="hero-bg" data-src="hero-bg.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+    <video class="hero-bg" data-src="hero-bg.mp4?v=2" muted loop playsinline preload="none" aria-hidden="true"></video>
     <div class="wrap hero-in">
       <div class="txt">
         <span class="kicker"><i></i><span id="kick">Revendedor autorizado · Aveiro</span></span>
@@ -105,33 +106,38 @@
     <div class="more"><button class="btn ghost" id="moreBtn" hidden>Ver mais peças</button></div>
   </section>
 
+  <section class="wrap sec" id="recentes" hidden>
+    <div class="sh reveal"><div><p class="eyebrow">Continua onde ficaste</p><h2>Vistas recentemente</h2></div></div>
+    <div class="rrow" id="rrow"></div>
+  </section>
+
   <section class="wrap sec">
     <div class="sh reveal"><div><p class="eyebrow">Sem complicações</p><h2>Comprar é simples</h2></div></div>
     <div class="steps">
       <div class="step reveal"><b>1</b><h4>Filtra pelo teu tamanho</h4><p>Só vês o que existe no teu tamanho.</p></div>
-      <div class="step reveal"><b>2</b><h4>Junta peças</h4><p id="stepTxt">Escolhe as peças que quiseres e junta-as ao saco.</p></div>
+      <div class="step reveal"><b>2</b><h4>Junta peças</h4><p id="stepTxt">Escolhe as peças que quiseres e junta-as ao carrinho.</p></div>
       <div class="step reveal"><b>3</b><h4>Paga em segurança</h4><p>Cartão ou MB WAY.</p></div>
       <div class="step reveal"><b>4</b><h4>Recebe em casa</h4><p data-env="passo">Envio para Portugal continental. 14 dias para devolver.</p></div>
     </div>
   </section>
 
-  <section class="wrap sec" id="visita">
-    <div class="visit reveal">
-      <div class="v-info">
-        <div class="v-photo"><img src="loja-aveiro.webp" alt="Loja Incomum.eu em Aveiro" loading="lazy"></div>
-        <p class="eyebrow light">Experimenta antes</p>
-        <h2>Visita a nossa loja em Aveiro</h2>
-        <p>Na Galeria Centro Avenida, em frente ao Fórum. Toda a coleção LIVE! para experimentar, com ajuda para encontrar o tamanho certo.</p>
-        <ul class="v-list">
-          <li><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span><b>Galeria Centro Avenida</b>Av. Dr. Lourenço Peixinho, 10, loja 23 · 3800-159 Aveiro</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 7 9 18l-5-5"/></svg><span><b>Provador e ajuda com tamanhos</b>Toda a coleção LIVE! para experimentar</span></li>
-        </ul>
-        <div class="row"><a class="btn g" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener">Como chegar →</a><a class="btn o light" data-wa="Olá! Gostava de visitar a loja." href="#">Falar connosco</a></div>
-      </div>
-      <div class="v-map"><iframe title="Mapa da loja Incomum.eu" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Av.+Dr.+Louren%C3%A7o+Peixinho+10,+3800-159+Aveiro&amp;z=16&amp;output=embed"></iframe>
-        <div class="v-pin"><img src="logo.png?v=2" alt=""><span><b>Incomum.eu</b>Loja 23 · Galeria Centro Avenida</span></div></div>
+  <section class="sec vst" id="visita"><div class="wrap vst-in">
+    <div class="vst-txt reveal">
+      <p class="eyebrow">Loja física · Aveiro</p>
+      <h2>Vem experimentar<br>antes de levar.</h2>
+      <p class="vst-lead">Tocas nos tecidos, provas os tamanhos e sais com a peça certa. Estamos na Galeria Centro Avenida, em frente ao Fórum.</p>
+      <dl class="vst-dl">
+        <div><dt>Morada</dt><dd>Av. Dr. Lourenço Peixinho, 10, loja 23<br>3800-159 Aveiro</dd></div>
+        <div><dt>Onde</dt><dd>Galeria Centro Avenida, em frente ao Fórum Aveiro</dd></div>
+        <div><dt>Na loja</dt><dd>Provador e ajuda para encontrar o teu tamanho</dd></div>
+      </dl>
+      <div class="vst-cta"><a class="btn g" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener">Como chegar <span aria-hidden="true">↗</span></a><a class="btn ghost" data-wa="Olá! Gostava de visitar a loja." href="#">Falar no WhatsApp</a></div>
     </div>
-  </section>
+    <a class="vst-map reveal" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Dr.+Louren%C3%A7o+Peixinho+10+3800-159+Aveiro" target="_blank" rel="noopener" aria-label="Abrir a loja no Google Maps">
+      <iframe title="Mapa da loja Incomum.eu" loading="lazy" tabindex="-1" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Av.+Dr.+Louren%C3%A7o+Peixinho+10,+3800-159+Aveiro&amp;z=16&amp;output=embed"></iframe>
+      <span class="vst-pin"><i></i>Incomum.eu · loja 23</span>
+      </a>
+  </div></section>
 </main>
 
 <!-- página de produto -->
@@ -139,7 +145,7 @@
 
 <footer class="ft">
   <div class="wrap ft-in">
-    <div><img src="logo.png?v=2" alt="Incomum.eu" class="ft-logo"><p>Revendedor autorizado LIVE! em Portugal.</p></div>
+    <div><img src="logo.png?v=2" alt="Incomum.eu" class="ft-logo"><p>Revendedor autorizado LIVE! em Portugal.</p><a class="ig-btn" href="https://www.instagram.com/incomum.eu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg><span>Instagram</span><small>@incomum.eu</small></a></div>
     <div><b>Loja</b><p>Av. Dr. Lourenço Peixinho, 10, loja 23<br>3800-159 Aveiro</p></div>
     <div><b>Contacto</b><p><a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a><br><a href="#" data-wa="Olá Incomum! Vim do vosso site e tenho uma pergunta.">WhatsApp da loja +351 910 202 105</a></p></div>
     <div><b>Informação</b><p><a href="termos.html">Termos de venda e devoluções</a><br><a href="privacidade.html">Privacidade</a><br><a href="https://www.livroreclamacoes.pt/Inicio/" target="_blank" rel="noopener">Livro de Reclamações</a></p></div>
@@ -151,8 +157,8 @@
 
 <!-- saco -->
 <div class="drawer" id="cart" aria-hidden="true"><div class="scrim" data-close></div>
-  <aside class="dbox" role="dialog" aria-label="Saco de compras">
-    <div class="dh"><h3>O teu saco</h3><button class="ico" data-close aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <aside class="dbox" role="dialog" aria-label="Carrinho de compras">
+    <div class="dh"><h3>O teu carrinho</h3><button class="ico" data-close aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="ship" id="ship"></div>
     <div class="items" id="items"></div>
     <div class="df" id="cfoot"></div>
@@ -165,8 +171,8 @@
 </div>
 
 <div class="toast" id="toast" role="status"></div>
-<script src="config.js?v=11162050"></script>
-<script src="dados.js?v=11162050"></script>
-<script src="loja.js?v=11162050"></script>
+<script src="config.js?v=11162390"></script>
+<script src="dados.js?v=11162390"></script>
+<script src="loja.js?v=11162390"></script>
 </body>
 </html>
