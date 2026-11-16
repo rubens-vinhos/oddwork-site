@@ -50,8 +50,12 @@ async function entrar() {
     .subscribe();
   setInterval(() => { if (S.v === 'repor' && !$('#drawer').classList.contains('on')) mudouStock(); }, 60000);
 }
-sb.auth.getSession().then(({ data }) => { if (data.session) entrar(); });
-sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').hidden) entrar(); });
+// só arranca depois de catalogo.js e extras.js carregarem (em redes lentas a sessão chegava antes)
+const arrancar = () => {
+  sb.auth.getSession().then(({ data }) => { if (data.session) entrar(); });
+  sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s && $('#app').hidden) entrar(); });
+};
+if (document.readyState === 'complete') arrancar(); else window.addEventListener('load', arrancar);
 
 /* ---------- navegação ---------- */
 $$('#tabs a').forEach(a => a.onclick = () => go(a.dataset.v));
