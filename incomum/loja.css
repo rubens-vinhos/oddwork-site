@@ -30,7 +30,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .nav a.bf{color:var(--magenta)}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--grad);transform:scaleX(0);transition:transform .3s var(--ease)}
 .nav a:hover::after{transform:scaleX(1)}
-.logo img{height:30px;mix-blend-mode:multiply}
+.logo img{height:30px;display:block}
 .hd-r{display:flex;justify-content:flex-end;gap:4px}
 .ico{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;transition:background .2s}
 .ico:hover{background:var(--soft)}
