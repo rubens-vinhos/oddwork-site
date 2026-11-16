@@ -103,15 +103,15 @@ function edView() {
             <button class="ghost sm" data-cdel="${esc(c)}">Apagar cor</button></div></div></div>
       <h4>Fotos desta cor</h4>${fotosHTML(comI.filter(x => x.f.cor === c), c)}
       <h4>Tamanhos</h4>
-      <div class="vt-wrap"><table class="vt"><tr><th>Tamanho</th><th>Preço €</th>${temPromo ? '<th>Promo €</th>' : ''}<th>Desconto %<small>só este tamanho</small></th><th>Cliente paga</th><th>Stock</th><th></th></tr>
+      <div class="vt-wrap"><table class="vt vt-tam"><tr><th>Tamanho</th><th>Preço €</th>${temPromo ? '<th>Promo €</th>' : ''}<th>Desconto %<small>só este tamanho</small></th><th>Cliente paga</th><th>Stock</th><th></th></tr>
         ${linhas(c).map(({ v, i }) => `<tr class="${v.desconto > 0 ? 'com-desc' : ''}">
-          <td><input data-vi="${i}" data-k="tam" value="${esc(v.tam || '')}" class="w4"></td>
-          <td><input data-vi="${i}" data-k="preco" inputmode="decimal" value="${euros(v.preco)}" class="w6"></td>
-          ${temPromo ? `<td><input data-vi="${i}" data-k="promo" inputmode="decimal" value="${euros(v.promo)}" class="w6"></td>` : ''}
-          <td><input data-vi="${i}" data-k="desconto" inputmode="numeric" value="${v.desconto || ''}" placeholder="0" class="w4"></td>
-          <td class="fin">${Number.isFinite(final(v)) ? eur(final(v)) : '—'}</td>
-          <td><div class="st${v.stock ? '' : ' zero'}"><button data-vs="${i}" data-d="-1">−</button><input data-vi="${i}" data-k="stock" inputmode="numeric" value="${v.stock}"><button data-vs="${i}" data-d="1">+</button></div></td>
-          <td><button class="ghost sm" data-vx="${i}" title="Tirar este tamanho">✕</button></td></tr>`).join('')}</table></div>
+          <td data-l="Tamanho"><input data-vi="${i}" data-k="tam" value="${esc(v.tam || '')}" class="w4"></td>
+          <td data-l="Preço €"><input data-vi="${i}" data-k="preco" inputmode="decimal" value="${euros(v.preco)}" class="w6"></td>
+          ${temPromo ? `<td data-l="Promo €"><input data-vi="${i}" data-k="promo" inputmode="decimal" value="${euros(v.promo)}" class="w6"></td>` : ''}
+          <td data-l="Desconto %"><input data-vi="${i}" data-k="desconto" inputmode="numeric" value="${v.desconto || ''}" placeholder="0" class="w4"></td>
+          <td class="fin" data-l="Cliente paga">${Number.isFinite(final(v)) ? eur(final(v)) : '—'}</td>
+          <td data-l="Stock"><div class="st${v.stock ? '' : ' zero'}"><button data-vs="${i}" data-d="-1">−</button><input data-vi="${i}" data-k="stock" inputmode="numeric" value="${v.stock}"><button data-vs="${i}" data-d="1">+</button></div></td>
+          <td class="vx"><button class="ghost sm" data-vx="${i}" title="Tirar este tamanho">✕</button></td></tr>`).join('')}</table></div>
       <div class="cor-add"><input data-nt="${esc(c)}" placeholder="Novo tamanho (ex.: L)" class="w6"><button class="ghost sm" data-ntb="${esc(c)}">+ Tamanho</button></div>
     </section>`).join('')}
 
@@ -291,18 +291,18 @@ async function carregarCategorias() {
   $('#view').innerHTML = '<div class="empty">A carregar…</div>';
   await Promise.all([carregarCats(), C.prods.length ? null : carregarProds()]);
   const n = slug => C.prods.filter(p => p.categorias.includes(slug)).length;
-  const linha = c => `<tr data-c="${esc(c.slug)}"><td><input data-ck="nome" value="${esc(c.nome)}" maxlength="60"></td>
-    <td><select data-ck="grupo"><option value="tipo" ${c.grupo === 'tipo' ? 'selected' : ''}>Tipo de peça</option><option value="colecao" ${c.grupo === 'colecao' ? 'selected' : ''}>Coleção</option></select></td>
-    <td><select data-ck="parte"><option value="">—</option><option value="cima" ${c.parte === 'cima' ? 'selected' : ''}>Parte de cima</option><option value="baixo" ${c.parte === 'baixo' ? 'selected' : ''}>Parte de baixo</option></select></td>
-    <td><input data-ck="ordem" inputmode="numeric" value="${c.ordem}" class="w4"></td>
-    <td><label class="sw"><input type="checkbox" data-ck="ativo" ${c.ativo ? 'checked' : ''}><span></span></label></td>
-    <td class="muted">${n(c.slug)}</td><td><button class="ghost sm" data-cx="${esc(c.slug)}">Apagar</button></td></tr>`;
+  const linha = c => `<tr data-c="${esc(c.slug)}"><td data-l="Nome"><input data-ck="nome" value="${esc(c.nome)}" maxlength="60"></td>
+    <td data-l="Grupo"><select data-ck="grupo"><option value="tipo" ${c.grupo === 'tipo' ? 'selected' : ''}>Tipo de peça</option><option value="colecao" ${c.grupo === 'colecao' ? 'selected' : ''}>Coleção</option></select></td>
+    <td data-l="Monta o teu conjunto"><select data-ck="parte"><option value="">—</option><option value="cima" ${c.parte === 'cima' ? 'selected' : ''}>Parte de cima</option><option value="baixo" ${c.parte === 'baixo' ? 'selected' : ''}>Parte de baixo</option></select></td>
+    <td data-l="Ordem"><input data-ck="ordem" inputmode="numeric" value="${c.ordem}" class="w4"></td>
+    <td data-l="Visível"><label class="sw"><input type="checkbox" data-ck="ativo" ${c.ativo ? 'checked' : ''}><span></span></label></td>
+    <td class="muted" data-l="Produtos">${n(c.slug)}</td><td class="cx"><button class="ghost sm" data-cx="${esc(c.slug)}">Apagar</button></td></tr>`;
   $('#view').innerHTML = `
     <section class="card ed-sec"><h3>Nova categoria</h3>
       <div class="gera"><input id="nCat" placeholder="Nome (ex.: Macacões)" maxlength="60"><select id="nGrupo"><option value="tipo">Tipo de peça</option><option value="colecao">Coleção</option></select>
         <select id="nParte"><option value="">Não entra no "Monta o teu conjunto"</option><option value="cima">Parte de cima</option><option value="baixo">Parte de baixo</option></select><button class="btn grad" id="nAdd">Criar categoria</button></div></section>
     <section class="card ed-sec"><h3>Categorias <small class="muted">as alterações guardam-se sozinhas · "Tipo de peça" aparece no menu do site; "Coleção" nos filtros</small></h3>
-      <div class="vt-wrap"><table class="vt"><tr><th>Nome</th><th>Grupo</th><th>Monta o teu conjunto</th><th>Ordem</th><th>Visível</th><th>Produtos</th><th></th></tr>${C.cats.map(linha).join('')}</table></div></section>`;
+      <div class="vt-wrap"><table class="vt vt-cat"><tr><th>Nome</th><th>Grupo</th><th>Monta o teu conjunto</th><th>Ordem</th><th>Visível</th><th>Produtos</th><th></th></tr>${C.cats.map(linha).join('')}</table></div></section>`;
   $('#nAdd').onclick = async () => {
     const nome = $('#nCat').value.trim(); if (!nome) return toast('Escreve o nome');
     let slug = slugify(nome), k = 2; while (C.cats.some(c => c.slug === slug)) slug = slugify(nome) + '-' + k++;
@@ -354,10 +354,15 @@ function vendaView() {
       }).join('') || '<div class="empty">Nenhuma peça.</div>'}</div></section>
 
     <section class="card ed-sec" id="vResumoSec"><h3>2 · Venda</h3>
-      ${C.venda.length ? `<div class="vt-wrap"><table class="vt"><tr><th>Peça</th><th>Qtd.</th><th>Preço un. €</th><th>Total</th><th></th></tr>
-        ${C.venda.map((l, i) => `<tr><td><b>${esc(l.produto)}</b><small class="muted" style="display:block">${esc([l.cor, l.tam].filter(Boolean).join(' · '))}</small></td>
-          <td><div class="st"><button data-lq="${i}" data-d="-1">−</button><input value="${l.qtd}" data-lqi="${i}" inputmode="numeric"><button data-lq="${i}" data-d="1">+</button></div></td>
-          <td><input data-lp="${i}" value="${euros(l.preco)}" inputmode="decimal" class="w6"></td><td>${eur(l.preco * l.qtd)}</td><td><button class="ghost sm" data-lx="${i}">✕</button></td></tr>`).join('')}</table></div>
+      ${C.venda.length ? `<div class="vlin">${C.venda.map((l, i) => {
+          const p = C.prods.find(x => x.variantes.some(v => v.id === l.variante));
+          const f = p ? ((p.fotos.find(k => k.cor === l.cor) || p.fotos[0] || {}).url) : null;
+          return `<div class="vl"><img src="${f ? esc(fotoURL(f)) : (p && S.fotos[p.id]) || ''}" alt="">
+          <div class="vl-i"><b>${esc(l.produto)}</b><small>${esc([l.cor, l.tam].filter(Boolean).join(' · '))}</small>
+            <div class="vl-c"><div class="st"><button data-lq="${i}" data-d="-1" aria-label="Menos">−</button><input value="${l.qtd}" data-lqi="${i}" inputmode="numeric"><button data-lq="${i}" data-d="1" aria-label="Mais">+</button></div>
+              <label class="vl-p"><input data-lp="${i}" value="${euros(l.preco)}" inputmode="decimal"> €</label></div></div>
+          <div class="vl-r"><button class="vl-x" data-lx="${i}" aria-label="Tirar">✕</button><b>${eur(l.preco * l.qtd)}</b></div></div>`;
+        }).join('')}</div>
         <div class="vfim"><label>Pagamento<select id="vPag"><option>Dinheiro</option><option>Cartão</option><option>MB WAY</option><option>Outro</option></select></label>
           <label>Nota (opcional)<input id="vNota" maxlength="300" placeholder="Ex.: cliente habitual"></label>
           <div class="vtot">Total <b>${eur(tot)}</b></div>
