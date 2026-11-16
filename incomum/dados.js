@@ -67,11 +67,11 @@ async function validarCupao(codigo) {
 const cupaoGuardado = () => { try { const j = JSON.parse(localStorage.getItem('incomum-cupao') || 'null'); return j && j.codigo ? j : null; } catch { return null; } };
 const guardarCupao = c => { try { c ? localStorage.setItem('incomum-cupao', JSON.stringify(c)) : localStorage.removeItem('incomum-cupao'); } catch {} };
 const cupaoTexto = c => [c.pct ? `-${c.pct}% em tudo` : '', c.portes_gratis ? 'envio grátis' : ''].filter(Boolean).join(' + ');
-const eurCup = c => (c / 100).toFixed(2).replace('.', ',') + ' €';
+const eurCup = c => (c / 100).toFixed(2).replace('.', ',') + '\u00a0€';
 
 // Textos do envio (valor, grátis a partir de, prazo) vêm do painel > Cupões e envio. Preenche os elementos [data-env].
 let ENVIO = PORTES_PADRAO;
-const eurE = n => (Math.round(n * 100) % 100 ? n.toFixed(2).replace('.', ',') : String(Math.round(n))) + ' €';
+const eurE = n => (Math.round(n * 100) % 100 ? n.toFixed(2).replace('.', ',') : String(Math.round(n))) + '\u00a0€';
 function pintarEnvio(p) {
   ENVIO = p || ENVIO;
   const v = eurE(ENVIO.valor), g = ENVIO.gratis ? eurE(ENVIO.gratis) : '', pz = ENVIO.prazo, Pz = pz.charAt(0).toUpperCase() + pz.slice(1);

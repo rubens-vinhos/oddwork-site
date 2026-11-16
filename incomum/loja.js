@@ -1,6 +1,6 @@
 /* Incomum.eu — loja (estática; o pagamento liga-se em config.js na etapa 2) */
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-const eur = n => n.toFixed(2).replace('.', ',') + ' €';
+const eur = n => n.toFixed(2).replace('.', ',') + '\u00a0€';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const CFG = window.INCOMUM || {};
 const SZ = ['PP', 'XS', 'P', 'S', 'M', 'G', 'L', 'GG', 'XL', 'XXL', 'U', 'Único'];

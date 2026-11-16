@@ -2,7 +2,7 @@
 const CFG = window.INCOMUM || {};
 const sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseChave);
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-const eur = c => ((c || 0) / 100).toFixed(2).replace('.', ',') + ' €';
+const eur = c => ((c || 0) / 100).toFixed(2).replace('.', ',') + '\u00a0€';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const data = d => d ? new Date(d).toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
 const SZ = ['PP', 'XS', 'P', 'S', 'M', 'G', 'L', 'GG', 'XL', 'XXL', 'U', 'Único'];

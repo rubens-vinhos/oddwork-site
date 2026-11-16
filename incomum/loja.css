@@ -627,3 +627,9 @@ body.ready .hero.v2 .hero-img{opacity:1}
 .ig-btn small{color:var(--muted);font-weight:600;font-size:12px}
 .ig-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(214,36,159,.18)}
 .ig-btn{white-space:nowrap}
+
+/* faixa a correr sempre (também com "reduzir movimento"), devagar e suave */
+.marquee div{will-change:transform}
+@media (prefers-reduced-motion:reduce){.marquee div{animation:run 45s linear infinite!important}}
+/* total do simulador: o € nunca fica sozinho noutra linha */
+.tl.sum span:last-child{white-space:nowrap}

@@ -2,7 +2,7 @@
 const CFG = window.INCOMUM || {};
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const eur = c => ((c || 0) / 100).toFixed(2).replace('.', ',') + ' €'; // cêntimos
+const eur = c => ((c || 0) / 100).toFixed(2).replace('.', ',') + '\u00a0€'; // cêntimos
 const dataPT = d => d ? new Date(d).toLocaleString('pt-PT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
 const waLink = t => `https://wa.me/${CFG.whatsapp || '351910202105'}?text=${encodeURIComponent(t)}`;
 const desc = i => [i.cor, i.tam && 'Tam. ' + i.tam].filter(Boolean).map(esc).join(' · ');
