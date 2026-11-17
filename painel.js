@@ -502,6 +502,18 @@ function abrirGaveta(p, foco) {
   document.getElementById("gaveta-titulo").textContent = p.negocio || "—";
   document.getElementById("gaveta-sub").textContent = `${p.nome || ""} · ${p.pais || ""}`;
   const dados = [["Pedido", new Date(p.data).toLocaleString("pt-PT", { dateStyle: "medium", timeStyle: "short" })], ["Tipo", p.tipo], ["Clientes", p.clientes], ["Maior dor", p.dor], ["Disse que veio de", p.origem], ["WhatsApp", p.whatsapp], ["Email", p.email], ["Estado", NOME_ESTADO[p.estado]]];
+  // Pedidos da landing page /diagnostico: passo, site, horas da calculadora e anúncio de origem.
+  if (p.pagina) {
+    const anuncio = [p.utm_source, p.utm_medium, p.utm_campaign, p.utm_content].filter(Boolean).join(" · ");
+    dados.push(
+      ["Página", p.pagina],
+      ["Formulário", p.passo === 1 ? "Só o passo 1" : "Completo"],
+      ["Site ou Instagram", p.site],
+      ["Horas na calculadora", p.horas_calc != null ? `${p.horas_calc} h/mês` : null],
+      ["Anúncio", anuncio || null],
+      ["Clique do anúncio", p.clid ? (p.clid.startsWith("fb:") ? "Meta" : "Google") : null],
+    );
+  }
   document.getElementById("gaveta-dados").replaceChildren(...dados.flatMap(([k, v]) => [el("dt", {}, k), el("dd", {}, v || "—")]));
 
   const evs = p.vid ? todosEventos().filter((e) => e.vid === p.vid && e.tipo !== "pagina").sort((a, b) => a.t.localeCompare(b.t)) : [];

@@ -133,15 +133,17 @@
     });
 
     // Formulário: só o nome do campo, nunca o valor
-    var form = document.getElementById("formulario");
-    if (form) {
+    var forms = document.querySelectorAll("#formulario, .lp-form");
+    if (forms.length) {
       var tocados = {};
       var tocar = function (e) {
         var n = e.target.name;
         if (n && !tocados[n] && n !== "website" && n !== "pais") { tocados[n] = 1; ev("form-campo", { campo: n }); }
       };
-      form.addEventListener("focusin", tocar);
-      form.addEventListener("change", tocar);
+      forms.forEach(function (form) {
+        form.addEventListener("focusin", tocar);
+        form.addEventListener("change", tocar);
+      });
     }
 
     // Saída: tempo na página e scroll

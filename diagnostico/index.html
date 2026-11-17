@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pt-PT" data-mercado="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Diagnóstico grátis de 20 minutos · Oddwork</title>
+  <meta name="description" content="Descobre em 20 minutos quantas horas por semana o teu negócio perde em tarefas repetidas. Diagnóstico grátis por videochamada.">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Oddwork">
+  <meta property="og:title" content="Diagnóstico grátis de 20 minutos · Oddwork">
+  <meta property="og:description" content="Descobre quantas horas por semana o teu negócio perde em tarefas repetidas. Grátis.">
+  <meta property="og:image" content="https://theoddwork.com/assets/partilha.png">
+  <meta property="og:locale" content="pt_PT">
+  <meta name="theme-color" content="#131A2B">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <script>
+    // Antes de pintar: marca JS e a versão do título (?v=b para o teste A/B).
+    (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      var v = new URLSearchParams(location.search).get("v");
+      d.dataset.v = v === "b" ? "b" : "a";
+    })();
+  </script>
+  <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/diagnostico/lp.css">
+</head>
+<body class="lp">
+  <div class="progresso" id="progresso" aria-hidden="true"></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+      <symbol id="i-whats" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="saltar" href="#formulario-lugar">Saltar para o formulário</a>
+
+  <!-- ============ Topo + hero com formulário ============ -->
+  <div class="noite">
+    <header class="topo">
+      <span class="marca" aria-label="Oddwork"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></span>
+    </header>
+
+    <section class="hero lp-hero" id="diagnostico" aria-labelledby="hero-titulo">
+      <div class="hero__texto">
+        <h1 id="hero-titulo">
+          <span data-var="a">Descobre quantas horas por semana o teu negócio perde.</span>
+          <span data-var="b">O teu negócio confirma, avisa e cobra sozinho.</span>
+        </h1>
+        <p class="hero__lead">Diagnóstico grátis de 20 minutos, por videochamada.</p>
+        <div class="lp-logo3d" data-logo3d aria-hidden="true">
+          <svg class="lp-logo3d__plano" viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg>
+        </div>
+      </div>
+      <div class="lp-hero__form" id="formulario-lugar" data-form-lugar="hero"></div>
+    </section>
+  </div>
+
+  <main id="conteudo">
+    <!-- ============ Calculadora ============ -->
+    <section class="calc" aria-labelledby="calc-titulo">
+      <div class="calc__cartao">
+        <div class="calc__entrada">
+          <h2 id="calc-titulo">Faz as contas</h2>
+          <label class="calc__campo">
+            <span class="calc__pergunta">Clientes ou alunos por semana<output id="calc-clientes-v" for="calc-clientes">60</output></span>
+            <input type="range" id="calc-clientes" min="10" max="400" step="10" value="60">
+          </label>
+          <label class="calc__campo">
+            <span class="calc__pergunta">Minutos por cliente<output id="calc-minutos-v" for="calc-minutos">4 min</output></span>
+            <input type="range" id="calc-minutos" min="1" max="15" step="1" value="4">
+          </label>
+        </div>
+        <div class="calc__saida" aria-live="polite">
+          <span class="calc__rotulo">Por mês, isto leva-te cerca de</span>
+          <strong class="calc__horas" id="calc-horas">17h</strong>
+          <span class="calc__dias" id="calc-dias">2 dias de 8 horas</span>
+          <div class="calc__mes" id="calc-mes" aria-hidden="true"></div>
+          <a class="botao" href="#diagnostico" data-ir-form data-calc-cta data-rastrear="lp-cta-calc"><span>Quero recuperar estas <b data-calc-horas>17</b> horas</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ O que fica automático ============ -->
+    <section id="sistema" class="bloco" aria-labelledby="sistema-titulo">
+      <div class="bloco__cabeca"><h2 id="sistema-titulo">O que passa a ser automático</h2></div>
+      <ul class="lp-modulos">
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><h3>Marcação online</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12Z"/><path d="M9 11.5l2 2 4-4"/></svg></span><h3>Lembretes no WhatsApp</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg></span><h3>Lista de espera</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span><h3>Cobranças</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><h3>Painel do dono</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3>Relatório mensal</h3></li>
+      </ul>
+    </section>
+
+    <!-- ============ Como funciona + preço ============ -->
+    <section id="como" class="bloco bloco--papel" aria-labelledby="como-titulo">
+      <div class="bloco__cabeca"><h2 id="como-titulo">Como funciona</h2></div>
+      <ol class="passos lp-passos">
+        <li><span class="passos__n">1</span><h3>Diagnóstico grátis</h3><p>20 minutos</p></li>
+        <li><span class="passos__n">2</span><h3>Proposta</h3><p>Em 48 horas</p></li>
+        <li><span class="passos__n">3</span><h3>Entrega</h3><p>Na data ou não pagas a 2.ª metade</p></li>
+      </ol>
+      <div id="preco" class="lp-preco">
+        <p class="lp-preco__linha">A partir de <strong>900 €</strong> + <strong>100 €/mês</strong></p>
+        <p class="lp-preco__nota"><span data-vagas-curta>10 vagas de fundador</span> · 30 dias para desistir · sem IVA (art. 53.º CIVA)</p>
+      </div>
+    </section>
+
+    <!-- ============ Perguntas ============ -->
+    <section id="perguntas" class="bloco" aria-labelledby="perguntas-titulo">
+      <div class="bloco__cabeca"><h2 id="perguntas-titulo">Perguntas</h2></div>
+      <div class="perguntas">
+        <details><summary>Porque não um programa de agendamento pronto?</summary><p>Os programas prontos obrigam-te a seguir as regras deles. O nosso segue as tuas: turmas, prazos, planos e forma de cobrar.</p></details>
+        <details><summary>O que inclui a mensalidade?</summary><p>WhatsApp oficial, servidor, suporte e ajustes. Sem custos escondidos.</p></details>
+        <details><summary>E se eu quiser cancelar?</summary><p>Nos primeiros 30 dias devolvemos o que pagaste. Depois, cancelas quando quiseres e os dados ficam teus.</p></details>
+        <details><summary>Trabalham em Portugal e no Brasil?</summary><p>Sim, com preço em euros ou em reais.</p></details>
+      </div>
+    </section>
+
+    <!-- ============ CTA final ============ -->
+    <section class="lp-final" aria-labelledby="final-titulo">
+      <h2 id="final-titulo">Pede o teu diagnóstico grátis</h2>
+      <div data-form-lugar="final"></div>
+      <a class="lp-whats" href="#" data-whats data-rastrear="lp-whats-final"><svg aria-hidden="true"><use href="#i-whats"/></svg>Prefiro falar no WhatsApp</a>
+    </section>
+  </main>
+
+  <footer class="rodape lp-rodape">
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="/privacidade.html">Privacidade</a>
+      <a href="/termos.html">Termos</a>
+      <button type="button" class="link" data-abrir-cookies>Cookies</button>
+    </nav>
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
+  </footer>
+
+  <!-- Barra fixa no telemóvel -->
+  <div class="barra lp-barra" id="barra-lp" aria-hidden="true">
+    <a class="botao" href="#diagnostico" data-ir-form tabindex="-1" data-rastrear="lp-cta-barra">Pedir diagnóstico grátis</a>
+    <a class="lp-barra__whats" href="#" data-whats tabindex="-1" aria-label="Falar no WhatsApp" data-rastrear="lp-whats-barra"><svg aria-hidden="true"><use href="#i-whats"/></svg></a>
+  </div>
+
+  <!-- ============ Formulário (usado no topo e no fim) ============ -->
+  <template id="tpl-form">
+    <div class="lp-form-caixa">
+      <form class="lp-form" data-passo="1" novalidate>
+        <div class="lp-form__cabeca">
+          <p class="lp-form__titulo">Pede o teu diagnóstico grátis</p>
+        </div>
+        <label class="campo"><span>O teu nome</span><input name="nome" autocomplete="name" required maxlength="120"></label>
+        <div class="campo">
+          <span id="ID-whats-rot">WhatsApp</span>
+          <div class="lp-tel">
+            <select name="indicativo" aria-label="Indicativo do país">
+              <option value="+351" selected>🇵🇹 +351</option>
+              <option value="+55">🇧🇷 +55</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+41">🇨🇭 +41</option>
+              <option value="+352">🇱🇺 +352</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="">Outro</option>
+            </select>
+            <input name="whatsapp" type="tel" autocomplete="tel-national" inputmode="tel" required maxlength="24" aria-labelledby="ID-whats-rot" placeholder="912 345 678">
+          </div>
+        </div>
+        <fieldset class="lp-chips" data-obrigatorio="tipo">
+          <legend>Tipo de negócio</legend>
+          <label><input type="radio" name="tipo" value="Clínica médica ou dentária"><span>Clínica</span></label>
+          <label><input type="radio" name="tipo" value="Clínica de estética"><span>Estética</span></label>
+          <label><input type="radio" name="tipo" value="Academia ou estúdio"><span>Academia/Estúdio</span></label>
+          <label><input type="radio" name="tipo" value="Escola"><span>Escola</span></label>
+          <label><input type="radio" name="tipo" value="Professor ou mentor"><span>Professor/Mentor</span></label>
+          <label><input type="radio" name="tipo" value="Outro"><span>Outro</span></label>
+        </fieldset>
+        <div class="isco" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <p class="form__erro" role="alert" hidden></p>
+        <button class="botao botao--largo" type="submit">Quero o meu diagnóstico grátis</button>
+        <p class="lp-form__legal">Ao enviar, aceitas que te contactemos pelo WhatsApp sobre o diagnóstico (<a href="/privacidade.html">privacidade</a>).</p>
+      </form>
+
+      <form class="lp-form" data-passo="2" novalidate hidden>
+        <div class="lp-form__cabeca">
+          <p class="lp-form__titulo" tabindex="-1">Recebido<span data-nome></span>! Só mais 4 perguntas</p>
+          <span class="lp-form__passo">Passo 2 de 2</span>
+        </div>
+        <label class="campo"><span>Nome do negócio</span><input name="negocio" autocomplete="organization" maxlength="160"></label>
+        <fieldset class="lp-chips">
+          <legend>Clientes ou alunos ativos</legend>
+          <label><input type="radio" name="clientes" value="Menos de 30"><span>Menos de 30</span></label>
+          <label><input type="radio" name="clientes" value="30 a 100"><span>30 a 100</span></label>
+          <label><input type="radio" name="clientes" value="100 a 300"><span>100 a 300</span></label>
+          <label><input type="radio" name="clientes" value="Mais de 300"><span>Mais de 300</span></label>
+        </fieldset>
+        <fieldset class="lp-chips">
+          <legend>O que te ocupa mais tempo hoje?</legend>
+          <label><input type="radio" name="dor" value="Confirmar marcações e faltas"><span>Confirmar marcações e faltas</span></label>
+          <label><input type="radio" name="dor" value="Cobrar mensalidades"><span>Cobrar mensalidades</span></label>
+          <label><input type="radio" name="dor" value="Responder sempre às mesmas perguntas"><span>Responder sempre às mesmas perguntas</span></label>
+          <label><input type="radio" name="dor" value="Gerir turmas e lista de espera"><span>Gerir turmas e lista de espera</span></label>
+          <label><input type="radio" name="dor" value="Outra coisa"><span>Outra coisa</span></label>
+        </fieldset>
+        <label class="campo"><span>Website ou Instagram <small>(opcional)</small></span><input name="site" maxlength="200" placeholder="@onegocio ou onegocio.pt"></label>
+        <p class="form__erro" role="alert" hidden></p>
+        <button class="botao botao--largo" type="submit">Enviar e escolher o horário</button>
+        <button class="link lp-form__saltar" type="button" data-saltar>Saltar este passo</button>
+      </form>
+
+      <div class="lp-form lp-form--feito" hidden>
+        <span class="garantia__selo" aria-hidden="true">✓</span>
+        <p class="lp-form__titulo">Já recebemos o teu pedido</p>
+        <a class="botao botao--largo" href="/diagnostico/obrigado/">Ver o próximo passo</a>
+      </div>
+    </div>
+  </template>
+
+  <!-- ============ Cookies ============ -->
+  <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
+    <div class="cookies__cabeca">
+      <svg class="cookies__bolacha" viewBox="-512 -512 1024 1024" aria-hidden="true">
+        <defs><mask id="ck-dentada"><rect x="-512" y="-512" width="1024" height="1024" fill="#fff"/><circle cx="470" cy="-470" r="230" fill="#000"/><circle cx="250" cy="-500" r="110" fill="#000"/><circle cx="500" cy="-230" r="110" fill="#000"/></mask></defs>
+        <rect x="-512" y="-512" width="1024" height="1024" rx="300" fill="#F26A21" mask="url(#ck-dentada)"/>
+        <g transform="translate(-20 40) scale(.92)" fill="#131A2B"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="52" fill="#fff"/></g>
+      </svg>
+      <div>
+        <h2 id="cookies-titulo">Podemos usar cookies?</h2>
+        <p id="cookies-texto">Usamos os essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado e de que anúncio vieste, para o melhorarmos. Nunca vendemos dados. <a href="/privacidade.html#cookies">Saber mais</a></p>
+      </div>
+    </div>
+    <div class="cookies__opcoes" id="cookies-opcoes" hidden>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Essenciais</b><small>Guardam a tua escolha de cookies. Sempre ligados.</small></span>
+        <span class="interruptor"><input type="checkbox" checked disabled><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Estatísticas</b><small>De onde vens, que páginas vês e que botões usas (Google Analytics e o nosso registo).</small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-estatisticas"><i></i></span>
+      </label>
+      <label class="opcao">
+        <span class="opcao__texto"><b>Marketing</b><small>Para medir os anúncios e mostrá-los a quem já nos visitou (Meta, Google).</small></span>
+        <span class="interruptor"><input type="checkbox" id="ck-marketing"><i></i></span>
+      </label>
+    </div>
+    <div class="cookies__acoes">
+      <button type="button" class="ck-botao ck-botao--claro" data-cookies="recusar">Recusar</button>
+      <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="aceitar">Aceitar</button>
+      <button type="button" class="ck-botao ck-botao--laranja" data-cookies="guardar" hidden>Guardar escolha</button>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script src="/cookies.js"></script>
+  <script src="/anuncios.js"></script>
+  <script src="/diagnostico/lp.js"></script>
+  <script type="module" src="/diagnostico/lp3d.js"></script>
+  <script src="/rastreio.js"></script>
+  <script src="/site.js"></script>
+</body>
+</html>

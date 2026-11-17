@@ -34,6 +34,9 @@ document.querySelectorAll("[data-vagas-frase]").forEach((el) => {
     ? `Restam ${restam} de ${total} vagas. O preço de fundador fica enquanto a assinatura estiver ativa.`
     : "As vagas de fundador estão preenchidas.";
 });
+document.querySelectorAll("[data-vagas-curta]").forEach((el) => {
+  el.textContent = restam > 0 ? `Restam ${restam} de ${total} vagas de fundador` : "Vagas de fundador preenchidas";
+});
 document.querySelectorAll("[data-vagas-barra]").forEach((el) => {
   el.innerHTML = Array.from({ length: total }, (_, i) => `<i class="${i < total - restam ? "ocupada" : ""}"></i>`).join("");
   el.parentElement.setAttribute("aria-label", `${restam} de ${total} vagas livres`);
@@ -48,6 +51,7 @@ const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fmt = (m) => `${Math.floor(m / 60)}h${String(m % 60).padStart(2, "0")}`;
 
 function mostrarTudo() {
+  if (!horasEl) return;
   itens.forEach((li) => { li.classList.remove("espera", "agora"); li.classList.add("feito"); });
   horasEl.textContent = fmt(MINUTOS.reduce((a, b) => a + b, 0));
 }
@@ -63,7 +67,7 @@ if (reduzido || !itens.length) {
   const contar = (de, ate) => {
     const t0 = performance.now();
     const f = (t) => {
-      const k = Math.min(1, (t - t0) / 700);
+      const k = Math.min(1, Math.max(0, (t - t0) / 700));
       horasEl.textContent = fmt(Math.round(de + (ate - de) * k));
       if (k < 1) requestAnimationFrame(f);
     };
@@ -227,7 +231,7 @@ if (numero && !semMovimento) {
   aoAparecer([numero], () => {
     const t0 = performance.now();
     const f = (t) => {
-      const k = Math.min(1, (t - t0) / 1400);
+      const k = Math.min(1, Math.max(0, (t - t0) / 1400));
       numero.textContent = Math.round(alvo * (1 - Math.pow(1 - k, 3))) + "%";
       if (k < 1) requestAnimationFrame(f);
     };
@@ -294,7 +298,7 @@ if (calc.clientes) {
     cancelAnimationFrame(anim);
     const de = mostradas, t0 = performance.now();
     const f = (t) => {
-      const k = semMovimento ? 1 : Math.min(1, (t - t0) / 450);
+      const k = semMovimento ? 1 : Math.min(1, Math.max(0, (t - t0) / 450));
       mostradas = de + (alvo - de) * (1 - Math.pow(1 - k, 3));
       calc.horas.textContent = Math.round(mostradas) + "h";
       pintar(mostradas);
