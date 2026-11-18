@@ -344,7 +344,7 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
   .lp-hero { display: block; padding: 0 1.25rem 3rem; overflow: visible; }
   .lp-hero .hero__texto { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: calc(100svh - 4.2rem); padding: 0 0 4.5rem; position: relative; }
 
-  .lp-hero .lp-logo3d { order: -1; display: block; position: relative; inset: auto; width: min(66vw, 17rem); height: min(66vw, 17rem); margin: 0 0 2.4rem; translate: none; }
+  .lp-hero .lp-logo3d { order: -1; flex: none; min-height: 0; display: block; position: relative; inset: auto; width: min(66vw, 17rem); height: min(66vw, 17rem); margin: 0 0 2.4rem; translate: none; }
   .lp-hero .lp-logo3d::before { inset: -8%; opacity: 1; background: radial-gradient(closest-side, rgba(242,106,33,.30), rgba(242,106,33,.08) 55%, transparent); filter: blur(18px); animation: lp-respirar 6s ease-in-out infinite; }
   .lp-hero .lp-logo3d__plano { width: 100%; color: #F4F5F9; opacity: 1; filter: drop-shadow(0 18px 40px rgba(0,0,0,.45)); animation: lp-entrar 1.4s cubic-bezier(.2,.8,.2,1) both, lp-girar 70s linear 1.4s infinite; }
 
@@ -363,4 +363,8 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 @keyframes lp-descer { to { top: 2.6rem; } }
 @media (prefers-reduced-motion: reduce) {
   .lp-hero .lp-logo3d__plano, .lp-hero .lp-logo3d::before, .lp-hero__desce::after { animation: none; }
+}
+/* Telemóvel com 3D: quando o canvas está pronto, o símbolo plano sai */
+@media (max-width: 900px) {
+  .lp-hero .lp-logo3d--pronto .lp-logo3d__plano { opacity: 0; animation: none; }
 }

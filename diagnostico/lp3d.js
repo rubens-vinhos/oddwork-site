@@ -1,8 +1,8 @@
 // Logo da Oddwork em 3D no topo da landing page.
-// Só no computador e com WebGL; carrega a biblioteca depois da página estar pronta.
-// Sem WebGL (ou no telemóvel) fica o símbolo plano que já está no HTML.
+// Computador e telemóvel, desde que haja WebGL; carrega a biblioteca depois da página estar pronta.
+// Sem WebGL fica o símbolo plano que já está no HTML.
 const lugar = document.querySelector("[data-logo3d]");
-const computador = matchMedia("(min-width: 901px)").matches;
+const telemovel = matchMedia("(max-width: 900px)").matches;
 const semMovimento = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function temWebGL() {
@@ -30,7 +30,7 @@ if (lugar) {
   addEventListener("resize", () => { lugar.style.removeProperty("--desvio"); centrarNoTexto(); }, { passive: true });
 }
 
-if (lugar && computador && temWebGL()) {
+if (lugar && temWebGL()) {
   const iniciar = () => import("/assets/vendor/three.module.min.js").then(arrancar).catch(() => {});
   if ("requestIdleCallback" in window) requestIdleCallback(iniciar, { timeout: 1500 });
   else setTimeout(iniciar, 400);
@@ -46,7 +46,7 @@ const PA = [
 
 function arrancar(THREE) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, telemovel ? 1.75 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
 
