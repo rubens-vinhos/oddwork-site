@@ -268,3 +268,67 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
   .cookies__acoes > * { grid-column: auto !important; order: 0 !important; }
   .cookies__acoes .botao, .cookies__acoes button { min-height: 2.6rem; padding-block: .5rem; font-size: .88rem; }
 }
+
+/* ================================================================
+   Telemóvel: página toda escura, como o topo: uma só superfície "noite",
+   sem saltos branco/cinzento entre secções.
+   ================================================================ */
+@media (max-width: 900px) {
+  body.lp { background: var(--noite); }
+  .lp main {
+    --tinta: #fff;
+    --suave: #A3ACC2;
+    --linha: rgba(255,255,255,.09);
+    --papel: transparent;
+    color: #fff;
+    background:
+      radial-gradient(60rem 40rem at 110% 30%, rgba(242,106,33,.07), transparent 60%),
+      radial-gradient(50rem 40rem at -20% 70%, rgba(80,110,200,.08), transparent 60%),
+      var(--noite);
+  }
+  .lp .bloco { position: relative; }
+  .lp .bloco + .bloco::before { content: ""; position: absolute; top: 0; left: 50%; width: min(calc(100% - 2.5rem), calc(var(--larg) - 2.5rem)); translate: -50% 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent); }
+  .lp .bloco__cabeca h2 { color: #fff; }
+
+  /* O que passa a ser automático: azulejos com ícone */
+  .lp .lp-modulos li { padding: 1rem 1.1rem; border-radius: 1rem; background: rgba(255,255,255,.035); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+  .lp .lp-modulos .lp-ico { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: .7rem; background: rgba(242,106,33,.12); }
+  .lp .lp-modulos .lp-ico svg { width: 1.2rem; height: 1.2rem; }
+  .lp .lp-modulos h3 { color: #fff; font-weight: 600; line-height: 1.25; }
+
+  /* Como funciona: linha do tempo com fio laranja */
+  .lp .lp-passos .passos__n { background: var(--noite) !important; color: var(--laranja); border: 1.5px solid var(--laranja); }
+  .lp .lp-passos h3 { color: #fff; }
+
+  /* Preço em destaque */
+  .lp #como > .lp-preco { padding: 1.6rem 1.5rem; border: 0; border-radius: 1.2rem; background: linear-gradient(135deg, rgba(242,106,33,.16), rgba(242,106,33,.04) 60%); box-shadow: inset 0 0 0 1px rgba(242,106,33,.28); }
+  .lp .lp-preco__linha { color: #fff; }
+
+  /* Perguntas */
+  .lp .perguntas summary { color: #fff; }
+
+  /* Final: continua no mesmo fundo, sem caixa nova */
+  .lp .lp-final { background: none; margin-top: 0; }
+  .lp-rodape { border-top: 1px solid rgba(255,255,255,.07); }
+}
+
+@media (max-width: 620px) {
+  .lp .lp-modulos { gap: .6rem; }
+  .lp .lp-modulos li { padding: .8rem .85rem; gap: .65rem; }
+  .lp .lp-modulos .lp-ico { width: 2.1rem; height: 2.1rem; }
+  .lp .lp-modulos h3 { font-size: .95rem; }
+
+  /* Linha do tempo vertical a ligar os números */
+  .lp .lp-passos { position: relative; }
+  .lp .lp-passos::before { content: ""; position: absolute; left: calc(1rem - .75px); top: 1.9rem; bottom: 1.9rem; width: 1.5px; background: linear-gradient(var(--laranja), rgba(242,106,33,.15)); }
+  .lp .lp-passos li { position: relative; border-top: 0; padding: .75rem 0; }
+  .lp .lp-passos .passos__n { position: relative; z-index: 1; }
+  .lp #como > .lp-preco { margin-top: 1.4rem; padding: 1.3rem 1.2rem; }
+}
+@media (max-width: 620px) {
+  /* Azulejos: ícone em cima, texto em baixo (cabe sem partir em 3 linhas) */
+  .lp .lp-modulos li { grid-template-columns: 1fr; align-content: start; gap: .7rem; padding: .95rem; }
+  .lp .lp-modulos h3 { font-size: .98rem; }
+  /* Barra de baixo escura, como a página */
+  .lp .lp-barra { background: rgba(19,26,43,.92); border-top-color: rgba(255,255,255,.08); }
+}
