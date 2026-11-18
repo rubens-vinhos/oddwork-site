@@ -228,3 +228,43 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 .lp .lp-form [aria-invalid="true"], .lp .lp-chips[aria-invalid="true"] span { border-color: #F07A73; }
 .lp-final .lp-form { background: rgba(255,255,255,.04); }
 .lp-logo3d { translate: var(--desvio, 0) 0; }
+
+/* ---------- Telemóvel: mais compacto e com a marca no topo ---------- */
+@media (max-width: 900px) {
+  .lp-hero { position: relative; overflow: hidden; }
+  .lp-hero > * { position: relative; z-index: 1; }
+  .lp-hero .lp-logo3d { display: block; position: absolute; z-index: 0; right: -4.5rem; top: -1.5rem; width: 15rem; min-height: 0; height: 15rem; margin: 0; translate: none; pointer-events: none; }
+  .lp-hero .lp-logo3d::before { inset: 20%; opacity: .7; }
+  .lp-hero .lp-logo3d__plano { width: 70%; opacity: .14; animation: lp-girar 40s linear infinite; }
+}
+@keyframes lp-girar { from { transform: translate(-50%, -50%) rotate(0); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .lp-hero .lp-logo3d__plano { animation: none; } }
+
+@media (max-width: 620px) {
+  .lp .bloco { padding: 2.75rem 1.25rem; }
+  .lp .bloco__cabeca { margin-bottom: 1.4rem; }
+  .lp .calc { padding-bottom: 2rem; }
+  .lp .calc__cartao { padding: 1.25rem 1.25rem 0; }
+
+  /* Passos: uma linha cada, número ao lado */
+  .lp .lp-passos { gap: 0; }
+  .lp .lp-passos li { display: grid; grid-template-columns: 2rem 1fr; column-gap: .9rem; align-items: center; padding: .9rem 0; border-top: 1px solid var(--linha); }
+  .lp .lp-passos li::after { display: none; }
+  .lp .lp-passos .passos__n { grid-row: span 2; width: 2rem; height: 2rem; }
+  .lp .lp-passos h3 { margin: 0; font-size: 1.05rem; }
+  .lp .lp-passos p { margin: 0; font-size: .9rem; }
+  .lp #como > .lp-preco { margin-top: 1.6rem; padding-top: 1.6rem; }
+
+  .lp-final { padding: 2.5rem 1.25rem; margin-top: 0; }
+  .lp-final h2 { font-size: 1.7rem; max-width: 16ch; }
+
+  /* Cookies: barra baixa em vez de um cartão alto */
+  .cookies { left: .75rem; right: .75rem; bottom: .75rem; width: auto; padding: 1rem; border-radius: 1.1rem; }
+  .cookies__bolacha { display: none; }
+  .cookies h2 { font-size: 1rem; }
+  .cookies p { font-size: .8rem; line-height: 1.45; }
+  .cookies__acoes { display: grid !important; margin-top: .8rem; grid-template-columns: 1fr 1fr 1fr !important; gap: .4rem; }
+  .cookies__acoes > * { width: 100%; min-width: 0; padding-inline: .3rem; grid-row: auto !important; }
+  .cookies__acoes > * { grid-column: auto !important; order: 0 !important; }
+  .cookies__acoes .botao, .cookies__acoes button { min-height: 2.6rem; padding-block: .5rem; font-size: .88rem; }
+}
