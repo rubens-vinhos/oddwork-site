@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Oddwork · Sistemas sob medida que devolvem horas ao dono</title>
-  <meta name="description" content="A Oddwork cria o site e o sistema que confirmam marcações, avisam clientes pelo WhatsApp e cobram mensalidades sozinhos. Para clínicas, estúdios, academias e mentores. Diagnóstico grátis.">
+  <title>Oddwork · Diagnóstico grátis: quantas horas perde o teu negócio?</title>
+  <meta name="description" content="Descobre em 20 minutos quantas horas por semana o teu negócio perde em tarefas repetidas. Diagnóstico grátis por videochamada.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Oddwork">
   <meta property="og:url" content="https://theoddwork.com/">
-  <meta property="og:title" content="Oddwork · Sistemas sob medida que devolvem horas ao dono">
-  <meta property="og:description" content="Marcações, avisos e cobranças no automático, com o WhatsApp oficial do teu negócio. Diagnóstico grátis de 20 minutos.">
+  <meta property="og:title" content="Oddwork · Diagnóstico grátis de 20 minutos">
+  <meta property="og:description" content="Descobre quantas horas por semana o teu negócio perde em tarefas repetidas. Grátis.">
   <meta property="og:image" content="https://theoddwork.com/assets/partilha.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Oddwork: sistemas sob medida que devolvem horas ao dono do negócio.">
-  <meta name="twitter:card" content="summary_large_image">
   <meta property="og:locale" content="pt_PT">
-  <meta property="og:locale:alternate" content="pt_BR">
   <meta name="theme-color" content="#131A2B">
   <link rel="canonical" href="https://theoddwork.com/">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
-  <link rel="icon" href="/assets/icone-96.png" type="image/png" sizes="96x96">
   <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
@@ -46,11 +40,20 @@
       "sameAs": ["https://www.instagram.com/_oddwork/"]
     }]
   </script>
-  <script src="mercado.js"></script>
-  <link rel="preload" href="assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="site.css">
+  <script>
+    // Antes de pintar: marca JS e a versão do título (?v=b para o teste A/B).
+    (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      var v = new URLSearchParams(location.search).get("v");
+      d.dataset.v = v === "b" ? "b" : "a";
+    })();
+  </script>
+  <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="/diagnostico/lp.css">
 </head>
-<body>
+<body class="lp">
   <div class="progresso" id="progresso" aria-hidden="true"></div>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
@@ -61,224 +64,82 @@
         <polygon points="50,-92 76,-212 118,-136 100,-102"/>
       </g>
       <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+      <symbol id="i-whats" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></symbol>
     </defs>
   </svg>
 
-  <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+  <a class="saltar" href="#formulario-lugar">Saltar para o formulário</a>
 
-  <!-- ============ Hero escuro ============ -->
+  <!-- ============ Topo + hero com formulário ============ -->
   <div class="noite">
     <header class="topo">
-      <a class="marca" href="#" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
-      <nav aria-label="Principal">
-        <a href="#para-quem">Para quem</a>
-        <a href="#como">Como funciona</a>
-        <a href="#preco">Preço</a>
-        <div class="mercado" role="group" aria-label="País">
-          <button type="button" data-mercado="pt" aria-pressed="true" title="Portugal">PT</button>
-          <button type="button" data-mercado="br" aria-pressed="false" title="Brasil">BR</button>
-        </div>
-        <a class="botao botao--peq" href="#diagnostico" data-rastrear="cta-topo">Pedir diagnóstico</a>
-      </nav>
+      <span class="marca" aria-label="Oddwork"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></span>
     </header>
 
-    <section class="hero" aria-labelledby="hero-titulo">
+    <section class="hero lp-hero" id="diagnostico" aria-labelledby="hero-titulo">
       <div class="hero__texto">
-        <p class="hero__marca">A fábrica de soluções improváveis</p>
         <h1 id="hero-titulo">
-          <span data-m="pt">O teu negócio cresceu. O teu dia não estica.</span>
-          <span data-m="br">Seu negócio cresceu. Seu dia não estica.</span>
+          <span data-var="a">Descobre quantas horas por semana o teu negócio perde.</span>
+          <span data-var="b">O teu negócio confirma, avisa e cobra sozinho.</span>
         </h1>
-        <p class="hero__lead">
-          <span data-m="pt">Construímos o site e o sistema que confirmam marcações, avisam alunos e cobram mensalidades por ti. Feito com as regras do teu negócio, não com as de um programa genérico.</span>
-          <span data-m="br">Construímos o site e o sistema que confirmam horários, avisam alunos e cobram mensalidades por você. Feito com as regras do seu negócio, não com as de um programa genérico.</span>
-        </p>
-        <div class="hero__acoes">
-          <a class="botao" href="#diagnostico" data-rastrear="cta-hero">Pedir diagnóstico grátis</a>
-          <span class="hero__nota">20 minutos, por videochamada. Sem compromisso.</span>
+        <p class="hero__lead">Diagnóstico grátis de 20 minutos, por videochamada.</p>
+        <div class="lp-logo3d" data-logo3d aria-hidden="true">
+          <svg class="lp-logo3d__plano" viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg>
         </div>
       </div>
-
-      <figure class="dia" aria-label="Exemplo de um dia em que o sistema trata das tarefas repetitivas">
-        <div class="dia__cartao" id="dia">
-          <div class="dia__topo">
-            <span class="dia__titulo" data-br="Hoje, sem você">Hoje, sem ti</span>
-            <span class="dia__estado"><i></i> Sistema ligado</span>
-          </div>
-          <ol class="dia__lista" id="dia-lista">
-            <li data-hora="08:00"><span class="dia__ico" data-tipo="whats"></span><div data-br="&lt;b&gt;Confirmar 14 agendamentos de amanhã&lt;/b&gt;&lt;small&gt;WhatsApp oficial&lt;/small&gt;"><b>Confirmar 14 marcações de amanhã</b><small>WhatsApp oficial</small></div></li>
-            <li data-hora="09:12"><span class="dia__ico" data-tipo="agenda"></span><div><b>Vaga das 18h passou para a lista de espera</b><small data-br="A Ana cancelou, a Sofia ficou com a vaga">A Ana cancelou, a Sofia ficou com o lugar</small></div></li>
-            <li data-hora="11:30"><span class="dia__ico" data-tipo="pix"></span><div><b data-br="Mensalidade cobrada de 6 alunos">Mensalidade cobrada a 6 alunos</b><small><span data-m="pt">Cartão</span><span data-m="br">Pix e cartão</span></small></div></li>
-            <li data-hora="14:05"><span class="dia__ico" data-tipo="whats"></span><div><b>Respondeu “tem vaga na quinta?”</b><small>Com os horários livres</small></div></li>
-            <li data-hora="19:00"><span class="dia__ico" data-tipo="relatorio"></span><div><b>Resumo do dia enviado ao dono</b><small>Faltas, pagamentos e vagas</small></div></li>
-          </ol>
-          <div class="dia__rodape">
-            <span data-br="Tempo que ficou com você">Tempo que ficou contigo</span>
-            <strong id="dia-horas">0h00</strong>
-          </div>
-        </div>
-        <figcaption>Exemplo ilustrativo. Cada sistema segue as regras do negócio.</figcaption>
-      </figure>
+      <div class="lp-hero__form" id="formulario-lugar" data-form-lugar="hero"></div>
     </section>
   </div>
 
   <main id="conteudo">
-    <!-- ============ A dor ============ -->
-    <section class="dor" aria-labelledby="dor-titulo">
-      <div class="dor__numero" aria-hidden="true">36%</div>
-      <div>
-        <h2 id="dor-titulo" data-br="da semana de quem administra um negócio vai para tarefas administrativas.">da semana de quem gere um negócio vai para tarefas administrativas.</h2>
-        <p data-br="Em uma semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem esquecer.">Numa semana de 45 horas, são cerca de 16. Confirmar, lembrar, cobrar, responder sempre às mesmas perguntas. É trabalho que um sistema faz melhor, e sem se esquecer.</p>
-        <p class="fonte">Fonte: inquérito a 251 empreendedores nos EUA (Time etc e Censuswide, 2023).</p>
-      </div>
-    </section>
-
     <!-- ============ Calculadora ============ -->
     <section class="calc" aria-labelledby="calc-titulo">
       <div class="calc__cartao">
         <div class="calc__entrada">
-          <h2 id="calc-titulo"><span data-m="pt">E no teu negócio, quanto é?</span><span data-m="br">E no seu negócio, quanto é?</span></h2>
-          <p><span data-m="pt">Mexe nos valores até se parecerem com a tua semana.</span><span data-m="br">Ajuste os valores até ficarem parecidos com a sua semana.</span></p>
+          <h2 id="calc-titulo">Faz as contas</h2>
           <label class="calc__campo">
-            <span class="calc__pergunta"><span data-m="pt">Clientes ou alunos por semana</span><span data-m="br">Clientes ou alunos por semana</span><output id="calc-clientes-v" for="calc-clientes">60</output></span>
+            <span class="calc__pergunta">Clientes ou alunos por semana<output id="calc-clientes-v" for="calc-clientes">60</output></span>
             <input type="range" id="calc-clientes" min="10" max="400" step="10" value="60">
           </label>
           <label class="calc__campo">
-            <span class="calc__pergunta"><span data-m="pt">Minutos por cliente a confirmar, lembrar e cobrar</span><span data-m="br">Minutos por cliente para confirmar, lembrar e cobrar</span><output id="calc-minutos-v" for="calc-minutos">4 min</output></span>
+            <span class="calc__pergunta">Minutos por cliente<output id="calc-minutos-v" for="calc-minutos">4 min</output></span>
             <input type="range" id="calc-minutos" min="1" max="15" step="1" value="4">
           </label>
         </div>
         <div class="calc__saida" aria-live="polite">
-          <span class="calc__rotulo"><span data-m="pt">Por mês, isto leva-te cerca de</span><span data-m="br">Por mês, isso leva cerca de</span></span>
+          <span class="calc__rotulo">Por mês, isto leva-te cerca de</span>
           <strong class="calc__horas" id="calc-horas">17h</strong>
           <span class="calc__dias" id="calc-dias">2 dias de 8 horas</span>
           <div class="calc__mes" id="calc-mes" aria-hidden="true"></div>
-          <span class="calc__legenda"><span data-m="pt">Cada quadrado é um dia útil do mês.</span><span data-m="br">Cada quadrado é um dia útil do mês.</span></span>
-          <a class="botao" href="#diagnostico" data-rastrear="cta-calc"><span data-m="pt">Medir isto a sério</span><span data-m="br">Medir isso de verdade</span></a>
-          <small class="calc__nota"><span data-m="pt">Estimativa feita com os teus números. No diagnóstico medimos com o teu negócio real.</span><span data-m="br">Estimativa feita com os seus números. No diagnóstico medimos com o seu negócio real.</span></small>
+          <a class="botao" href="#diagnostico" data-ir-form data-calc-cta data-rastrear="lp-cta-calc"><span>Quero recuperar estas <b data-calc-horas>17</b> horas</span></a>
         </div>
       </div>
     </section>
 
-    <!-- ============ Para quem ============ -->
-    <section id="para-quem" class="bloco" aria-labelledby="quem-titulo">
-      <div class="bloco__cabeca">
-        <h2 id="quem-titulo" data-br="Para negócios que estão dando certo">Para negócios que estão a dar certo</h2>
-        <p><span data-m="pt">Cresceste mais depressa do que o teu tempo. A procura está lá; o que falta são horas.</span><span data-m="br">Você cresceu mais rápido do que o seu tempo. A procura está lá; o que falta são horas.</span></p>
-      </div>
-      <ul class="nichos">
-        <li><span class="nichos__ico" data-ico="clinica"></span><h3>Clínicas médicas e dentárias</h3><p>Agenda cheia, confirmações, faltas e pagamentos todos os dias.</p></li>
-        <li><span class="nichos__ico" data-ico="estetica"></span><h3>Clínicas de estética</h3><p data-br="As que já têm demanda, equipe e lista de espera.">As que já têm procura, equipa e lista de espera.</p></li>
-        <li><span class="nichos__ico" data-ico="academia"></span><h3>Academias e estúdios</h3><p>Turmas com limite, planos, reposições e mensalidades.</p></li>
-        <li><span class="nichos__ico" data-ico="idiomas"></span><h3>Escolas de idiomas</h3><p>Turmas, horários e alunos em vários países.</p></li>
-        <li><span class="nichos__ico" data-ico="mentor"></span><h3>Professores e mentores</h3><p data-br="Muitas aulas e sessões, tudo gerenciado na mão.">Muitas aulas e sessões, tudo gerido à mão.</p></li>
-        <li><span class="nichos__ico" data-ico="criador"></span><h3>Criadores que vendem aulas</h3><p data-br="Mentorias, turmas e comunidades crescendo.">Mentorias, turmas e comunidades a crescer.</p></li>
+    <!-- ============ O que fica automático ============ -->
+    <section id="sistema" class="bloco" aria-labelledby="sistema-titulo">
+      <div class="bloco__cabeca"><h2 id="sistema-titulo">O que passa a ser automático</h2></div>
+      <ul class="lp-modulos">
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><h3>Marcação online</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12Z"/><path d="M9 11.5l2 2 4-4"/></svg></span><h3>Lembretes no WhatsApp</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg></span><h3>Lista de espera</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span><h3>Cobranças</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><h3>Painel do dono</h3></li>
+        <li><span class="lp-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3>Relatório mensal</h3></li>
       </ul>
-
-      <div class="encaixe">
-        <div class="encaixe__col encaixe__col--sim">
-          <h3>Faz sentido se…</h3>
-          <ul>
-            <li data-br="Você tem agenda cheia ou lista de espera">Tens agenda cheia ou lista de espera</li>
-            <li data-br="A equipe está crescendo, ou já há mais de uma unidade">A equipa está a crescer, ou já há mais de uma unidade</li>
-            <li data-br="Ainda é você quem confirma, cobra e responde na mão">Ainda és tu quem confirma, cobra e responde à mão</li>
-            <li data-br="Você prefere bem feito a mais barato">Preferes bem feito a mais barato</li>
-          </ul>
-        </div>
-        <div class="encaixe__col">
-          <h3>Ainda não é o momento se…</h3>
-          <ul>
-            <li data-br="Você procura só “posts para as redes”">Procuras só “posts para as redes”</li>
-            <li data-br="Ainda não tem clientes para gerenciar">Ainda não tens clientes para gerir</li>
-            <li>A decisão é só pelo preço</li>
-          </ul>
-        </div>
-      </div>
     </section>
 
-    <!-- ============ O que construímos ============ -->
-    <section id="sistema" class="bloco bloco--papel" aria-labelledby="sistema-titulo">
-      <div class="bloco__cabeca">
-        <h2 id="sistema-titulo" data-br="Um sistema feito sob medida, não um programa de prateleira">Um sistema feito à medida, não um programa de prateleira</h2>
-        <p data-br="Os programas prontos seguem as regras de todo mundo. O nosso segue as suas: limite por turma, prazos para cancelar, planos, textos e cores.">Os programas prontos seguem as regras de toda a gente. O nosso segue as tuas: limite por turma, prazos para cancelar, planos, textos e cores.</p>
-      </div>
-      <ul class="pecas">
-        <li><h3 data-br="Site com agendamento">Site com marcação</h3><p data-br="O cliente vê os horários livres e agenda sozinho, a qualquer hora.">O cliente vê os horários livres e marca sozinho, a qualquer hora.</p></li>
-        <li><h3>Confirmações e avisos</h3><p data-br="Pelo WhatsApp oficial, com o número do seu negócio. Menos faltas, sem mensagens na mão.">Pelo WhatsApp oficial, com o número do teu negócio. Menos faltas, sem mensagens à mão.</p></li>
-        <li><h3>Lista de espera</h3><p>Quando alguém cancela, a vaga é oferecida ao próximo automaticamente.</p></li>
-        <li><h3>Cobranças</h3><p>Mensalidades e pacotes cobrados <span data-m="pt">por cartão</span><span data-m="br">por Pix e cartão</span>, com aviso a quem se atrasa.</p></li>
-        <li><h3>Painel do dono</h3><p data-br="Quem vem, quem pagou, quem faltou e quantas vagas sobram, numa tela só.">Quem vem, quem pagou, quem faltou e quantas vagas sobram, num só ecrã.</p></li>
-        <li><h3>Relatório mensal</h3><p data-br="Quantas horas o sistema devolveu a você e o que melhorar em seguida.">Quantas horas o sistema te devolveu e o que melhorar a seguir.</p></li>
-      </ul>
-      <p class="pecas__nota" data-br="Usamos IA todos os dias, mas nada sai sem um humano revisar.">Usamos IA todos os dias, mas nada sai sem um humano a rever.</p>
-    </section>
-
-    <!-- ============ Como funciona ============ -->
-    <section id="como" class="bloco" aria-labelledby="como-titulo">
-      <div class="bloco__cabeca">
-        <h2 id="como-titulo">Primeiro medimos. Depois propomos.</h2>
-        <p data-br="Só fazemos proposta depois de entender onde suas horas se perdem.">Só fazemos proposta depois de perceber onde se perdem as tuas horas.</p>
-      </div>
-      <ol class="passos">
-        <li><span class="passos__n">1</span><h3>Diagnóstico</h3><p>20 minutos por videochamada para medir as horas perdidas e as regras do negócio. Grátis.</p></li>
-        <li><span class="passos__n">2</span><h3>Proposta</h3><p data-br="Em até 48 horas, feita para o seu negócio, com as horas que você economiza e o preço.">Em até 48 horas, feita para o teu negócio, com as horas que poupas e o preço.</p></li>
-        <li><span class="passos__n">3</span><h3>Implantação</h3><p data-br="Paga uma vez: metade quando você aceita, metade na entrega.">Paga uma vez: metade quando aceitas, metade na entrega.</p></li>
-        <li><span class="passos__n">4</span><h3>Mensalidade</h3><p data-br="WhatsApp oficial, servidor, suporte e ajustes. O sistema continua melhorando.">WhatsApp oficial, servidor, suporte e ajustes. O sistema continua a melhorar.</p></li>
+    <!-- ============ Como funciona + preço ============ -->
+    <section id="como" class="bloco bloco--papel" aria-labelledby="como-titulo">
+      <div class="bloco__cabeca"><h2 id="como-titulo">Como funciona</h2></div>
+      <ol class="passos lp-passos">
+        <li><span class="passos__n">1</span><h3>Diagnóstico grátis</h3><p>20 minutos</p></li>
+        <li><span class="passos__n">2</span><h3>Proposta</h3><p>Em 48 horas</p></li>
+        <li><span class="passos__n">3</span><h3>Entrega</h3><p>Na data ou não pagas a 2.ª metade</p></li>
       </ol>
-      <div class="garantias">
-        <div class="garantia">
-          <span class="garantia__selo" aria-hidden="true">✓</span>
-          <div><h3>Entregamos na data</h3><p data-br="Se perdermos o prazo combinado, a segunda metade da implantação não é cobrada.">Se falharmos o prazo combinado, a segunda metade da implantação não é cobrada.</p></div>
-        </div>
-        <div class="garantia">
-          <span class="garantia__selo" aria-hidden="true">✓</span>
-          <div><h3>30 dias para desistir</h3><p data-br="Se você não ficar satisfeito nos primeiros 30 dias, devolvemos o que pagou.">Se não ficares satisfeito nos primeiros 30 dias, devolvemos o que pagaste.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ Preço ============ -->
-    <section id="preco" class="bloco bloco--papel" aria-labelledby="preco-titulo">
-      <div class="bloco__cabeca">
-        <h2 id="preco-titulo">Preço de fundador para os primeiros dez</h2>
-        <p data-vagas-frase>10 vagas de fundador.</p>
-      </div>
-
-      <div class="preco">
-        <div class="preco__topo">
-          <span class="preco__selo">Membro fundador</span>
-          <div class="vagas" aria-hidden="true"><span data-vagas-barra></span></div>
-        </div>
-        <div class="preco__linhas">
-          <div class="preco__linha">
-            <span class="preco__rotulo">Implantação</span>
-            <span class="preco__valor"><span data-m="pt">900 €</span><span data-m="br">R$ 2.000</span></span>
-            <span class="preco__normal">Depois: <span data-m="pt">1.500 €</span><span data-m="br">R$ 3.000 a 5.000</span></span>
-          </div>
-          <div class="preco__linha">
-            <span class="preco__rotulo">Mensalidade</span>
-            <span class="preco__valor"><span data-m="pt">100 €</span><span data-m="br">R$ 350</span><small>/mês</small></span>
-            <span class="preco__normal">Depois: <span data-m="pt">130 €</span><span data-m="br">R$ 350 a 500</span></span>
-          </div>
-        </div>
-        <ul class="preco__lista">
-          <li>Preço de fundador mantido enquanto a assinatura estiver ativa</li>
-          <li data-br="Em troca: você é piloto, autoriza que mostremos o caso e dá um depoimento">Em troca: és piloto, autorizas mostrarmos o caso e dás um depoimento</li>
-          <li data-br="A implantação só aumenta se o sistema for maior do que o combinado">A implantação sobe só se o sistema for maior do que o combinado</li>
-        </ul>
-        <a class="botao" href="#diagnostico" data-rastrear="cta-preco">Pedir diagnóstico grátis</a>
-        <p class="preco__fiscal" data-m="pt">Valores finais, sem IVA (regime de isenção, art. 53.º CIVA).</p>
-        <p class="preco__fiscal" data-m="br">Fatura portuguesa, sem nota fiscal brasileira. No Pix, o IOF já está incluído no preço.</p>
-      </div>
-
-      <div class="dono">
-        <h3 data-br="O que fica com você">O que fica contigo</h3>
-        <ul>
-          <li>O site, o domínio, os textos e as fotos</li>
-          <li data-br="Os dados dos seus clientes e alunos">Os dados dos teus clientes e alunos</li>
-          <li>O número de WhatsApp, sempre</li>
-        </ul>
-        <p>O sistema funciona enquanto a mensalidade estiver em dia. O código é a base da Oddwork e não é entregue.</p>
+      <div id="preco" class="lp-preco">
+        <p class="lp-preco__linha">A partir de <strong>900 €</strong> + <strong>100 €/mês</strong></p>
+        <p class="lp-preco__nota"><span data-vagas-curta>10 vagas de fundador</span> · 30 dias para desistir · sem IVA (art. 53.º CIVA)</p>
       </div>
     </section>
 
@@ -286,109 +147,110 @@
     <section id="perguntas" class="bloco" aria-labelledby="perguntas-titulo">
       <div class="bloco__cabeca"><h2 id="perguntas-titulo">Perguntas</h2></div>
       <div class="perguntas">
-        <details><summary data-br="Por que não usar um programa de agendamento pronto?">Porque não usar um programa de agendamento pronto?</summary><p data-br="Os programas prontos obrigam o seu negócio a seguir as regras deles. Nós fazemos o contrário: o sistema segue os seus limites por turma, prazos, planos e forma de cobrar.">Os programas prontos obrigam o teu negócio a seguir as regras deles. Nós fazemos o contrário: o sistema segue os teus limites por turma, prazos, planos e forma de cobrar.</p></details>
-        <details><summary>Quanto tempo demora a implantação?</summary><p data-br="Depende do tamanho do sistema. A data fica escrita na proposta, e se perdermos o prazo a segunda metade não é cobrada.">Depende do tamanho do sistema. A data fica escrita na proposta, e se falharmos a segunda metade não é cobrada.</p></details>
-        <details><summary>O que inclui a mensalidade?</summary><p data-br="O WhatsApp oficial, o servidor, o suporte e os ajustes no sistema. Sem custos escondidos.">O WhatsApp oficial, o servidor, o suporte e os ajustes ao sistema. Sem custos escondidos.</p></details>
-        <details><summary>E se eu quiser cancelar?</summary><p data-br="Nos primeiros 30 dias devolvemos o que você pagou. Depois, você cancela quando quiser: os dados dos seus clientes e o número de WhatsApp são sempre seus.">Nos primeiros 30 dias devolvemos o que pagaste. Depois, cancelas quando quiseres: os dados dos teus clientes e o número de WhatsApp são sempre teus.</p></details>
-        <details><summary>Prometem mais vendas?</summary><p data-br="Não. Garantimos a entrega e a qualidade. O que medimos é o tempo que o sistema devolve a você.">Não. Garantimos a entrega e a qualidade. O que medimos é o tempo que o sistema te devolve.</p></details>
-        <details><summary>Trabalham em Portugal e no Brasil?</summary><p>Sim. Cada país tem o seu preço, em euros ou em reais, e as cobranças usam os meios de pagamento de cada mercado.</p></details>
+        <details><summary>Porque não um programa de agendamento pronto?</summary><p>Os programas prontos obrigam-te a seguir as regras deles. O nosso segue as tuas: turmas, prazos, planos e forma de cobrar.</p></details>
+        <details><summary>O que inclui a mensalidade?</summary><p>WhatsApp oficial, servidor, suporte e ajustes. Sem custos escondidos.</p></details>
+        <details><summary>E se eu quiser cancelar?</summary><p>Nos primeiros 30 dias devolvemos o que pagaste. Depois, cancelas quando quiseres e os dados ficam teus.</p></details>
+        <details><summary>Trabalham em Portugal e no Brasil?</summary><p>Sim, com preço em euros ou em reais.</p></details>
       </div>
     </section>
 
-    <!-- ============ Diagnóstico (formulário) ============ -->
-    <section id="diagnostico" class="diag" aria-labelledby="diag-titulo">
-      <div class="diag__intro">
-        <h2 id="diag-titulo" data-br="Peça o seu diagnóstico">Pede o teu diagnóstico</h2>
-        <p data-br="Leva um minuto para preencher. Depois marcamos 20 minutos com você. Você sai sabendo quantas horas está perdendo, mesmo que não avance.">Leva um minuto a preencher. Depois marcamos 20 minutos contigo. Saís com as horas que estás a perder, mesmo que não avances.</p>
-        <ul class="diag__passos">
-          <li>Respondemos em até 1 dia útil</li>
-          <li>Proposta em até 48 horas depois do diagnóstico</li>
-        </ul>
-      </div>
-
-      <form class="form" id="formulario" novalidate>
-        <div class="form__grelha">
-          <label class="campo"><span data-br="Seu nome">O teu nome</span><input name="nome" autocomplete="name" required></label>
-          <label class="campo"><span>Nome do negócio</span><input name="negocio" autocomplete="organization" required></label>
-          <label class="campo"><span>Tipo de negócio</span>
-            <select name="tipo" required>
-              <option value="" data-br="Escolha…">Escolhe…</option>
-              <option>Clínica médica ou dentária</option>
-              <option>Clínica de estética</option>
-              <option>Academia ou estúdio</option>
-              <option>Escola de idiomas</option>
-              <option>Professor ou mentor</option>
-              <option>Criador que vende aulas</option>
-              <option>Outro</option>
-            </select>
-          </label>
-          <label class="campo"><span>Quantos clientes ou alunos ativos?</span>
-            <select name="clientes" required>
-              <option value="" data-br="Escolha…">Escolhe…</option>
-              <option>Menos de 30</option>
-              <option>30 a 100</option>
-              <option>100 a 300</option>
-              <option>Mais de 300</option>
-            </select>
-          </label>
-          <label class="campo campo--largo"><span data-br="O que mais toma o seu tempo hoje?">O que te ocupa mais tempo hoje?</span>
-            <select name="dor" required>
-              <option value="" data-br="Escolha…">Escolhe…</option>
-              <option data-br="Confirmar agendamentos e faltas" value="Confirmar marcações e faltas">Confirmar marcações e faltas</option>
-              <option>Cobrar mensalidades</option>
-              <option>Responder sempre às mesmas perguntas</option>
-              <option data-br="Gerenciar turmas e lista de espera" value="Gerir turmas e lista de espera">Gerir turmas e lista de espera</option>
-              <option>Outra coisa</option>
-            </select>
-          </label>
-          <label class="campo"><span>WhatsApp</span><input name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required></label>
-          <label class="campo"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
-          <label class="campo campo--largo"><span data-br="Como você conheceu a Oddwork?">Como conheceste a Oddwork?</span>
-            <select name="origem">
-              <option value="" data-br="Escolha…">Escolhe…</option>
-              <option>Instagram ou TikTok</option>
-              <option>Live ou YouTube</option>
-              <option>Recebi um email</option>
-              <option>Recebi uma chamada ou visita</option>
-              <option>Indicação</option>
-              <option>Google</option>
-              <option>Outro</option>
-            </select>
-          </label>
-        </div>
-        <input type="hidden" name="pais">
-        <div class="isco" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
-        <label class="consent"><input type="checkbox" name="consentimento" required><span data-br="Aceito que a Oddwork use estes dados para me contatar sobre o diagnóstico, conforme a &lt;a href=&quot;privacidade.html&quot;&gt;política de privacidade&lt;/a&gt;.">Aceito que a Oddwork use estes dados para me contactar sobre o diagnóstico, conforme a <a href="privacidade.html">política de privacidade</a>.</span></label>
-        <p class="form__erro" id="formulario-erro" role="alert" hidden></p>
-        <button class="botao botao--largo" id="formulario-botao" type="submit">Pedir diagnóstico</button>
-      </form>
-
-      <div class="form__ok" id="formulario-sucesso" hidden tabindex="-1">
-        <span class="garantia__selo" aria-hidden="true">✓</span>
-        <h3>Pedido recebido</h3>
-        <p data-br="Vamos falar com você pelo WhatsApp em até 1 dia útil para marcar os 20 minutos.">Vamos falar contigo pelo WhatsApp em até 1 dia útil para marcar os 20 minutos.</p>
-      </div>
+    <!-- ============ CTA final ============ -->
+    <section class="lp-final" aria-labelledby="final-titulo">
+      <h2 id="final-titulo">Pede o teu diagnóstico grátis</h2>
+      <div data-form-lugar="final"></div>
+      <a class="lp-whats" href="#" data-whats data-rastrear="lp-whats-final"><svg aria-hidden="true"><use href="#i-whats"/></svg>Prefiro falar no WhatsApp</a>
     </section>
   </main>
 
-  <footer class="rodape">
-    <div class="rodape__marca">
-      <a class="marca" href="#" aria-label="Oddwork, início"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
-      <p>We think differently. We work oddly.</p>
-    </div>
+  <footer class="rodape lp-rodape">
     <nav class="rodape__links" aria-label="Rodapé">
-      <a href="mailto:geral@theoddwork.com">geral@theoddwork.com</a>
-      <a href="https://www.instagram.com/_oddwork/" rel="noopener">Instagram</a>
-      <a href="privacidade.html">Privacidade</a>
-      <a href="termos.html">Termos</a>
+      <a href="/privacidade.html">Privacidade</a>
+      <a href="/termos.html">Termos</a>
       <button type="button" class="link" data-abrir-cookies>Cookies</button>
     </nav>
     <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
   </footer>
 
-  <div class="barra" id="barra" aria-hidden="true">
-    <a class="botao botao--largo" href="#diagnostico" tabindex="-1" data-rastrear="cta-barra">Pedir diagnóstico grátis</a>
+  <!-- Barra fixa no telemóvel -->
+  <div class="barra lp-barra" id="barra-lp" aria-hidden="true">
+    <a class="botao" href="#diagnostico" data-ir-form tabindex="-1" data-rastrear="lp-cta-barra">Pedir diagnóstico grátis</a>
+    <a class="lp-barra__whats" href="#" data-whats tabindex="-1" aria-label="Falar no WhatsApp" data-rastrear="lp-whats-barra"><svg aria-hidden="true"><use href="#i-whats"/></svg></a>
   </div>
+
+  <!-- ============ Formulário (usado no topo e no fim) ============ -->
+  <template id="tpl-form">
+    <div class="lp-form-caixa">
+      <form class="lp-form" data-passo="1" novalidate>
+        <div class="lp-form__cabeca">
+          <p class="lp-form__titulo">Pede o teu diagnóstico grátis</p>
+        </div>
+        <label class="campo"><span>O teu nome</span><input name="nome" autocomplete="name" required maxlength="120"></label>
+        <div class="campo">
+          <span id="ID-whats-rot">WhatsApp</span>
+          <div class="lp-tel">
+            <select name="indicativo" aria-label="Indicativo do país">
+              <option value="+351" selected>🇵🇹 +351</option>
+              <option value="+55">🇧🇷 +55</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+41">🇨🇭 +41</option>
+              <option value="+352">🇱🇺 +352</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="">Outro</option>
+            </select>
+            <input name="whatsapp" type="tel" autocomplete="tel-national" inputmode="tel" required maxlength="24" aria-labelledby="ID-whats-rot" placeholder="912 345 678">
+          </div>
+        </div>
+        <fieldset class="lp-chips" data-obrigatorio="tipo">
+          <legend>Tipo de negócio</legend>
+          <label><input type="radio" name="tipo" value="Clínica médica ou dentária"><span>Clínica</span></label>
+          <label><input type="radio" name="tipo" value="Clínica de estética"><span>Estética</span></label>
+          <label><input type="radio" name="tipo" value="Academia ou estúdio"><span>Academia/Estúdio</span></label>
+          <label><input type="radio" name="tipo" value="Escola"><span>Escola</span></label>
+          <label><input type="radio" name="tipo" value="Professor ou mentor"><span>Professor/Mentor</span></label>
+          <label><input type="radio" name="tipo" value="Outro"><span>Outro</span></label>
+        </fieldset>
+        <div class="isco" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <p class="form__erro" role="alert" hidden></p>
+        <button class="botao botao--largo" type="submit">Quero o meu diagnóstico grátis</button>
+        <p class="lp-form__legal">Ao enviar, aceitas que te contactemos pelo WhatsApp sobre o diagnóstico (<a href="/privacidade.html">privacidade</a>).</p>
+      </form>
+
+      <form class="lp-form" data-passo="2" novalidate hidden>
+        <div class="lp-form__cabeca">
+          <p class="lp-form__titulo" tabindex="-1">Recebido<span data-nome></span>! Só mais 4 perguntas</p>
+          <span class="lp-form__passo">Passo 2 de 2</span>
+        </div>
+        <label class="campo"><span>Nome do negócio</span><input name="negocio" autocomplete="organization" maxlength="160"></label>
+        <fieldset class="lp-chips">
+          <legend>Clientes ou alunos ativos</legend>
+          <label><input type="radio" name="clientes" value="Menos de 30"><span>Menos de 30</span></label>
+          <label><input type="radio" name="clientes" value="30 a 100"><span>30 a 100</span></label>
+          <label><input type="radio" name="clientes" value="100 a 300"><span>100 a 300</span></label>
+          <label><input type="radio" name="clientes" value="Mais de 300"><span>Mais de 300</span></label>
+        </fieldset>
+        <fieldset class="lp-chips">
+          <legend>O que te ocupa mais tempo hoje?</legend>
+          <label><input type="radio" name="dor" value="Confirmar marcações e faltas"><span>Confirmar marcações e faltas</span></label>
+          <label><input type="radio" name="dor" value="Cobrar mensalidades"><span>Cobrar mensalidades</span></label>
+          <label><input type="radio" name="dor" value="Responder sempre às mesmas perguntas"><span>Responder sempre às mesmas perguntas</span></label>
+          <label><input type="radio" name="dor" value="Gerir turmas e lista de espera"><span>Gerir turmas e lista de espera</span></label>
+          <label><input type="radio" name="dor" value="Outra coisa"><span>Outra coisa</span></label>
+        </fieldset>
+        <label class="campo"><span>Website ou Instagram <small>(opcional)</small></span><input name="site" maxlength="200" placeholder="@onegocio ou onegocio.pt"></label>
+        <p class="form__erro" role="alert" hidden></p>
+        <button class="botao botao--largo" type="submit">Enviar e escolher o horário</button>
+        <button class="link lp-form__saltar" type="button" data-saltar>Saltar este passo</button>
+      </form>
+
+      <div class="lp-form lp-form--feito" hidden>
+        <span class="garantia__selo" aria-hidden="true">✓</span>
+        <p class="lp-form__titulo">Já recebemos o teu pedido</p>
+        <a class="botao botao--largo" href="/diagnostico/obrigado/">Ver o próximo passo</a>
+      </div>
+    </div>
+  </template>
 
   <!-- ============ Cookies ============ -->
   <div class="cookies" id="cookies" role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto" hidden>
@@ -400,29 +262,23 @@
       </svg>
       <div>
         <h2 id="cookies-titulo">Podemos usar cookies?</h2>
-        <p id="cookies-texto">
-          <span data-m="pt">Usamos os essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado, para o melhorarmos. Nunca vendemos dados.</span>
-          <span data-m="br">Usamos os essenciais para o site funcionar. Com a sua autorização, medimos também como o site é usado, para melhorá-lo. Nunca vendemos dados.</span>
-          <a href="privacidade.html#cookies">Saber mais</a>
-        </p>
+        <p id="cookies-texto">Usamos os essenciais para o site funcionar. Com a tua autorização, medimos também como o site é usado e de que anúncio vieste, para o melhorarmos. Nunca vendemos dados. <a href="/privacidade.html#cookies">Saber mais</a></p>
       </div>
     </div>
-
     <div class="cookies__opcoes" id="cookies-opcoes" hidden>
       <label class="opcao">
-        <span class="opcao__texto"><b>Essenciais</b><small><span data-m="pt">Guardam a tua escolha de país e de cookies. Sempre ligados.</span><span data-m="br">Guardam sua escolha de país e de cookies. Sempre ligados.</span></small></span>
+        <span class="opcao__texto"><b>Essenciais</b><small>Guardam a tua escolha de cookies. Sempre ligados.</small></span>
         <span class="interruptor"><input type="checkbox" checked disabled><i></i></span>
       </label>
       <label class="opcao">
-        <span class="opcao__texto"><b>Estatísticas</b><small><span data-m="pt">De onde vens, que páginas vês e que botões usas. Só nós vemos.</span><span data-m="br">De onde você vem, que páginas vê e que botões usa. Só nós vemos.</span></small></span>
+        <span class="opcao__texto"><b>Estatísticas</b><small>De onde vens, que páginas vês e que botões usas (Google Analytics e o nosso registo).</small></span>
         <span class="interruptor"><input type="checkbox" id="ck-estatisticas"><i></i></span>
       </label>
       <label class="opcao">
-        <span class="opcao__texto"><b>Marketing</b><small><span data-m="pt">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span><span data-m="br">Para mostrar anúncios a quem já nos visitou (Meta, TikTok, Google).</span></small></span>
+        <span class="opcao__texto"><b>Marketing</b><small>Para medir os anúncios e mostrá-los a quem já nos visitou (Meta, Google).</small></span>
         <span class="interruptor"><input type="checkbox" id="ck-marketing"><i></i></span>
       </label>
     </div>
-
     <div class="cookies__acoes">
       <button type="button" class="ck-botao ck-botao--claro" data-cookies="recusar">Recusar</button>
       <button type="button" class="ck-botao ck-botao--linha" data-cookies="personalizar" aria-expanded="false" aria-controls="cookies-opcoes">Escolher</button>
@@ -431,9 +287,12 @@
     </div>
   </div>
 
-  <script src="config.js"></script>
-  <script src="cookies.js"></script>
-  <script src="rastreio.js"></script>
-  <script src="site.js"></script>
+  <script src="/config.js"></script>
+  <script src="/cookies.js"></script>
+  <script src="/anuncios.js"></script>
+  <script src="/diagnostico/lp.js"></script>
+  <script type="module" src="/diagnostico/lp3d.js"></script>
+  <script src="/rastreio.js"></script>
+  <script src="/site.js"></script>
 </body>
 </html>
