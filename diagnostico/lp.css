@@ -332,3 +332,35 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
   /* Barra de baixo escura, como a página */
   .lp .lp-barra { background: rgba(19,26,43,.92); border-top-color: rgba(255,255,255,.08); }
 }
+
+/* ================================================================
+   Telemóvel: o topo ocupa o ecrã todo e só tem o essencial —
+   o símbolo grande a girar devagar, o título e um botão.
+   O formulário vem a seguir, ao deslizar.
+   ================================================================ */
+.lp-hero__cta, .lp-hero__desce { display: none; }
+@media (max-width: 900px) {
+  .lp .noite .topo { justify-content: center; padding-top: 1.1rem; }
+  .lp-hero { display: block; padding: 0 1.25rem 3rem; overflow: visible; }
+  .lp-hero .hero__texto { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: calc(100svh - 4.2rem); padding: 0 0 4.5rem; position: relative; }
+
+  .lp-hero .lp-logo3d { order: -1; display: block; position: relative; inset: auto; width: min(66vw, 17rem); height: min(66vw, 17rem); margin: 0 0 2.4rem; translate: none; }
+  .lp-hero .lp-logo3d::before { inset: -8%; opacity: 1; background: radial-gradient(closest-side, rgba(242,106,33,.30), rgba(242,106,33,.08) 55%, transparent); filter: blur(18px); animation: lp-respirar 6s ease-in-out infinite; }
+  .lp-hero .lp-logo3d__plano { width: 100%; color: #F4F5F9; opacity: 1; filter: drop-shadow(0 18px 40px rgba(0,0,0,.45)); animation: lp-entrar 1.4s cubic-bezier(.2,.8,.2,1) both, lp-girar 70s linear 1.4s infinite; }
+
+  .lp-hero h1 { order: 0; max-width: 15ch; font-size: clamp(2rem, 8.4vw, 2.6rem); line-height: 1.08; letter-spacing: -.03em; }
+  .lp-hero .hero__lead { order: 0; margin: 1rem auto 0; max-width: 26ch; font-size: 1rem; color: var(--noite-suave); }
+  .lp-hero__cta { display: inline-flex; margin-top: 2rem; padding: 0 1.8rem; box-shadow: 0 14px 40px -12px rgba(242,106,33,.65); }
+
+  /* Indicação discreta para deslizar */
+  .lp-hero__desce { display: block; position: absolute; left: 50%; bottom: 1.2rem; width: 1px; height: 2.6rem; translate: -50% 0; background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.35)); overflow: hidden; }
+  .lp-hero__desce::after { content: ""; position: absolute; left: -1px; top: -.6rem; width: 3px; height: .6rem; border-radius: 2px; background: var(--laranja); animation: lp-descer 2.2s cubic-bezier(.6,0,.3,1) infinite; }
+
+  .lp-hero__form { margin-top: 2rem; }
+}
+@keyframes lp-entrar { from { opacity: 0; transform: translate(-50%, -50%) scale(.82) rotate(-50deg); } to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); } }
+@keyframes lp-respirar { 50% { opacity: .65; transform: scale(.94); } }
+@keyframes lp-descer { to { top: 2.6rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .lp-hero .lp-logo3d__plano, .lp-hero .lp-logo3d::before, .lp-hero__desce::after { animation: none; }
+}
