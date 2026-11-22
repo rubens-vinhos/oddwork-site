@@ -98,18 +98,22 @@ function fumoTextura(THREE) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
+// Textura de fumo: ruído fractal (fiapos) dentro de uma bola suave, com luz por cima e sombra por baixo.
 function nuvemTextura(THREE) {
-  const cv = document.createElement("canvas"); cv.width = cv.height = 256;
-  const x = cv.getContext("2d");
-  for (let i = 0; i < 16; i++) {
-    const a = Math.random() * 6.28, r = Math.random() * 60, cx = 128 + Math.cos(a) * r, cy = 128 + Math.sin(a) * r, raio = 40 + Math.random() * 55;
-    const g = x.createRadialGradient(cx, cy, 0, cx, cy, raio);
-    g.addColorStop(0, "rgba(255,255,255,.22)"); g.addColorStop(1, "rgba(255,255,255,0)");
-    x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+  const N = 128, cv = document.createElement("canvas"); cv.width = cv.height = N;
+  const x = cv.getContext("2d"), img = x.createImageData(N, N);
+  const ox = Math.random() * 1000, oy = Math.random() * 1000;
+  const fbm = (u, v) => { let s = 0, a = 0.5, f = 1; for (let o = 0; o < 5; o++) { s += a * ruido(u * f + ox, v * f + oy); a *= 0.5; f *= 2.03; } return s; };
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const u = i / N - 0.5, v = j / N - 0.5, r = Math.hypot(u, v) * 2;
+    // a borda é deformada pelo ruído, para não ser um círculo
+    const n = fbm(i / 22, j / 22), borda = 1 - Math.min(1, Math.max(0, (r + (n - 0.5) * 0.55 - 0.25) / 0.7));
+    const dens = Math.max(0, Math.min(1, (n - 0.3) * 1.9)) * borda * borda;
+    const luz = 0.72 + 0.28 * Math.max(0, Math.min(1, 0.5 - v * 1.4 - u * 0.4)) + (n - 0.5) * 0.25;
+    const k = (j * N + i) * 4, c = Math.max(0, Math.min(255, luz * 255));
+    img.data[k] = c; img.data[k + 1] = c; img.data[k + 2] = c; img.data[k + 3] = dens * 255;
   }
-  const m = x.createRadialGradient(128, 128, 60, 128, 128, 128);
-  m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(1, "rgba(0,0,0,1)");
-  x.globalCompositeOperation = "destination-out"; x.fillStyle = m; x.fillRect(0, 0, 256, 256);
+  x.putImageData(img, 0, 0);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
@@ -187,27 +191,68 @@ function arrancar(THREE) {
   const R = Math.random;
   const suaveK = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
   const tFumo = fumoTextura(THREE);
-  const tNuvens = [0, 1, 2].map(() => nuvemTextura(THREE));
+  const tNuvens = [0, 1, 2, 3, 4].map(() => nuvemTextura(THREE));
 
-  // Fumo: cada nuvem nasce com tamanho, rumo e duração próprios, sobe devagar e desvanece sem cortes.
-  const NFU = telemovel ? 22 : 36;
-  const corQuente = new THREE.Color(0xa08276), corFria = new THREE.Color(0x737d96);
+  // Fumo: colunas que saem da cratera e das fendas. Cada baforada nasce pequena e densa,
+  // abre ao subir, inclina com o vento, perde a cor da brasa e desfaz-se devagar no alto.
+  const NFU = telemovel ? 70 : 130;
+  const corBrasa = new THREE.Color(0xb0704a), corFumo = new THREE.Color(0x6a738a), corAlto = new THREE.Color(0x485067);
+  const FONTES = [
+    { x: -40, z: -120, ritmo: 8, forca: 1 },    // atrás da nave, a coluna principal
+    { x: 150, z: -95, ritmo: 5, forca: 0.8 },
+    { x: -340, z: 20, ritmo: 3.2, forca: 0.65 }, // fendas dos lados
+    { x: 345, z: 0, ritmo: 3, forca: 0.6 },
+  ];
+  for (const f of FONTES) { f.y = altura(f.x, f.z); f.acum = R(); }
   const fumos = [];
-  const nascerFumo = (f, poeira = false) => {
-    const a = R() * Math.PI * 2, r = poeira ? 40 + R() * 80 : R() * 150;
-    f.p.set(Math.cos(a) * r, poeira ? 20 + R() * 30 : 10 + R() * 50, Math.sin(a) * r * 0.7 - 30);
-    if (poeira) { const v = 220 + R() * 260; f.v.set(Math.cos(a) * v, 40 + R() * 90, Math.sin(a) * v * 0.6); }
-    else f.v.set(-8 - R() * 16, 22 + R() * 30, (R() - 0.5) * 8);
-    f.idade = 0; f.vida = poeira ? 2.4 + R() * 1.8 : 7 + R() * 6;
-    f.t0 = (poeira ? 140 : 70) + R() * 90; f.cresce = poeira ? 90 + R() * 60 : 22 + R() * 26;
-    f.op = poeira ? 0.22 + R() * 0.12 : 0.08 + R() * 0.1; f.giro = (R() - 0.5) * 0.25; f.semente = R() * 100; f.poeira = poeira;
-    f.s.material.map = tNuvens[(R() * 3) | 0]; f.s.material.rotation = R() * 6.28;
+  const nascerFumo = (f, fonte, poeira = false) => {
+    if (poeira) {
+      const a = R() * Math.PI * 2, v = 200 + R() * 240;
+      f.p.set(Math.cos(a) * (40 + R() * 70), 15 + R() * 25, Math.sin(a) * (40 + R() * 70) * 0.7);
+      f.v.set(Math.cos(a) * v, 30 + R() * 70, Math.sin(a) * v * 0.6);
+      f.vida = 2.6 + R() * 1.8; f.t0 = 90 + R() * 60; f.cresce = 120 + R() * 60; f.op = 0.32 + R() * 0.12;
+    } else {
+      f.p.set(fonte.x + (R() - 0.5) * 30, fonte.y + 6 + R() * 10, fonte.z + (R() - 0.5) * 24);
+      f.v.set((R() - 0.5) * 8, 75 + R() * 35, (R() - 0.5) * 6);
+      f.vida = 6.5 + R() * 4; f.t0 = 22 + R() * 16; f.cresce = 26 + R() * 18; f.op = (0.55 + R() * 0.2) * fonte.forca;
+    }
+    f.idade = 0; f.poeira = poeira; f.vivo = true; f.giro = (R() - 0.5) * 0.5; f.semente = R() * 100; f.v0 = f.v.y;
+    f.s.material.map = tNuvens[(R() * tNuvens.length) | 0]; f.s.material.rotation = R() * 6.28;
   };
-  for (let i = 0; i < NFU + 14; i++) {
+  for (let i = 0; i < NFU + 16; i++) {
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tNuvens[0], transparent: true, opacity: 0, depthWrite: false }));
-    const f = { s, p: s.position, v: new THREE.Vector3(), vivo: false, extra: i >= NFU };
-    cena.add(s); fumos.push(f);
+    s.visible = false; cena.add(s);
+    fumos.push({ s, p: s.position, v: new THREE.Vector3(), vivo: false, extra: i >= NFU, idade: 0, vida: 1 });
   }
+  let proxFumo = 0;
+  const soltarFumo = (fonte) => {
+    for (let n = 0; n < NFU; n++) {
+      const f = fumos[proxFumo]; proxFumo = (proxFumo + 1) % NFU;
+      if (!f.vivo) { nascerFumo(f, fonte); return f; }
+    }
+    return null;
+  };
+  const atualizarFumo = (f, dt) => {
+    f.idade += dt;
+    if (f.idade >= f.vida) { f.vivo = false; f.s.visible = false; return; }
+    const k = f.idade / f.vida;
+    if (f.poeira) f.v.multiplyScalar(Math.max(0, 1 - dt * 2.4));
+    else {
+      f.v.y = f.v0 * Math.exp(-f.idade * 0.22) + 8;                 // impulso quente que vai perdendo força
+      f.v.x += (6 + f.p.y * 0.035 - f.v.x) * dt * 0.6;               // vento, mais forte em cima
+    }
+    f.p.addScaledVector(f.v, dt);
+    f.p.x += Math.sin(f.idade * 1.1 + f.semente) * 9 * dt;           // remoinhos
+    f.p.z += Math.cos(f.idade * 0.9 + f.semente) * 6 * dt;
+    f.s.material.rotation += f.giro * Math.exp(-f.idade * 0.3) * dt;
+    f.s.scale.setScalar(f.t0 + f.cresce * Math.pow(f.idade, 0.85));
+    const alto = 1 - suaveK(380, 600, f.p.y);
+    f.s.material.opacity = f.op * suaveK(0, 0.08, k) * Math.pow(1 - k, 1.7) * alto;
+    const c = f.s.material.color;
+    if (f.poeira) c.copy(corFumo).lerp(corBrasa, 0.25);
+    else { c.copy(corBrasa).lerp(corFumo, suaveK(0, 0.3, k)); c.lerp(corAlto, suaveK(0.4, 1, k)); }
+    f.s.visible = true;
+  };
 
   // Faíscas: sobem das fendas com turbulência; de vez em quando, um jato que sobe e cai.
   const NF = telemovel ? 110 : 180;
@@ -341,28 +386,18 @@ function arrancar(THREE) {
     brasa.intensity = aceso * (4000 * resp + golpe * 16000);
     const dt = ultimo === null ? 0 : Math.min(0.05, (agora - ultimo) / 1000); ultimo = agora;
     const ativo = d >= 0;
-    // no impacto: nuvem de poeira e um grande jato de faíscas
+    // no impacto: nuvem de poeira para os lados e um grande jato de faíscas
     if (ativo && !impacto) {
       impacto = true;
-      for (const f of fumos) if (f.extra) { nascerFumo(f, true); f.vivo = true; }
+      for (const f of fumos) if (f.extra) nascerFumo(f, null, true);
       for (let i = 0; i < 70; i++) lancarFaisca(true, (R() - 0.5) * 80, (R() - 0.5) * 60);
-      for (const f of fumos) if (!f.extra) { nascerFumo(f); f.idade = R() * f.vida * 0.6; f.vivo = true; }
     }
-    // fumo
-    for (const f of fumos) {
-      if (!f.vivo) { f.s.material.opacity = 0; continue; }
-      f.idade += dt;
-      if (f.idade >= f.vida) { if (f.extra) { f.vivo = false; f.s.material.opacity = 0; continue; } nascerFumo(f); }
-      const k = f.idade / f.vida;
-      if (f.poeira) f.v.multiplyScalar(Math.max(0, 1 - dt * 2.2));
-      f.p.addScaledVector(f.v, dt);
-      f.p.x += Math.sin(f.idade * 0.6 + f.semente) * 6 * dt;
-      f.s.material.rotation += f.giro * dt;
-      f.s.scale.setScalar(f.t0 + f.cresce * f.idade);
-      const alto = 1 - suaveK(200, 430, f.p.y); // desaparece antes de chegar ao topo
-      f.s.material.opacity = f.op * suaveK(0, 0.18, k) * (1 - suaveK(0.4, 1, k)) * alto;
-      f.s.material.color.copy(corQuente).lerp(corFria, suaveK(0, 0.6, k));
+    // fumo: cada fonte solta baforadas a um ritmo que oscila, para nunca parecer em série
+    if (ativo) for (const fo of FONTES) {
+      fo.acum += dt * fo.ritmo * (0.7 + 0.6 * ruido(agora / 1400, fo.x));
+      while (fo.acum >= 1) { fo.acum -= 1; soltarFumo(fo); }
     }
+    for (const f of fumos) if (f.vivo) atualizarFumo(f, dt);
     // faíscas contínuas + jatos ao acaso
     if (ativo) {
       for (let i = 0, n = Math.random() < dt * 28 ? 1 : 0; i < n; i++) lancarFaisca(false);
