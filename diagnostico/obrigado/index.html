@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261122f">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122f">
+  <link rel="stylesheet" href="/site.css?v=20261122h">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122h">
   <script>
     // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
     (function (d) {
@@ -23,7 +23,7 @@
   </script>
   <link rel="stylesheet" href="/assets/transicao.css?v=2">
 </head>
-<body class="lp">
+<body class="lp lp-obrigado">
   <div class="carregador" data-carregador aria-hidden="true">
     <div class="carregador__fundo"></div>
     <svg class="carregador__simbolo" viewBox="-420 -420 840 840" fill="currentColor"><g class="carregador__giro">
@@ -49,33 +49,35 @@
     </defs>
   </svg>
 
-  <div class="noite">
+  <div class="noite ok-noite">
     <header class="topo">
-      <span class="marca" aria-label="Oddwork"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></span>
+      <a class="marca" href="/" aria-label="Oddwork, página inicial"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
     </header>
     <section class="lp-ok" aria-labelledby="ok-titulo">
-      <div class="obrigado__selo" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7.5 7.5L38 19"/></svg></div>
-      <h1 id="ok-titulo">Pedido recebido<span data-nome></span>!</h1>
-      <p class="lp-ok__lead" data-sem-calendario>Falta só combinar o dia e a hora dos 20 minutos. Vamos enviar-te uma mensagem no WhatsApp em até 1 dia útil.</p>
-      <p class="lp-ok__lead" data-com-calendario hidden>Falta só escolher o dia e a hora dos 20 minutos.</p>
-      <a class="lp-whats lp-whats--cheio" href="#" data-whats-ok data-sem-calendario><svg aria-hidden="true"><use href="#i-whats"/></svg>Marcar já pelo WhatsApp</a>
+      <div class="lp-logo3d ok-logo" data-logo3d aria-hidden="true">
+        <svg class="lp-logo3d__plano" viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg>
+      </div>
+      <p class="ok-estado ok-entra" style="--o:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>Pedido recebido</p>
+      <h1 id="ok-titulo" class="ok-entra" style="--o:1">Obrigado<span data-nome></span>.</h1>
+      <p class="lp-ok__lead ok-entra" style="--o:2" data-sem-calendario>Falta só combinar o dia e a hora dos 20 minutos. Vamos enviar-te uma mensagem no WhatsApp em até 1 dia útil.</p>
+      <p class="lp-ok__lead ok-entra" style="--o:2" data-com-calendario hidden>Falta só escolher o dia e a hora dos 20 minutos.</p>
+      <a class="botao ok-whats ok-entra" style="--o:3" href="#" data-whats-ok data-sem-calendario><svg aria-hidden="true"><use href="#i-whats"/></svg>Marcar já pelo WhatsApp</a>
+      <span class="lp-hero__desce ok-desce" aria-hidden="true"></span>
     </section>
   </div>
 
-  <main id="conteudo">
+  <main id="conteudo" class="ok-main">
     <section class="lp-calendario" data-com-calendario hidden aria-label="Escolher horário">
       <div id="calendario"></div>
     </section>
 
-    <section class="bloco" aria-labelledby="chamada-titulo">
-      <div class="bloco__cabeca">
-        <h2 id="chamada-titulo">O que acontece na chamada</h2>
-        <p>20 minutos por videochamada, sem compromisso.</p>
-      </div>
-      <ol class="passos lp-ok__passos">
-        <li><span class="passos__n">1</span><h3>Medimos as horas</h3><p>Quantas horas por semana vão para confirmar, lembrar, cobrar e responder.</p></li>
-        <li><span class="passos__n">2</span><h3>Vemos as tuas regras</h3><p>Turmas, prazos para cancelar, planos e forma de cobrar.</p></li>
-        <li><span class="passos__n">3</span><h3>Recebes a proposta</h3><p>Em até 48 horas, com as horas que poupas e o preço. Se não avançares, ficas com os números.</p></li>
+    <section class="ok-chamada" aria-labelledby="chamada-titulo">
+      <h2 id="chamada-titulo" class="ok-revela">O que acontece na chamada</h2>
+      <p class="ok-chamada__sub ok-revela">20 minutos por videochamada, sem compromisso.</p>
+      <ol class="ok-passos">
+        <li class="ok-revela"><span class="ok-passos__n">1</span><div><h3>Medimos as horas</h3><p>Quantas horas por semana vão para confirmar, lembrar, cobrar e responder.</p></div></li>
+        <li class="ok-revela"><span class="ok-passos__n">2</span><div><h3>Vemos as tuas regras</h3><p>Turmas, prazos para cancelar, planos e forma de cobrar.</p></div></li>
+        <li class="ok-revela"><span class="ok-passos__n">3</span><div><h3>Recebes a proposta</h3><p>Em até 48 horas, com as horas que poupas e o preço. Se não avançares, ficas com os números.</p></div></li>
       </ol>
     </section>
   </main>
@@ -100,6 +102,18 @@
   <script src="/config.js"></script>
   <script src="/anuncios.js"></script>
   <script src="/rastreio.js"></script>
+  <script type="module" src="/diagnostico/lp3d.js?v=20261122h"></script>
+  <script>
+    // Os passos aparecem ao chegar ao ecrã.
+    (function () {
+      var els = document.querySelectorAll(".ok-revela");
+      if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("visto"); }); return; }
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("visto"); io.unobserve(e.target); } });
+      }, { rootMargin: "0px 0px -12% 0px" });
+      els.forEach(function (e) { io.observe(e); });
+    })();
+  </script>
   <script>
     (function () {
       var CFG = window.ODDWORK || {};

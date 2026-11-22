@@ -80,6 +80,47 @@
     if (el) el.textContent = nome ? ", " + nome.split(/\s+/)[0] : "";
   }
 
+  // ---------- Animações do formulário ----------
+  var espera = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  // Botão de enviar: o texto sai, aparece um anel a girar; no fim, um visto.
+  function botaoAEnviar(b) {
+    if (!b.querySelector(".botao__estado")) {
+      var e = document.createElement("span"); e.className = "botao__estado"; e.setAttribute("aria-hidden", "true");
+      e.innerHTML = '<svg viewBox="0 0 24 24"><circle class="botao__anel" cx="12" cy="12" r="9"/><path class="botao__visto" d="M7 12.5l3.2 3.2L17 9"/></svg>';
+      b.appendChild(e);
+    }
+    b.disabled = true; b.setAttribute("aria-busy", "true");
+    b.classList.remove("a-feito"); b.classList.add("a-enviar");
+  }
+  function botaoFeito(b) { b.classList.add("a-feito"); b.removeAttribute("aria-busy"); return espera(semMovimento ? 0 : 650); }
+  function botaoNormal(b) { b.classList.remove("a-enviar", "a-feito"); b.disabled = false; b.removeAttribute("aria-busy"); }
+
+  // Passar de uma etapa para a outra: a atual sai a subir e a desfocar, a caixa ajusta a altura, a nova entra campo a campo.
+  async function trocarPasso(caixa, qual) {
+    var atual = caixa.querySelector(".lp-form:not([hidden])");
+    if (semMovimento || !atual) { mostrar(caixa, qual); return; }
+    var h0 = caixa.offsetHeight;
+    caixa.style.height = h0 + "px";
+    atual.classList.add("a-sair-passo");
+    await espera(340);
+    atual.classList.remove("a-sair-passo");
+    mostrar(caixa, qual);
+    var nova = caixa.querySelector(".lp-form:not([hidden])");
+    caixa.style.height = "auto";
+    var h1 = caixa.offsetHeight;
+    caixa.style.height = h0 + "px"; void caixa.offsetHeight;
+    caixa.classList.add("a-mudar");
+    caixa.style.height = h1 + "px";
+    if (nova) {
+      Array.prototype.forEach.call(nova.children, function (f, i) { f.style.setProperty("--i", i); });
+      nova.style.setProperty("--atraso", "60ms");
+      nova.classList.remove("a-entrar"); void nova.offsetWidth; nova.classList.add("a-entrar");
+    }
+    await espera(560);
+    caixa.classList.remove("a-mudar"); caixa.style.height = "";
+    setTimeout(function () { if (nova) nova.classList.remove("a-entrar"); }, 1200);
+  }
+
   function erro(form, msg) {
     var p = form.querySelector(".form__erro");
     p.textContent = msg || ""; p.hidden = !msg;
@@ -130,7 +171,7 @@
     };
 
     var botao = form.querySelector('button[type="submit"]');
-    botao.disabled = true; botao.textContent = "A enviar…";
+    botaoAEnviar(botao);
     try {
       if (TESTE) {
         var lista = JSON.parse(localStorage.getItem("oddwork-pedidos-teste") || "[]");
@@ -147,18 +188,22 @@
       }
     } catch (e) {
       erro(form, "Não conseguimos enviar agora. Fala connosco no WhatsApp ou escreve para geral@theoddwork.com.");
-      botao.disabled = false; botao.textContent = "Quero o meu diagnóstico grátis";
+      botaoNormal(botao);
       return;
     }
+    await botaoFeito(botao);
 
     ss(CH_LEAD, { id: lead.id, nome: nome, passo: 1 });
     marcar("Lead", { content_category: tipo, variante: variante });
     if (window.oddworkEvento) window.oddworkEvento("pedido", {});
-    caixas.forEach(function (c) { mostrar(c, c === caixa ? 2 : "feito"); });
+    caixas.forEach(function (c) { if (c !== caixa) mostrar(c, "feito"); });
     preencherNome(caixa, nome);
+    var r = caixa.getBoundingClientRect();
+    if (r.top < 0 || r.top > innerHeight * .35) window.scrollTo({ top: scrollY + r.top - 16, behavior: semMovimento ? "auto" : "smooth" });
+    await trocarPasso(caixa, 2);
+    botaoNormal(botao);
     var titulo = caixa.querySelector('[data-passo="2"] .lp-form__titulo');
     titulo.focus({ preventScroll: true });
-    caixa.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth", block: "start" });
   }
 
   async function enviarPasso2(form, saltar) {
@@ -171,7 +216,7 @@
       var vazio = !dados.p_negocio && !dados.p_clientes && !dados.p_dor && !dados.p_site;
       if (vazio) { erro(form, "Responde a pelo menos uma pergunta, ou carrega em “Saltar este passo”."); return; }
       var botao = form.querySelector('button[type="submit"]');
-      botao.disabled = true; botao.textContent = "A enviar…";
+      botaoAEnviar(botao);
       try {
         if (TESTE) {
           var lista = JSON.parse(localStorage.getItem("oddwork-pedidos-teste") || "[]");
@@ -187,6 +232,7 @@
         }
       } catch (e) { /* o lead já está gravado; seguimos para a página seguinte */ }
       marcar("lead_qualified", { clientes: dados.p_clientes, dor: dados.p_dor });
+      await botaoFeito(botao);
     }
     lead.passo = 2;
     ss(CH_LEAD, lead);
@@ -288,6 +334,38 @@
       barra.querySelectorAll("a").forEach(function (a) { a.tabIndex = mostrar ? 0 : -1; });
     });
     alvos.forEach(function (a) { obs.observe(a); });
+  }
+
+  // ---------- Perguntas: abrir e fechar com a altura a deslizar ----------
+  document.querySelectorAll(".perguntas details").forEach(function (d) {
+    var sum = d.querySelector("summary");
+    if (!sum || !d.animate) return;
+    sum.addEventListener("click", function (e) {
+      if (semMovimento) return;
+      e.preventDefault();
+      if (d.dataset.anim) return;
+      d.dataset.anim = "1";
+      var aberto = d.open, h0 = d.offsetHeight;
+      if (aberto) d.classList.add("a-fechar"); else d.open = true;
+      var h1 = aberto ? sum.offsetHeight + (parseFloat(getComputedStyle(d).borderBottomWidth) || 0) : d.offsetHeight;
+      d.style.overflow = "hidden";
+      var a = d.animate({ height: [h0 + "px", h1 + "px"] }, { duration: aberto ? 380 : 480, easing: "cubic-bezier(.22,1,.36,1)" });
+      a.onfinish = function () {
+        if (aberto) d.open = false;
+        d.classList.remove("a-fechar"); d.style.overflow = ""; delete d.dataset.anim;
+      };
+    });
+  });
+
+  // ---------- Calculadora: o número salta quando muda ----------
+  var horasNum = document.getElementById("calc-horas");
+  if (horasNum && !semMovimento) {
+    var ultimo = horasNum.textContent;
+    new MutationObserver(function () {
+      if (horasNum.textContent === ultimo) return;
+      ultimo = horasNum.textContent;
+      horasNum.classList.remove("a-mudar"); void horasNum.offsetWidth; horasNum.classList.add("a-mudar");
+    }).observe(horasNum, { childList: true, characterData: true, subtree: true });
   }
 
   marcar("ViewContent", { content_name: "diagnostico", variante: variante });
