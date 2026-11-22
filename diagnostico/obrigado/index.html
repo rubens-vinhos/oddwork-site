@@ -12,10 +12,30 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261118d">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261118d">
+  <link rel="stylesheet" href="/site.css?v=20261122b">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122b">
+  <script>
+    // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
+    (function (d) {
+      d.classList.add("a-carregar");
+      try { if (!sessionStorage.getItem("oddwork-visto")) { d.classList.add("primeira-vez"); sessionStorage.setItem("oddwork-visto", "1"); } } catch (e) {}
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/assets/transicao.css?v=1">
 </head>
 <body class="lp">
+  <div class="carregador" data-carregador aria-hidden="true">
+    <div class="carregador__fundo"></div>
+    <svg class="carregador__simbolo" viewBox="-420 -420 840 840" fill="currentColor"><g class="carregador__giro">
+      <g><g class="carregador__pa" style="--i:0"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <g transform="rotate(120)"><g class="carregador__pa" style="--i:1"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <g transform="rotate(240)"><g class="carregador__pa" style="--i:2"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <circle class="carregador__centro" r="48" fill="#F26A21"/>
+    </g></svg>
+    <p class="carregador__marca">the<em>odd</em>work</p>
+    <div class="carregador__barra"><i></i></div>
+  </div>
+  <script src="/assets/transicao.js?v=1"></script>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
       <g id="pa">

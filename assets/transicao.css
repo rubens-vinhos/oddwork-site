@@ -1,0 +1,66 @@
+/* Ecrã de carregamento e transições entre páginas.
+   Ao abrir: o símbolo monta-se e gira enquanto a página carrega; quando está pronta,
+   o fundo desvanece e o símbolo voa até ao lugar do logo do topo.
+   Ao mudar de página: o ecrã escuro volta a entrar, suave, e a página nova carrega por trás. */
+
+.carregador { display: none; }
+.a-carregar .carregador, .a-sair .carregador {
+  position: fixed; inset: 0; z-index: 2000;
+  display: grid; place-content: center; justify-items: center; gap: 1.5rem;
+}
+.a-revelar .carregador { pointer-events: none; }
+.a-carregar:not(.a-revelar) { overflow: hidden; }
+
+.carregador__fundo {
+  position: absolute; inset: 0;
+  background: radial-gradient(40rem 30rem at 50% 45%, #1C2540, #131A2B 70%);
+  transition: opacity 1s cubic-bezier(.4, 0, .2, 1) .12s;
+}
+.a-revelar .carregador__fundo { opacity: 0; }
+
+.carregador__simbolo {
+  position: relative; width: clamp(6.5rem, 16vw, 8.5rem); overflow: visible; color: #F4F5F9;
+  filter: drop-shadow(0 0 36px rgba(242, 106, 33, .28));
+  transition: transform 1.05s cubic-bezier(.65, 0, .25, 1), opacity .45s ease .62s;
+}
+.a-revelar .carregador__simbolo { transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(var(--s, 1.35)); opacity: 0; }
+
+/* Gira sempre enquanto carrega */
+.carregador__giro { animation: c-girar 2.6s linear infinite; }
+.carregador__centro { transform-box: fill-box; transform-origin: center; }
+
+/* 1.ª visita: as pás entram de fora e o centro acende */
+.primeira-vez .carregador__pa { animation: c-pa .8s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--i) * 90ms + 60ms); }
+.primeira-vez .carregador__centro { animation: c-centro .6s cubic-bezier(.34, 1.8, .5, 1) .55s both; }
+
+.carregador__marca {
+  position: relative; margin: 0; color: #F4F5F9;
+  font: 600 clamp(1.35rem, 3.6vw, 1.7rem) "Plus Jakarta Sans", system-ui, sans-serif; letter-spacing: -.02em;
+  animation: c-marca .7s cubic-bezier(.16, 1, .3, 1) .35s both;
+  transition: opacity .3s ease, transform .4s ease;
+}
+.carregador__marca em { color: #F26A21; font-style: italic; }
+.primeira-vez .carregador__marca { animation-delay: .95s; }
+
+.carregador__barra { position: relative; width: 7.5rem; height: 2px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, .1); transition: opacity .3s ease; }
+.carregador__barra i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: #F26A21; border-radius: inherit; transition: width .35s ease; }
+
+.a-revelar .carregador__marca { opacity: 0; transform: translateY(-6px); }
+.a-revelar .carregador__barra { opacity: 0; }
+
+/* A sair para outra página: o ecrã volta a entrar */
+.a-sair .carregador__fundo { animation: c-aparecer .45s cubic-bezier(.4, 0, .2, 1) both; }
+.a-sair .carregador__simbolo { animation: c-chegar .5s cubic-bezier(.16, 1, .3, 1) both; }
+.a-sair .carregador__marca, .a-sair .carregador__barra { display: none; }
+
+/* Enquanto o ecrã está por cima, as animações do topo esperam */
+.a-carregar:not(.a-revelar) .hero *, .a-carregar:not(.a-revelar) .hero *::before { animation-play-state: paused !important; }
+
+@keyframes c-girar { to { transform: rotate(360deg); } }
+@keyframes c-pa { from { opacity: 0; transform: translateY(-320px) rotate(-35deg); } to { opacity: 1; transform: none; } }
+@keyframes c-centro { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes c-marca { from { opacity: 0; transform: translateY(10px); letter-spacing: .1em; } to { opacity: 1; transform: none; letter-spacing: -.02em; } }
+@keyframes c-aparecer { from { opacity: 0; } to { opacity: 1; } }
+@keyframes c-chegar { from { opacity: 0; transform: scale(.7) rotate(-60deg); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) { .carregador { display: none !important; } }

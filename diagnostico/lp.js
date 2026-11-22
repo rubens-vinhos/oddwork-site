@@ -190,7 +190,7 @@
     }
     lead.passo = 2;
     ss(CH_LEAD, lead);
-    location.href = OBRIGADO;
+    if (window.oddworkIr) window.oddworkIr(OBRIGADO); else location.href = OBRIGADO;
   }
 
   var comecou = false;
