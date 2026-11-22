@@ -12,7 +12,7 @@ function temWebGL() {
 // Alinha o logo pelo centro real do texto (título + frase), não da coluna:
 // as linhas do título são mais curtas do que a coluna.
 function centrarNoTexto() {
-  if (!lugar || !matchMedia("(min-width: 901px)").matches) { if (lugar) lugar.style.removeProperty("--desvio"); return; }
+  if (!lugar || !matchMedia("(min-width: 901px)").matches) { if (lugar) lugar.style.removeProperty("--desvio"); document.querySelector(".lp-hero__exemplos")?.style.removeProperty("--desvio"); return; }
   const r = document.createRange();
   let esq = Infinity, dir = -Infinity;
   for (const el of document.querySelectorAll(".lp-hero h1 [data-var], .lp-hero .hero__lead")) {
@@ -23,6 +23,9 @@ function centrarNoTexto() {
   if (!isFinite(esq)) return;
   const caixa = lugar.getBoundingClientRect();
   lugar.style.setProperty("--desvio", `${Math.round((esq + dir) / 2 - (caixa.left + caixa.right) / 2)}px`);
+  // o botão "Ver exemplos" fica centrado no mesmo eixo do texto e do logo
+  const ex = document.querySelector(".lp-hero__exemplos");
+  if (ex) ex.style.setProperty("--desvio", lugar.style.getPropertyValue("--desvio"));
 }
 if (lugar) {
   lugar.style.removeProperty("--desvio");

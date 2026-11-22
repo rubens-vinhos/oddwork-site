@@ -72,12 +72,11 @@
     caixas.forEach(function (c, i) {
       if (!lead) mostrar(c, 1);
       else if (lead.passo === 1 && i === 0) { mostrar(c, 2); preencherNome(c, lead.nome); }
-      else mostrar(c, "feito");
+      else { mostrar(c, "feito"); preencherNome(c, lead.nome); }
     });
   }
   function preencherNome(caixa, nome) {
-    var el = caixa.querySelector("[data-nome]");
-    if (el) el.textContent = nome ? ", " + nome.split(/\s+/)[0] : "";
+    caixa.querySelectorAll("[data-nome]").forEach(function (el) { el.textContent = nome ? ", " + nome.split(/\s+/)[0] : ""; });
   }
 
   // ---------- Animações do formulário ----------
