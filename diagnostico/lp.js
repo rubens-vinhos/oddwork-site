@@ -102,7 +102,7 @@
     var h0 = caixa.offsetHeight;
     caixa.style.height = h0 + "px";
     atual.classList.add("a-sair-passo");
-    await espera(340);
+    await espera(480);
     atual.classList.remove("a-sair-passo");
     mostrar(caixa, qual);
     var nova = caixa.querySelector(".lp-form:not([hidden])");
@@ -112,13 +112,11 @@
     caixa.classList.add("a-mudar");
     caixa.style.height = h1 + "px";
     if (nova) {
-      Array.prototype.forEach.call(nova.children, function (f, i) { f.style.setProperty("--i", i); });
-      nova.style.setProperty("--atraso", "60ms");
-      nova.classList.remove("a-entrar"); void nova.offsetWidth; nova.classList.add("a-entrar");
+      nova.classList.remove("a-entrar-passo"); void nova.offsetWidth; nova.classList.add("a-entrar-passo");
     }
-    await espera(560);
+    await espera(640);
     caixa.classList.remove("a-mudar"); caixa.style.height = "";
-    setTimeout(function () { if (nova) nova.classList.remove("a-entrar"); }, 1200);
+    setTimeout(function () { if (nova) nova.classList.remove("a-entrar-passo"); }, 1100);
   }
 
   function erro(form, msg) {
@@ -199,7 +197,7 @@
     caixas.forEach(function (c) { if (c !== caixa) mostrar(c, "feito"); });
     preencherNome(caixa, nome);
     var r = caixa.getBoundingClientRect();
-    if (r.top < 0 || r.top > innerHeight * .35) window.scrollTo({ top: scrollY + r.top - 16, behavior: semMovimento ? "auto" : "smooth" });
+    if (r.top < 0 || r.top > innerHeight * .35) { window.scrollTo({ top: scrollY + r.top - 16, behavior: semMovimento ? "auto" : "smooth" }); await espera(semMovimento ? 0 : 420); }
     await trocarPasso(caixa, 2);
     botaoNormal(botao);
     var titulo = caixa.querySelector('[data-passo="2"] .lp-form__titulo');

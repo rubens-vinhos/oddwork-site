@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261122i">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122i">
+  <link rel="stylesheet" href="/site.css?v=20261122k">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122k">
   <script>
     // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
     (function (d) {
@@ -54,15 +54,20 @@
       <a class="marca" href="/" aria-label="Oddwork, página inicial"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
     </header>
     <section class="lp-ok" aria-labelledby="ok-titulo">
-      <div class="lp-logo3d ok-logo" data-logo3d aria-hidden="true">
-        <svg class="lp-logo3d__plano" viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg>
+      <div class="ok-selo" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><defs><linearGradient id="ok-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB07A"/><stop offset=".55" stop-color="#F26A21"/><stop offset="1" stop-color="#D9520F"/></linearGradient></defs>
+          <circle class="ok-selo__fundo" cx="60" cy="60" r="52"/><circle class="ok-selo__anel" cx="60" cy="60" r="52"/><path class="ok-selo__visto" d="M40 61.5l13.5 13.5L81 46.5"/></svg>
       </div>
-      <p class="ok-estado ok-entra" style="--o:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>Pedido recebido</p>
-      <h1 id="ok-titulo" class="ok-entra" style="--o:1">Obrigado<span data-nome></span>.</h1>
-      <p class="lp-ok__lead ok-entra" style="--o:2" data-sem-calendario>Falta só combinar o dia e a hora dos 20 minutos. Vamos enviar-te uma mensagem no WhatsApp em até 1 dia útil.</p>
-      <p class="lp-ok__lead ok-entra" style="--o:2" data-com-calendario hidden>Falta só escolher o dia e a hora dos 20 minutos.</p>
+      <h1 id="ok-titulo" class="ok-entra" style="--o:0">Pedido recebido<span data-nome></span>.</h1>
+      <p class="lp-ok__lead ok-entra" style="--o:1" data-sem-calendario>Vamos enviar-te uma mensagem no WhatsApp em até 1 dia útil para combinar o dia e a hora.</p>
+      <p class="lp-ok__lead ok-entra" style="--o:1" data-com-calendario hidden>Falta só escolher o dia e a hora dos 20 minutos.</p>
+      <dl class="ok-resumo ok-entra" style="--o:2">
+        <div><dt>Diagnóstico</dt><dd>Grátis, sem compromisso</dd></div>
+        <div><dt>Duração</dt><dd>20 minutos</dd></div>
+        <div><dt>Formato</dt><dd>Videochamada</dd></div>
+        <div><dt>Resposta</dt><dd>No WhatsApp, em até 1 dia útil</dd></div>
+      </dl>
       <a class="botao ok-whats ok-entra" style="--o:3" href="#" data-whats-ok data-sem-calendario><svg aria-hidden="true"><use href="#i-whats"/></svg>Marcar já pelo WhatsApp</a>
-      <span class="lp-hero__desce ok-desce" aria-hidden="true"></span>
     </section>
   </div>
 
@@ -102,7 +107,6 @@
   <script src="/config.js"></script>
   <script src="/anuncios.js"></script>
   <script src="/rastreio.js"></script>
-  <script type="module" src="/diagnostico/lp3d.js?v=20261122i"></script>
   <script>
     // Os passos aparecem ao chegar ao ecrã.
     (function () {
