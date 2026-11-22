@@ -26,8 +26,8 @@
     })();
   </script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261122n">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122n">
+  <link rel="stylesheet" href="/site.css?v=20261122o">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122o">
   <script>
     // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
     (function (d) {
@@ -161,7 +161,9 @@
     </section>
   </main>
 
-  <footer class="rodape lp-rodape">
+  <footer class="rodape lp-rodape lp-rodape--queda">
+    <!-- a nave caída e cravada no chão, por trás dos links do rodapé -->
+    <div class="lp-queda" data-queda aria-hidden="true"></div>
     <nav class="rodape__links" aria-label="Rodapé">
       <a href="/privacidade.html">Privacidade</a>
       <a href="/termos.html">Termos</a>
@@ -283,9 +285,10 @@
   <script src="/config.js"></script>
   <script src="/cookies.js"></script>
   <script src="/anuncios.js"></script>
-  <script src="/diagnostico/lp.js?v=20261122n"></script>
-  <script type="module" src="/diagnostico/lp3d.js?v=20261122n"></script>
+  <script src="/diagnostico/lp.js?v=20261122o"></script>
+  <script type="module" src="/diagnostico/lp3d.js?v=20261122o"></script>
+  <script type="module" src="/diagnostico/lp-queda.js?v=2"></script>
   <script src="/rastreio.js"></script>
-  <script src="/site.js?v=20261122n"></script>
+  <script src="/site.js?v=20261122o"></script>
 </body>
 </html>
