@@ -205,7 +205,7 @@ if (progresso) {
 }
 
 // Elementos que entram quando aparecem no ecrã (com atraso em cascata dentro do mesmo grupo).
-const ALVOS = [".dor", ".calc__cartao", ".bloco__cabeca", ".nichos li", ".encaixe > *", ".pecas li", ".passos li", ".garantia", ".preco", ".perguntas details", ".diag"];
+const ALVOS = [".dor", ".calc__cartao", ".bloco__cabeca", ".nichos li", ".encaixe > *", ".pecas li", ".passos li", ".garantia", ".preco", ".perguntas details", ".diag", ".lp-final > *"];
 const aoAparecer = (els, fn, margem = "0px 0px -12% 0px") => {
   if (!("IntersectionObserver" in window)) { els.forEach(fn); return; }
   const io = new IntersectionObserver((entradas) => {

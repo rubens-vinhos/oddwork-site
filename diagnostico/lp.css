@@ -593,3 +593,9 @@ body.lp-obrigado { background: var(--noite); }
 .lp-queda::before { top: 0; height: 12%; background: linear-gradient(var(--noite), transparent); }
 .lp-queda::after { bottom: 0; height: 26%; background: linear-gradient(transparent, rgba(19,26,43,.92)); }
 @media (max-width: 900px) { .lp .lp-rodape--queda { min-height: 88svh; } }
+
+/* Fim da página: o título, a frase e os botões entram ao fazer scroll, como as perguntas */
+.lp .lp-final > .revela { transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, filter .3s ease, background-color .3s ease, border-color .3s ease, color .3s ease; transition-delay: var(--d, 0s); }
+.lp .lp-final > .revela.visto:hover, .lp .lp-final > .revela.visto:active { transition-delay: 0s; }
+/* sem o brilho laranja cortado entre a secção final e o rodapé da nave */
+.lp main:has(+ .lp-rodape--queda) > .lp-final { background: var(--noite); }

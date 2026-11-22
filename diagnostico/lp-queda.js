@@ -353,7 +353,8 @@ function arrancar(THREE) {
 
   // Queda: começa quando a faixa aparece no ecrã; depois fica cravada.
   const QUEDA = 0.85;
-  let inicio = null, visivel = false, a = null, ultimo = null, impacto = false;
+  // Sem queda: a nave já está cravada quando a cena aparece, e o fumo já vai alto.
+  let inicio = -1e6, visivel = false, a = null, ultimo = null, impacto = true;
   const fora = new THREE.Vector3(-520, 1500, -300);
   const ease = (k) => k * k * k;
   const desenhar = (agora) => {
@@ -459,7 +460,6 @@ function arrancar(THREE) {
 
   new IntersectionObserver(([e]) => {
     visivel = e.isIntersecting && !document.hidden;
-    if (visivel && inicio === null && e.intersectionRatio >= 0.3) inicio = performance.now();
     if (visivel && !a && !semMovimento) a = requestAnimationFrame(desenhar);
   }, { threshold: [0, 0.3, 0.6] }).observe(lugar);
   document.addEventListener("visibilitychange", () => {
@@ -467,6 +467,11 @@ function arrancar(THREE) {
     if (visivel && !a && !semMovimento) a = requestAnimationFrame(desenhar);
   });
 
+  // fumo já formado: simula uns segundos antes do primeiro desenho
+  for (let i = 0; i < 300; i++) {
+    for (const fo of FONTES) { fo.acum += (1 / 30) * fo.ritmo * (0.7 + 0.6 * ruido(i / 40, fo.x)); while (fo.acum >= 1) { fo.acum -= 1; soltarFumo(fo); } }
+    for (const f of fumos) if (f.vivo) atualizarFumo(f, 1 / 30);
+  }
   desenhar(performance.now());
   lugar.classList.add("lp-queda--pronta");
 }
