@@ -47,7 +47,7 @@ html[data-mercado="br"] [data-m="pt"] { display: none !important; }
 .link { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
 
 /* ---------- Topo + marca ---------- */
-.noite { background: var(--noite); color: #fff; position: relative; overflow: hidden; }
+.noite { background: var(--noite); color: #fff; position: relative; overflow: hidden; overflow: clip; }
 .noite::before { content: ""; position: absolute; inset: auto -10% -40% auto; width: 46rem; height: 46rem; border-radius: 50%; background: radial-gradient(closest-side, rgba(242,106,33,.22), transparent); pointer-events: none; }
 .topo { position: relative; display: flex; align-items: center; gap: 1rem; max-width: var(--larg); margin: 0 auto; padding: 1.2rem 1.25rem; }
 .marca { display: flex; align-items: center; gap: .5rem; font: 700 1.3rem/1 var(--titulos); letter-spacing: -.022em; text-decoration: none; white-space: nowrap; }
@@ -435,3 +435,34 @@ html[data-mercado="br"] [data-m="pt"] { display: none !important; }
   .legal__indice { columns: 1; }
   .topo--simples .so-largo { display: none; }
 }
+
+/* ---------- Botões de vidro (estilo Apple, cores da marca) ---------- */
+.botao {
+  background: linear-gradient(180deg, rgba(255,146,84,.94), rgba(242,106,33,.88) 55%, rgba(226,92,22,.9));
+  -webkit-backdrop-filter: blur(16px) saturate(1.7); backdrop-filter: blur(16px) saturate(1.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(110,36,0,.28), 0 0 0 1px rgba(255,255,255,.16), 0 12px 30px -12px rgba(242,106,33,.75);
+  text-shadow: 0 1px 1px rgba(110,36,0,.25);
+  transition: transform .55s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, background .35s ease, filter .35s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+/* reflexo do vidro na metade de cima */
+.botao::after { content: ""; position: absolute; z-index: -1; left: 1px; right: 1px; top: 1px; height: 52%; border-radius: 999px 999px 1.2rem 1.2rem / 999px 999px .6rem .6rem; background: linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.04)); pointer-events: none; }
+.botao:hover { background: linear-gradient(180deg, rgba(255,158,100,.96), rgba(246,116,46,.9) 55%, rgba(232,98,28,.92)); box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(110,36,0,.28), 0 0 0 1px rgba(255,255,255,.2), 0 18px 38px -14px rgba(242,106,33,.85); }
+.botao:active { transform: scale(.955); transition-duration: .12s; filter: brightness(.97); }
+
+.botao--sec { background: linear-gradient(180deg, rgba(43,54,87,.72), rgba(19,26,43,.78)); text-shadow: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 0 0 1px rgba(255,255,255,.12), 0 12px 30px -14px rgba(19,26,43,.7); }
+.botao--sec:hover { background: linear-gradient(180deg, rgba(54,66,104,.78), rgba(28,37,64,.82)); box-shadow: inset 0 1px 0 rgba(255,255,255,.26), 0 0 0 1px rgba(255,255,255,.16), 0 16px 34px -14px rgba(19,26,43,.8); }
+.botao--sec::after, .botao--linha::after { background: linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,0)); }
+.botao--linha { background: rgba(255,255,255,.5); text-shadow: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 0 0 1px rgba(19,26,43,.12), 0 10px 26px -16px rgba(19,26,43,.45); }
+.botao--linha:hover { background: rgba(255,255,255,.72); box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(19,26,43,.16), 0 14px 30px -16px rgba(19,26,43,.5); }
+.noite .botao--linha, .cookies .botao--linha { background: rgba(255,255,255,.08); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 0 0 1px rgba(255,255,255,.14); }
+.noite .botao--linha:hover, .cookies .botao--linha:hover { background: rgba(255,255,255,.14); }
+
+/* Onda de luz a partir do toque */
+.botao__onda { position: absolute; z-index: -1; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,255,255,.65), rgba(255,255,255,0)); pointer-events: none; animation: botao-onda .7s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes botao-onda { from { transform: scale(0); opacity: 1; } to { transform: scale(var(--r, 30)); opacity: 0; } }
+
+/* Barra de leitura do topo: fina e a desvanecer, sem risco duro */
+.progresso { height: 2px; background: linear-gradient(90deg, rgba(242,106,33,0), rgba(242,106,33,.85) 40%, #FF9A5C); box-shadow: 0 0 12px rgba(242,106,33,.45); }
+
+@media (prefers-reduced-motion: reduce) { .botao { transition: none; } .botao__onda { display: none; } }

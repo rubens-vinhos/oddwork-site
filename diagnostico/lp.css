@@ -221,7 +221,7 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 .lp .lp-chips span { border-color: rgba(255,255,255,.15); color: #D5DAE6; background: rgba(255,255,255,.03); }
 .lp .lp-chips label:hover span { border-color: rgba(242,106,33,.7); color: #fff; }
 .lp .lp-chips input:checked + span { background: var(--laranja); border-color: var(--laranja); color: #fff; }
-.lp .lp-form .botao { min-height: 3.2rem; box-shadow: 0 12px 30px -12px rgba(242,106,33,.8); }
+.lp .lp-form .botao { min-height: 3.2rem; }
 .lp .lp-form__legal, .lp .lp-form__saltar, .lp .lp-form__ajuda, .lp .lp-form .campo small { color: #8C95AB; }
 .lp .lp-form__passo { color: #8C95AB; }
 .lp .lp-form .form__erro { background: rgba(201,48,44,.16); color: #FFB4AE; }
@@ -350,7 +350,7 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 
   .lp-hero h1 { order: 0; max-width: 15ch; font-size: clamp(2rem, 8.4vw, 2.6rem); line-height: 1.08; letter-spacing: -.03em; }
   .lp-hero .hero__lead { order: 0; margin: 1rem auto 0; max-width: 26ch; font-size: 1rem; color: var(--noite-suave); }
-  .lp-hero__cta { display: inline-flex; margin-top: 2rem; padding: 0 1.8rem; box-shadow: 0 14px 40px -12px rgba(242,106,33,.65); }
+  .lp-hero__cta { display: inline-flex; margin-top: 2rem; padding: 0 1.8rem; }
 
   /* Indicação discreta para deslizar */
   .lp-hero__desce { display: block; position: absolute; left: 50%; bottom: 1.2rem; width: 1px; height: 2.6rem; translate: -50% 0; background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.35)); overflow: hidden; }
@@ -368,3 +368,17 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 @media (max-width: 900px) {
   .lp-hero .lp-logo3d--pronto .lp-logo3d__plano { opacity: 0; animation: none; }
 }
+
+/* Telemóvel: o brilho laranja do topo não pode acabar num corte — o fundo da página continua sozinho */
+@media (max-width: 900px) {
+  .lp .noite { background: transparent; }
+  .lp .noite::before { display: none; }
+}
+/* Ao chegar ao formulário pelo botão: o cartão acende devagar */
+.lp-form.a-chegar { animation: lp-chegar 1.4s cubic-bezier(.22,1,.36,1); }
+@keyframes lp-chegar {
+  0% { transform: scale(.97); box-shadow: 0 0 0 0 rgba(242,106,33,0); }
+  35% { transform: scale(1.01); box-shadow: 0 0 0 6px rgba(242,106,33,.22), 0 30px 60px -30px rgba(242,106,33,.6); }
+  100% { transform: none; box-shadow: 0 0 0 0 rgba(242,106,33,0); }
+}
+@media (prefers-reduced-motion: reduce) { .lp-form.a-chegar { animation: none; } }

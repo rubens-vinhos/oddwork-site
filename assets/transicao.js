@@ -86,6 +86,20 @@
     irPara(url.href);
   });
 
+  // Botões: onda de luz a partir do sítio onde se tocou.
+  document.addEventListener("pointerdown", function (e) {
+    var b = e.target.closest && e.target.closest(".botao");
+    if (!b || e.button > 0) return;
+    var r = b.getBoundingClientRect();
+    var o = document.createElement("span");
+    o.className = "botao__onda";
+    o.style.left = (e.clientX - r.left) + "px";
+    o.style.top = (e.clientY - r.top) + "px";
+    o.style.setProperty("--r", (Math.hypot(r.width, r.height) * 2 / 12).toFixed(1));
+    b.appendChild(o);
+    setTimeout(function () { o.remove(); }, 750);
+  }, { passive: true });
+
   // Voltar atrás (página guardada pelo browser): tira o ecrã escuro.
   addEventListener("pageshow", function (e) {
     if (e.persisted) { aSair = false; d.classList.remove("a-sair", "a-carregar", "a-revelar"); }

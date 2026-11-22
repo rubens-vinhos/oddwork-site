@@ -39,7 +39,7 @@
   animation: c-marca .7s cubic-bezier(.16, 1, .3, 1) .35s both;
   transition: opacity .3s ease, transform .4s ease;
 }
-.carregador__marca em { color: #F26A21; font-style: italic; }
+.carregador__marca em { display: inline-block; margin: 0 .07em 0 .03em; color: #F26A21; font-style: italic; transform: rotate(-7deg) translateY(-2px); }
 .primeira-vez .carregador__marca { animation-delay: .95s; }
 
 .carregador__barra { position: relative; width: 7.5rem; height: 2px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, .1); transition: opacity .3s ease; }
@@ -59,7 +59,7 @@
 @keyframes c-girar { to { transform: rotate(360deg); } }
 @keyframes c-pa { from { opacity: 0; transform: translateY(-320px) rotate(-35deg); } to { opacity: 1; transform: none; } }
 @keyframes c-centro { from { transform: scale(0); } to { transform: scale(1); } }
-@keyframes c-marca { from { opacity: 0; transform: translateY(10px); letter-spacing: .1em; } to { opacity: 1; transform: none; letter-spacing: -.02em; } }
+@keyframes c-marca { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes c-aparecer { from { opacity: 0; } to { opacity: 1; } }
 @keyframes c-chegar { from { opacity: 0; transform: scale(.7) rotate(-60deg); } to { opacity: 1; transform: none; } }
 

@@ -216,9 +216,16 @@
   function irParaForm(e) {
     e.preventDefault();
     var caixa = caixas[0];
-    caixa.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth", block: "center" });
+    var r = caixa.getBoundingClientRect();
+    window.scrollTo({ top: Math.max(0, scrollY + r.top - Math.max(16, (innerHeight - r.height) / 2)), behavior: semMovimento ? "auto" : "smooth" });
     var alvo = caixa.querySelector("form:not([hidden]) input:not([type=hidden]), .lp-form--feito:not([hidden]) a");
     if (alvo) setTimeout(function () { alvo.focus({ preventScroll: true }); }, semMovimento ? 0 : 450);
+    var cartao = caixa.querySelector(".lp-form:not([hidden])");
+    if (cartao && !semMovimento) {
+      cartao.classList.remove("a-chegar"); void cartao.offsetWidth;
+      setTimeout(function () { cartao.classList.add("a-chegar"); }, 380);
+      setTimeout(function () { cartao.classList.remove("a-chegar"); }, 1900);
+    }
   }
   document.querySelectorAll("[data-ir-form]").forEach(function (a) { a.addEventListener("click", irParaForm); });
 
