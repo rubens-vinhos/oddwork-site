@@ -212,20 +212,45 @@
   });
   estadoInicial();
 
-  // ---------- Ir para o formulário ----------
+  // ---------- Ir para o formulário: viagem suave do clique até lá ----------
+  var html = document.documentElement, aViajar = false;
+  function suave(k) { return k < .5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2; }
+  function rolar(destino, dur, feito) {
+    var y0 = scrollY, d = destino - y0, t0 = performance.now(), parou = false;
+    function parar() { parou = true; }
+    ["wheel", "touchstart", "keydown"].forEach(function (ev) { addEventListener(ev, parar, { once: true, passive: true }); });
+    html.style.scrollBehavior = "auto";
+    (function passo(t) {
+      if (parou) { html.style.scrollBehavior = ""; return feito(); }
+      var k = Math.min(1, (t - t0) / dur);
+      window.scrollTo(0, y0 + d * suave(k));
+      if (k < 1) requestAnimationFrame(passo); else { html.style.scrollBehavior = ""; feito(); }
+    })(t0);
+  }
   function irParaForm(e) {
     e.preventDefault();
+    if (aViajar) return;
     var caixa = caixas[0];
-    var r = caixa.getBoundingClientRect();
-    window.scrollTo({ top: Math.max(0, scrollY + r.top - Math.max(16, (innerHeight - r.height) / 2)), behavior: semMovimento ? "auto" : "smooth" });
-    var alvo = caixa.querySelector("form:not([hidden]) input:not([type=hidden]), .lp-form--feito:not([hidden]) a");
-    if (alvo) setTimeout(function () { alvo.focus({ preventScroll: true }); }, semMovimento ? 0 : 450);
     var cartao = caixa.querySelector(".lp-form:not([hidden])");
-    if (cartao && !semMovimento) {
-      cartao.classList.remove("a-chegar"); void cartao.offsetWidth;
-      setTimeout(function () { cartao.classList.add("a-chegar"); }, 380);
-      setTimeout(function () { cartao.classList.remove("a-chegar"); }, 1900);
+    var alvo = caixa.querySelector("form:not([hidden]) input:not([type=hidden]), .lp-form--feito:not([hidden]) a");
+    var r = caixa.getBoundingClientRect();
+    var destino = Math.max(0, scrollY + r.top - Math.max(16, (innerHeight - r.height) / 2));
+    if (semMovimento) { window.scrollTo(0, destino); if (alvo) alvo.focus({ preventScroll: true }); return; }
+    var distancia = Math.abs(destino - scrollY);
+    var dur = Math.min(1400, Math.max(750, distancia * 0.9));
+    aViajar = true;
+    html.classList.add("a-viajar");
+    if (cartao) {
+      Array.prototype.forEach.call(cartao.children, function (f, i) { f.style.setProperty("--i", i); });
+      cartao.style.setProperty("--atraso", Math.round(dur * 0.45) + "ms");
+      cartao.classList.remove("a-entrar"); void cartao.offsetWidth; cartao.classList.add("a-entrar");
     }
+    rolar(destino, dur, function () {
+      aViajar = false;
+      setTimeout(function () { html.classList.remove("a-viajar"); }, 250);
+      if (alvo) setTimeout(function () { alvo.focus({ preventScroll: true }); }, 350);
+      if (cartao) setTimeout(function () { cartao.classList.remove("a-entrar"); }, 1600);
+    });
   }
   document.querySelectorAll("[data-ir-form]").forEach(function (a) { a.addEventListener("click", irParaForm); });
 
