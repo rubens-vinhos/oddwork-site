@@ -336,6 +336,26 @@
     alvos.forEach(function (a) { obs.observe(a); });
   }
 
+  // ---------- Escolhas: o enchimento começa onde o dedo tocou ----------
+  document.addEventListener("pointerdown", function (e) {
+    var lab = e.target.closest && e.target.closest(".lp-chips label");
+    if (!lab) return;
+    var sp = lab.querySelector("span"), r = sp.getBoundingClientRect();
+    sp.style.setProperty("--x", (e.clientX - r.left) + "px");
+    sp.style.setProperty("--y", (e.clientY - r.top) + "px");
+  }, { passive: true });
+
+  // ---------- Campos: visto verde quando ficam preenchidos ----------
+  document.querySelectorAll(".lp-form label.campo input").forEach(function (inp) {
+    var campo = inp.closest("label.campo");
+    function ver() {
+      campo.style.setProperty("--alt-campo", inp.offsetHeight + "px");
+      campo.classList.toggle("preenchido", inp.value.trim().length > 1 && inp.checkValidity());
+    }
+    inp.addEventListener("blur", ver);
+    inp.addEventListener("input", function () { if (!inp.value.trim()) campo.classList.remove("preenchido"); });
+  });
+
   // ---------- Perguntas: abrir e fechar com a altura a deslizar ----------
   document.querySelectorAll(".perguntas details").forEach(function (d) {
     var sum = d.querySelector("summary");

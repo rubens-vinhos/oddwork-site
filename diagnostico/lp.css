@@ -493,3 +493,36 @@ body.lp-obrigado { background: var(--noite); }
   .ok-revela { opacity: 1; transform: none; filter: none; transition: none; }
   .ok-estado circle, .ok-estado path { stroke-dashoffset: 0; animation: none; }
 }
+
+/* ---------- Escolhas: o laranja enche a partir do sítio onde se tocou, e aparece um visto ---------- */
+.lp .lp-chips span { position: relative; isolation: isolate; overflow: hidden; }
+.lp .lp-chips span::before { content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
+  background: radial-gradient(circle at 30% 20%, #FF9A5C, var(--laranja) 60%, #E25C16);
+  clip-path: circle(0% at var(--x, 50%) var(--y, 50%)); transition: clip-path .55s cubic-bezier(.22,1,.36,1); }
+.lp .lp-chips span::after { content: ""; display: inline-block; flex: none; width: 0; height: .62em; margin-left: 0; margin-top: -.18em;
+  border: solid #fff; border-width: 0 2.2px 2.2px 0; border-radius: 1px; opacity: 0;
+  transform: rotate(45deg) scale(0); transition: width .35s cubic-bezier(.22,1,.36,1), margin .35s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.34,1.56,.64,1) .12s, opacity .2s ease .1s; }
+.lp .lp-chips input:checked + span { background: transparent; }
+.lp .lp-chips input:checked + span::before { clip-path: circle(150% at var(--x, 50%) var(--y, 50%)); }
+.lp .lp-chips input:checked + span::after { width: .32em; margin-left: .55em; opacity: 1; transform: rotate(45deg) scale(1); }
+
+/* ---------- Campos de texto: brilho ao entrar e visto quando ficam preenchidos ---------- */
+.lp .lp-form .campo input:focus, .lp .lp-tel select:focus, .lp .lp-tel input:focus { animation: campo-acender .7s cubic-bezier(.22,1,.36,1); }
+@keyframes campo-acender {
+  0% { box-shadow: 0 0 0 0 rgba(242,106,33,.55); }
+  45% { box-shadow: 0 0 0 7px rgba(242,106,33,.18); }
+  100% { box-shadow: 0 0 0 3px rgba(242,106,33,.25); }
+}
+.lp .lp-form .campo > span { display: inline-block; transition: color .3s ease, transform .4s cubic-bezier(.34,1.56,.64,1); transform-origin: left center; }
+.lp .lp-form .campo:focus-within > span { color: #FF9A5C; transform: translateX(3px); }
+.lp .lp-form label.campo { position: relative; }
+.lp .lp-form label.campo::after { content: ""; position: absolute; right: 1.05rem; bottom: calc(var(--alt-campo, 3.2rem) / 2 - .38rem); width: .42rem; height: .76rem;
+  border: solid #4ADE80; border-width: 0 2.4px 2.4px 0; border-radius: 1px; opacity: 0; transform: rotate(45deg) scale(0); pointer-events: none;
+  transition: opacity .2s ease, transform .5s cubic-bezier(.34,1.56,.64,1); }
+.lp .lp-form label.campo.preenchido::after { opacity: 1; transform: rotate(45deg) scale(1); }
+.lp .lp-form label.campo.preenchido input { padding-right: 2.6rem; }
+.lp .lp-form label.campo.preenchido:focus-within::after { opacity: 0; transform: rotate(45deg) scale(.4); }
+@media (prefers-reduced-motion: reduce) {
+  .lp .lp-chips span::before, .lp .lp-chips span::after, .lp .lp-form label.campo::after { transition: none; }
+  .lp .lp-form .campo input:focus, .lp .lp-tel input:focus, .lp .lp-tel select:focus { animation: none; }
+}
