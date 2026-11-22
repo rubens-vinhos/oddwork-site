@@ -557,3 +557,18 @@ body.lp-obrigado { background: var(--noite); }
   .lp .lp-chips span::before, .lp .lp-chips span::after, .lp .lp-form label.campo::after { transition: none; }
   .lp .lp-form .campo input:focus, .lp .lp-tel input:focus, .lp .lp-tel select:focus { animation: none; }
 }
+
+/* ---------- Calculadora: botão ao centro ---------- */
+.lp .calc__saida .botao { align-self: center; }
+
+/* ---------- Final: faixa escura de ponta a ponta, sem caixa ---------- */
+.lp .lp-final__sub { margin: -.4rem 0 1.2rem; color: #A3ACC2; font-size: 1.05rem; }
+@media (min-width: 901px) {
+  .lp .lp-final { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
+    max-width: none; margin: 0; padding: 7rem 1.25rem 6.5rem; border-radius: 0;
+    background: radial-gradient(42rem 22rem at 50% 115%, rgba(242,106,33,.22), transparent 70%), var(--noite); }
+  .lp .lp-final h2 { flex: 0 0 100%; max-width: none; margin: 0 0 .6rem; font-size: clamp(2.4rem, 4vw, 3.2rem); }
+  .lp .lp-final__sub { flex: 0 0 100%; margin: 0 0 1.6rem; }
+  .lp .lp-final .lp-final__cta, .lp .lp-final .lp-whats { width: 19.5rem; white-space: nowrap; padding-inline: 1.4rem; }
+  .lp .lp-rodape { border-top: 1px solid rgba(255,255,255,.07); }
+}
