@@ -233,6 +233,7 @@
     }
     lead.passo = 2;
     ss(CH_LEAD, lead);
+    if (window.oddworkEvento) window.oddworkEvento("passo2", { saltou: !!saltar });
     if (window.oddworkIr) window.oddworkIr(OBRIGADO); else location.href = OBRIGADO;
   }
 

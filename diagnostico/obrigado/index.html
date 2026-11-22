@@ -12,8 +12,9 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261122t">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122t">
+  <link rel="stylesheet" href="/site.css?v=20261122u">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122u">
+  <link rel="stylesheet" href="/diagnostico/calendario.css?v=1">
   <script>
     // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
     (function (d) {
@@ -59,21 +60,58 @@
           <circle class="ok-selo__fundo" cx="60" cy="60" r="52"/><circle class="ok-selo__anel" cx="60" cy="60" r="52"/><path class="ok-selo__visto" d="M40 61.5l13.5 13.5L81 46.5"/></svg>
       </div>
       <h1 id="ok-titulo" class="ok-entra" style="--o:0">Pedido recebido<span data-nome></span>.</h1>
-      <p class="lp-ok__lead ok-entra" style="--o:1" data-sem-calendario>Vamos enviar-te uma mensagem no WhatsApp em até 1 dia útil para combinar o dia e a hora.</p>
-      <p class="lp-ok__lead ok-entra" style="--o:1" data-com-calendario hidden>Falta só escolher o dia e a hora dos 20 minutos.</p>
+      <p class="lp-ok__lead ok-entra" style="--o:1" data-falta-marcar>Falta só escolher o dia e a hora dos 20 minutos.</p>
+      <p class="lp-ok__lead ok-entra" style="--o:1" data-ja-marcado hidden>A chamada ficou marcada para <b data-quando-topo></b>.</p>
       <dl class="ok-resumo ok-entra" style="--o:2">
         <div><dt>Diagnóstico</dt><dd>Grátis, sem compromisso</dd></div>
         <div><dt>Duração</dt><dd>20 minutos</dd></div>
         <div><dt>Formato</dt><dd>Videochamada</dd></div>
-        <div><dt>Resposta</dt><dd>No WhatsApp, em até 1 dia útil</dd></div>
+        <div><dt>Link da chamada</dt><dd>Enviado pelo WhatsApp</dd></div>
       </dl>
-      <a class="botao ok-whats ok-entra" style="--o:3" href="#" data-whats-ok data-sem-calendario><svg aria-hidden="true"><use href="#i-whats"/></svg>Marcar já pelo WhatsApp</a>
+      <a class="botao ok-whats ok-marcar ok-entra" style="--o:3" href="#marcar" data-ir-marcar data-falta-marcar><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Escolher o dia e a hora</a>
     </section>
   </div>
 
   <main id="conteudo" class="ok-main">
-    <section class="lp-calendario" data-com-calendario hidden aria-label="Escolher horário">
-      <div id="calendario"></div>
+    <section class="cal" id="marcar" aria-labelledby="cal-titulo">
+      <div class="cal__cabeca">
+        <h2 id="cal-titulo">Escolhe o dia e a hora</h2>
+        <p>Videochamada de 20 minutos. <span data-fuso></span></p>
+      </div>
+      <div class="cal__cartao">
+        <div class="cal__escolher">
+          <div class="cal__mes">
+            <p class="cal__mes-nome" data-mes></p>
+            <div class="cal__semana" aria-hidden="true"><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span></div>
+            <div class="cal__dias"></div>
+          </div>
+          <div class="cal__horas">
+            <p class="cal__dia-nome" data-dia-nome aria-live="polite"></p>
+            <div class="cal__lista" aria-label="Horas livres"></div>
+            <div class="cal__confirmar" hidden>
+              <div class="cal__confirmar-dentro">
+                <p class="cal__escolha"><b data-escolha></b><small data-escolha-pt></small></p>
+                <button class="botao botao--largo cal__botao" type="button" data-confirmar>Confirmar marcação<span class="botao__estado" aria-hidden="true"><svg viewBox="0 0 24 24"><circle class="botao__anel" cx="12" cy="12" r="9"/><path class="botao__visto" d="M7 12.5l3.2 3.2L17 9"/></svg></span></button>
+              </div>
+            </div>
+            <p class="cal__erro" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="cal__feito" hidden>
+          <div class="cal__selo">
+            <span class="cal__faiscas" aria-hidden="true"></span>
+            <div class="ok-selo" aria-hidden="true"><svg viewBox="0 0 120 120"><circle class="ok-selo__fundo" cx="60" cy="60" r="52"/><circle class="ok-selo__anel" cx="60" cy="60" r="52"/><path class="ok-selo__visto" d="M40 61.5l13.5 13.5L81 46.5"/></svg></div>
+          </div>
+          <h3 tabindex="-1">Está marcado.</h3>
+          <p class="cal__feito-quando" data-feito-quando></p>
+          <p class="cal__feito-texto"><span data-feito-local></span> Antes da chamada enviamos-te o link da videochamada pelo WhatsApp.</p>
+          <div class="cal__feito-acoes">
+            <button class="botao" type="button" data-ics>Adicionar ao calendário</button>
+            <button class="cal__mudar" type="button" data-mudar>Mudar a hora</button>
+          </div>
+        </div>
+      </div>
+      <p class="cal__ajuda">Nenhuma hora dá jeito? <a href="#" data-whats-cal>Combina connosco no WhatsApp</a>.</p>
     </section>
 
     <section class="ok-chamada" aria-labelledby="chamada-titulo">
@@ -107,6 +145,7 @@
   <script src="/config.js"></script>
   <script src="/anuncios.js"></script>
   <script src="/rastreio.js"></script>
+  <script src="/diagnostico/calendario.js?v=1" defer></script>
   <script>
     // Os passos aparecem ao chegar ao ecrã.
     (function () {
@@ -126,30 +165,12 @@
       var primeiro = lead && lead.nome ? lead.nome.trim().split(/\s+/)[0] : "";
       if (primeiro) document.querySelector("[data-nome]").textContent = ", " + primeiro;
 
-      // WhatsApp com mensagem já escrita.
-      var texto = (primeiro ? "Olá, sou " + primeiro + " e" : "Olá,") + " acabei de pedir o diagnóstico grátis no site. Quando podemos falar?";
-      var w = document.querySelector("[data-whats-ok]");
-      if (CFG.whatsapp) {
-        w.href = "https://wa.me/" + CFG.whatsapp + "?text=" + encodeURIComponent(texto);
-        w.target = "_blank"; w.rel = "noopener";
-        w.addEventListener("click", function () { if (window.oddworkMarcar) window.oddworkMarcar("Contact", { onde: "obrigado" }); });
-      } else { w.hidden = true; }
-
-      // Calendário (Cal.com ou Calendly), quando estiver configurado.
-      if (/^https:\/\//.test(CFG.calendario || "")) {
-        document.querySelectorAll("[data-sem-calendario]").forEach(function (el) { el.hidden = true; });
-        document.querySelectorAll("[data-com-calendario]").forEach(function (el) { el.hidden = false; });
-        var f = document.createElement("iframe");
-        f.src = CFG.calendario; f.title = "Escolher o horário da chamada"; f.loading = "lazy";
-        document.getElementById("calendario").appendChild(f);
-        // Calendly avisa a página quando a marcação fica feita.
-        addEventListener("message", function (e) {
-          var host = ""; try { host = new URL(e.origin).hostname; } catch (x) { return; }
-          if (/(^|\.)calendly\.com$/.test(host) && e.data && e.data.event === "calendly.event_scheduled") {
-            if (window.oddworkMarcar) window.oddworkMarcar("Schedule", {});
-          }
-        });
-      }
+      // Botão do topo: desce suavemente até ao calendário.
+      var ir = document.querySelector("[data-ir-marcar]");
+      if (ir) ir.addEventListener("click", function (e) {
+        e.preventDefault();
+        document.getElementById("marcar").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      });
     })();
   </script>
 </body>

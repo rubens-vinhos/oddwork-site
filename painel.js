@@ -322,7 +322,7 @@ function desenharTabela() {
 }
 
 function exportarCSV() {
-  const campos = ["data", "nome", "negocio", "tipo", "pais", "clientes", "dor", "origem", "whatsapp", "email", "estado"];
+  const campos = ["data", "nome", "negocio", "tipo", "pais", "clientes", "dor", "origem", "whatsapp", "email", "estado", "marcado_para"];
   // Evita que folhas de cálculo interpretem células como fórmulas.
   const celula = (v) => { let s = String(v ?? ""); if (/^[=+\-@]/.test(s)) s = "'" + s; return `"${s.replace(/"/g, '""')}"`; };
   const linhas = filtrados().map((p) => campos.map((c) => celula(c === "estado" ? NOME_ESTADO[p.estado] : p[c])).join(";"));
@@ -458,7 +458,8 @@ function desenharVisitas() {
   const porCampo = campos.map((c) => new Set(evs.filter((e) => e.tipo === "form-campo" && e.campo === c).map((e) => e.sid)).size);
   const totalForm = porCampo[0] || 0;
   const enviados = new Set(pedidos.map((e) => e.sid)).size;
-  const linhas = campos.map((c, i) => [NOME_CAMPO[c], porCampo[i]]).concat([["Enviou o pedido", enviados]]);
+  const sessoesCom = (tipo) => new Set(evs.filter((e) => e.tipo === tipo).map((e) => e.sid)).size;
+  const linhas = campos.map((c, i) => [NOME_CAMPO[c], porCampo[i]]).concat([["Enviou o pedido", enviados], ["Acabou o passo 2", sessoesCom("passo2")], ["Marcou a chamada", sessoesCom("marcou")]]);
   document.getElementById("v-form").replaceChildren(...(totalForm ? linhas.map(([nome, n], i) => {
     const li = el("li", {}, el("span", {}, nome), el("span", { class: "trilho" }, el("i", { style: `width:${pct(n, totalForm)}%` })), el("b", {}, n));
     if (i > 0 && linhas[i - 1][1] - n > 0) li.append(el("span", { class: "taxa" }, `${linhas[i - 1][1] - n} desistiram aqui`));
@@ -492,6 +493,8 @@ function descreverEvento(e) {
     case "pergunta": return [`Abriu a pergunta: ${e.pergunta}`, ""];
     case "form-campo": return null; // resumido abaixo
     case "pedido": return ["Enviou o pedido de diagnóstico", "forte"];
+    case "passo2": return [e.saltou ? "Saltou o passo 2" : "Respondeu ao passo 2", ""];
+    case "marcou": return ["Marcou a chamada no calendário", "forte"];
     case "saida": return [`Saiu depois de ${e.segundos}s · desceu ${e.scroll}% da página`, ""];
     default: return null;
   }
@@ -501,7 +504,7 @@ function abrirGaveta(p, foco) {
   focoAntes = document.activeElement;
   document.getElementById("gaveta-titulo").textContent = p.negocio || "—";
   document.getElementById("gaveta-sub").textContent = `${p.nome || ""} · ${p.pais || ""}`;
-  const dados = [["Pedido", new Date(p.data).toLocaleString("pt-PT", { dateStyle: "medium", timeStyle: "short" })], ["Tipo", p.tipo], ["Clientes", p.clientes], ["Maior dor", p.dor], ["Disse que veio de", p.origem], ["WhatsApp", p.whatsapp], ["Email", p.email], ["Estado", NOME_ESTADO[p.estado]]];
+  const dados = [["Pedido", new Date(p.data).toLocaleString("pt-PT", { dateStyle: "medium", timeStyle: "short" })], ["Tipo", p.tipo], ["Clientes", p.clientes], ["Maior dor", p.dor], ["Disse que veio de", p.origem], ["WhatsApp", p.whatsapp], ["Email", p.email], ["Estado", NOME_ESTADO[p.estado]], ["Chamada marcada", p.marcado_para ? new Date(p.marcado_para).toLocaleString("pt-PT", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Lisbon" }) : null]];
   // Pedidos da landing page /diagnostico: passo, site, horas da calculadora e anúncio de origem.
   if (p.pagina) {
     const anuncio = [p.utm_source, p.utm_medium, p.utm_campaign, p.utm_content].filter(Boolean).join(" · ");

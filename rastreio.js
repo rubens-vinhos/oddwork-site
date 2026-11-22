@@ -49,7 +49,7 @@
     ev.mercado = document.documentElement.dataset.mercado || "pt";
     if (EVENTOS_URL) {
       fila.push(ev);
-      if (fila.length >= 8 || ev.tipo === "saida" || ev.tipo === "pedido") despejar();
+      if (fila.length >= 8 || ev.tipo === "saida" || ev.tipo === "pedido" || ev.tipo === "passo2" || ev.tipo === "marcou") despejar();
     } else if (LOCAL) {
       var lista = []; try { lista = JSON.parse(localStorage.getItem(CH_TESTE) || "[]"); } catch (e) { /* vazio */ }
       lista.push(ev);
