@@ -374,16 +374,10 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
   .lp .noite { background: transparent; }
   .lp .noite::before { display: none; }
 }
-/* ---------- Telemóvel: formulário solto, sem caixa ---------- */
-@media (max-width: 900px) {
-  .lp .lp-hero__form .lp-form { background: none; border: 0; box-shadow: none; padding: 0; -webkit-backdrop-filter: none; backdrop-filter: none; border-radius: 0; gap: 1.15rem; }
-  .lp .lp-hero__form .lp-form::before { display: none; }
-  .lp .lp-hero__form { margin-top: 3.5rem; }
-  .lp .lp-hero__form .lp-form__titulo { font-size: 1.75rem; line-height: 1.12; letter-spacing: -.025em; margin-bottom: .4rem; }
-  .lp .lp-hero__form .campo input, .lp .lp-hero__form .lp-tel select, .lp .lp-hero__form .lp-tel input { min-height: 3.3rem; border-radius: .95rem; background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.1); }
-  .lp .lp-hero__form .lp-form .botao { min-height: 3.5rem; margin-top: .4rem; }
-}
-.lp-final__cta { margin-top: .4rem; }
+/* Fim: os dois botões com a mesma largura, um por baixo do outro, ao centro */
+.lp .lp-final { gap: .85rem; justify-items: center; text-align: center; }
+.lp .lp-final h2 { margin: 0 auto 1.1rem; }
+.lp .lp-final .lp-final__cta, .lp .lp-final .lp-whats { box-sizing: border-box; width: min(100%, 21rem); min-height: 3.3rem; margin: 0; justify-content: center; justify-self: center; }
 
 /* ---------- Do clique ao formulário ---------- */
 .lp-hero .hero__texto { transition: opacity .8s cubic-bezier(.4,0,.2,1), transform 1s cubic-bezier(.4,0,.2,1), filter .8s ease; }
