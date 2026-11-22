@@ -576,3 +576,6 @@ body.lp-obrigado { background: var(--noite); }
 .lp .lp-form .campo input, .lp .lp-tel select, .lp .lp-tel input { transition: border-color .45s ease, box-shadow .6s ease, background-color .45s ease; transform: none !important; }
 .lp .lp-form .campo input:focus, .lp .lp-tel select:focus, .lp .lp-tel input:focus { border-color: rgba(242,106,33,.85); box-shadow: 0 0 0 4px rgba(242,106,33,.14); background: rgba(255,255,255,.07); }
 .lp .lp-form .campo > span { transition: color .45s ease; transform: none !important; }
+
+/* Número ímpar de opções: a última ocupa a linha toda, para não ficar um buraco */
+.lp .lp-chips label:last-of-type:nth-of-type(odd) { grid-column: 1 / -1; }
