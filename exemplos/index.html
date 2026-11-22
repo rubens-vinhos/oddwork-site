@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-PT" data-mercado="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Exemplos · Oddwork</title>
+  <meta name="description" content="Como fica uma clínica, um estúdio de estética, uma academia e uma escola com a Oddwork: marcações, lembretes no WhatsApp e cobranças automáticas.">
+  <link rel="canonical" href="https://theoddwork.com/exemplos/">
+  <meta name="theme-color" content="#131A2B">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/simbolo-icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=20261122r">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122r">
+  <script>
+    // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
+    (function (d) {
+      // vindo da chuva de símbolos: sem ecrã de carregamento
+      try { if (sessionStorage.getItem("oddwork-chuva") === "1") return; } catch (e) {}
+      d.classList.add("a-carregar");
+      try { if (!sessionStorage.getItem("oddwork-visto")) { d.classList.add("primeira-vez"); sessionStorage.setItem("oddwork-visto", "1"); } } catch (e) {}
+    })(document.documentElement);
+  </script>
+  <link rel="stylesheet" href="/assets/transicao.css?v=2">
+  <link rel="stylesheet" href="/assets/chuva.css?v=1">
+  <link rel="stylesheet" href="/exemplos/exemplos.css?v=1">
+</head>
+<body class="lp lp-exemplos">
+  <div class="carregador" data-carregador aria-hidden="true">
+    <div class="carregador__fundo"></div>
+    <svg class="carregador__simbolo" viewBox="-420 -420 840 840" fill="currentColor"><g class="carregador__giro">
+      <g><g class="carregador__pa" style="--i:0"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <g transform="rotate(120)"><g class="carregador__pa" style="--i:1"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <g transform="rotate(240)"><g class="carregador__pa" style="--i:2"><polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/><polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/><polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/><polygon points="50,-92 76,-212 118,-136 100,-102"/></g></g>
+      <circle class="carregador__centro" r="48" fill="#F26A21"/>
+    </g></svg>
+    <p class="carregador__marca">the<em>odd</em>work</p>
+    <div class="carregador__barra"><i></i></div>
+  </div>
+  <script src="/assets/transicao.js?v=2"></script>
+  <script src="/assets/chuva.js?v=1"></script>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="pa">
+        <polygon points="-8,-78 -34,-82 -60,-198 -42,-332 -8,-376"/>
+        <polygon points="8,-78 34,-82 60,-198 42,-332 8,-376"/>
+        <polygon points="-50,-92 -76,-212 -118,-136 -100,-102"/>
+        <polygon points="50,-92 76,-212 118,-136 100,-102"/>
+      </g>
+      <g id="simbolo"><use href="#pa"/><use href="#pa" transform="rotate(120)"/><use href="#pa" transform="rotate(240)"/><circle r="48" fill="#F26A21"/></g>
+      <symbol id="i-whats" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></symbol>
+    </defs>
+  </svg>
+
+    <div class="noite ex-noite">
+    <header class="topo">
+      <a class="marca" href="/" aria-label="Oddwork, página inicial"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></a>
+    </header>
+
+    <main class="ex" id="conteudo">
+      <header class="ex-cabeca">
+        <h1>Exemplos</h1>
+        <p>Como fica o dia a dia com a Oddwork, em quatro tipos de negócio.</p>
+      </header>
+
+      <div class="ex-abas" role="tablist" aria-label="Tipo de negócio">
+        <span class="ex-abas__marca" aria-hidden="true"></span>
+        <button role="tab" id="aba-clinica" aria-controls="ex-palco" aria-selected="true" data-aba="clinica">Clínica</button>
+        <button role="tab" id="aba-estetica" aria-controls="ex-palco" aria-selected="false" data-aba="estetica" tabindex="-1">Estética</button>
+        <button role="tab" id="aba-academia" aria-controls="ex-palco" aria-selected="false" data-aba="academia" tabindex="-1">Academia</button>
+        <button role="tab" id="aba-ensino" aria-controls="ex-palco" aria-selected="false" data-aba="ensino" tabindex="-1">Ensino</button>
+      </div>
+
+      <section class="ex-palco" id="ex-palco" role="tabpanel" aria-labelledby="aba-clinica" aria-live="polite">
+        <div class="ex-tel" aria-label="Conversa no WhatsApp">
+          <div class="ex-tel__topo"><span class="ex-tel__foto" aria-hidden="true"><svg viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg></span><span><b data-ex="negocio">Clínica</b><small>WhatsApp oficial</small></span></div>
+          <ol class="ex-chat" data-ex="chat"></ol>
+        </div>
+        <div class="ex-info">
+          <h2 data-ex="titulo">Clínica</h2>
+          <ul class="ex-pontos" data-ex="pontos"></ul>
+          <div class="ex-painel">
+            <div class="ex-painel__cabeca"><span data-ex="painel-titulo">Hoje</span><small>Painel do dono</small></div>
+            <ul data-ex="painel"></ul>
+          </div>
+        </div>
+      </section>
+
+      <p class="ex-nota">Exemplos ilustrativos, com nomes e horários fictícios.</p>
+
+      <div class="ex-fim">
+        <a class="botao" href="/#formulario-lugar" data-rastrear="exemplos-cta">Fazer o diagnóstico grátis</a>
+        <a class="botao botao--linha" href="/">Voltar ao início</a>
+      </div>
+    </main>
+  </div>
+
+  <footer class="rodape lp-rodape">
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="/privacidade.html">Privacidade</a>
+      <a href="/termos.html">Termos</a>
+    </nav>
+    <p class="rodape__legal">© 2026 Oddwork · Rubens Bayard de Mello Silveiro · NIF 320510832 · Porto, Portugal</p>
+  </footer>
+
+  <script>
+    // Esta página não tem o aviso de cookies: lê a escolha já guardada.
+    (function () {
+      try {
+        var c = JSON.parse(localStorage.getItem("oddwork-cookies"));
+        window.oddworkConsentimento = c && c.v === 2 ? c : null;
+      } catch (e) { window.oddworkConsentimento = null; }
+    })();
+  </script>
+  <script src="/config.js"></script>
+  <script src="/anuncios.js"></script>
+  <script src="/rastreio.js"></script>
+  <script src="/exemplos/exemplos.js?v=1"></script>
+</body>
+</html>

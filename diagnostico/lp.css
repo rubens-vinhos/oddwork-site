@@ -599,3 +599,13 @@ body.lp-obrigado { background: var(--noite); }
 .lp .lp-final > .revela.visto:hover, .lp .lp-final > .revela.visto:active { transition-delay: 0s; }
 /* sem o brilho laranja cortado entre a secção final e o rodapé da nave */
 .lp main:has(+ .lp-rodape--queda) > .lp-final { background: var(--noite); }
+
+/* ---------- Topo: botão de vidro transparente "Ver exemplos" ---------- */
+.botao--vidro { color: #fff; background: linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.03));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.16), inset 1.5px 1.5px 1px -.5px rgba(255,255,255,.62), inset -1px -1px 1px -.5px rgba(255,255,255,.22), 0 10px 28px -14px rgba(0,0,0,.6); }
+.botao--vidro:hover { background: linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.06)); }
+.lp-hero__exemplos { display: inline-flex; align-self: flex-start; margin-top: 1.8rem; padding: 0 1.7rem; }
+@media (max-width: 900px) {
+  .lp-hero__exemplos { align-self: center; margin-top: .8rem; }
+  .lp-hero__cta, .lp-hero__exemplos { min-width: 16rem; }
+}
