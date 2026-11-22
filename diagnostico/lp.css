@@ -425,7 +425,7 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 
 /* Campos de texto */
 .lp .lp-form .campo input, .lp .lp-tel select, .lp .lp-tel input { transition: border-color .3s ease, box-shadow .4s ease, background-color .3s ease, transform .45s cubic-bezier(.34,1.56,.64,1); }
-.lp .lp-form .campo input:focus, .lp .lp-tel select:focus, .lp .lp-tel input:focus { transform: translateY(-1px); }
+
 .lp .lp-form .campo > span, .lp .lp-chips legend { transition: color .3s ease; }
 .lp .lp-form .campo:focus-within > span { color: #fff; }
 /* Erro: o campo abana e a mensagem desliza */
@@ -517,7 +517,6 @@ body.lp-obrigado { background: var(--noite); }
 
 /* ---------- Escolhas: grelha fixa (nada muda de lugar), o laranja enche a partir do toque ---------- */
 .lp .lp-chips { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.lp .lp-chips:has(input[name="dor"]) { grid-template-columns: 1fr; }
 .lp .lp-chips label { display: block; min-width: 0; }
 .lp .lp-chips span { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; width: 100%; box-sizing: border-box;
   min-height: 3rem; padding: .55rem 2.3rem .55rem .9rem; border-radius: .9rem; font-size: .92rem; line-height: 1.25; text-align: left; font-weight: 500; }
@@ -538,14 +537,14 @@ body.lp-obrigado { background: var(--noite); }
 .lp .lp-chips label:active span { transform: scale(.97); }
 
 /* ---------- Campos de texto: brilho ao entrar e visto quando ficam preenchidos ---------- */
-.lp .lp-form .campo input:focus, .lp .lp-tel select:focus, .lp .lp-tel input:focus { animation: campo-acender .7s cubic-bezier(.22,1,.36,1); }
+
 @keyframes campo-acender {
   0% { box-shadow: 0 0 0 0 rgba(242,106,33,.55); }
   45% { box-shadow: 0 0 0 7px rgba(242,106,33,.18); }
   100% { box-shadow: 0 0 0 3px rgba(242,106,33,.25); }
 }
 .lp .lp-form .campo > span { display: inline-block; transition: color .3s ease, transform .4s cubic-bezier(.34,1.56,.64,1); transform-origin: left center; }
-.lp .lp-form .campo:focus-within > span { color: #FF9A5C; transform: translateX(3px); }
+.lp .lp-form .campo:focus-within > span { color: #FF9A5C; }
 .lp .lp-form label.campo { position: relative; }
 .lp .lp-form label.campo::after { content: ""; position: absolute; right: 1.05rem; bottom: calc(var(--alt-campo, 3.2rem) / 2 - .38rem); width: .42rem; height: .76rem;
   border: solid #4ADE80; border-width: 0 2.4px 2.4px 0; border-radius: 1px; opacity: 0; transform: rotate(45deg) scale(0); pointer-events: none;
@@ -572,3 +571,8 @@ body.lp-obrigado { background: var(--noite); }
   .lp .lp-final .lp-final__cta, .lp .lp-final .lp-whats { width: 19.5rem; white-space: nowrap; padding-inline: 1.4rem; }
   .lp .lp-rodape { border-top: 1px solid rgba(255,255,255,.07); }
 }
+
+/* Campos: ao tocar, nada se mexe — só o contorno e o brilho aparecem devagar */
+.lp .lp-form .campo input, .lp .lp-tel select, .lp .lp-tel input { transition: border-color .45s ease, box-shadow .6s ease, background-color .45s ease; transform: none !important; }
+.lp .lp-form .campo input:focus, .lp .lp-tel select:focus, .lp .lp-tel input:focus { border-color: rgba(242,106,33,.85); box-shadow: 0 0 0 4px rgba(242,106,33,.14); background: rgba(255,255,255,.07); }
+.lp .lp-form .campo > span { transition: color .45s ease; transform: none !important; }

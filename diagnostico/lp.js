@@ -292,7 +292,8 @@
     rolar(destino, dur, function () {
       aViajar = false;
       setTimeout(function () { html.classList.remove("a-viajar"); }, 250);
-      if (alvo) setTimeout(function () { alvo.focus({ preventScroll: true }); }, 350);
+      // No telemóvel não abrimos o teclado sozinhos: o salto do teclado é brusco. A pessoa toca no campo quando quiser.
+      if (alvo && !matchMedia("(pointer: coarse)").matches) setTimeout(function () { alvo.focus({ preventScroll: true }); }, 350);
       if (cartao) setTimeout(function () { cartao.classList.remove("a-entrar"); }, 1600);
     });
   }
