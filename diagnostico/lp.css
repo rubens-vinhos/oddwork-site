@@ -565,7 +565,7 @@ body.lp-obrigado { background: var(--noite); }
 @media (min-width: 901px) {
   .lp .lp-final { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
     max-width: none; margin: 0; padding: 7rem 1.25rem 6.5rem; border-radius: 0;
-    background: radial-gradient(42rem 22rem at 50% 115%, rgba(242,106,33,.22), transparent 70%), var(--noite); }
+    background: var(--noite); }
   .lp .lp-final h2 { flex: 0 0 100%; max-width: none; margin: 0 0 .6rem; font-size: clamp(2.4rem, 4vw, 3.2rem); }
   .lp .lp-final__sub { flex: 0 0 100%; margin: 0 0 1.6rem; }
   .lp .lp-final .lp-final__cta, .lp .lp-final .lp-whats { width: 19.5rem; white-space: nowrap; padding-inline: 1.4rem; }
