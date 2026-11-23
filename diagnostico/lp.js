@@ -94,28 +94,28 @@
   function botaoFeito(b) { b.classList.add("a-feito"); b.removeAttribute("aria-busy"); return espera(semMovimento ? 0 : 650); }
   function botaoNormal(b) { b.classList.remove("a-enviar", "a-feito"); b.disabled = false; b.removeAttribute("aria-busy"); }
 
-  // Passar de uma etapa para a outra: a atual sai a subir e a desfocar, a caixa ajusta a altura, a nova entra campo a campo.
+  // Passar de uma etapa para a outra: as duas cruzam-se no mesmo sítio (uma apaga-se, a outra aparece)
+  // enquanto a caixa ajusta a altura. Sem desfoques nem saltos.
   async function trocarPasso(caixa, qual) {
     var atual = caixa.querySelector(".lp-form:not([hidden])");
     if (semMovimento || !atual) { mostrar(caixa, qual); return; }
     var h0 = caixa.offsetHeight;
-    caixa.style.height = h0 + "px";
-    atual.classList.add("a-sair-passo");
-    await espera(480);
-    atual.classList.remove("a-sair-passo");
+    var topo = atual.offsetTop, esq = atual.offsetLeft, larg = atual.offsetWidth;
     mostrar(caixa, qual);
     var nova = caixa.querySelector(".lp-form:not([hidden])");
-    caixa.style.height = "auto";
     var h1 = caixa.offsetHeight;
+    // a antiga fica por cima, presa onde estava, a apagar-se
+    atual.hidden = false;
+    atual.style.cssText = "position:absolute;top:" + topo + "px;left:" + esq + "px;width:" + larg + "px;margin:0";
+    atual.classList.add("a-sair-passo");
+    if (nova) nova.classList.add("a-entrar-passo");
     caixa.style.height = h0 + "px"; void caixa.offsetHeight;
     caixa.classList.add("a-mudar");
     caixa.style.height = h1 + "px";
-    if (nova) {
-      nova.classList.remove("a-entrar-passo"); void nova.offsetWidth; nova.classList.add("a-entrar-passo");
-    }
-    await espera(640);
+    await espera(1150);
+    atual.hidden = true; atual.style.cssText = ""; atual.classList.remove("a-sair-passo");
     caixa.classList.remove("a-mudar"); caixa.style.height = "";
-    setTimeout(function () { if (nova) nova.classList.remove("a-entrar-passo"); }, 1100);
+    if (nova) nova.classList.remove("a-entrar-passo");
   }
 
   function erro(form, msg) {

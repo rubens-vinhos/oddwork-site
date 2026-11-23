@@ -385,21 +385,14 @@ html[data-v="a"] [data-var="b"], html[data-v="b"] [data-var="a"] { display: none
 @media (prefers-reduced-motion: reduce) { .lp-hero .hero__texto { transition: none; } .lp-form.a-entrar > * { animation: none; } }
 
 /* ---------- Etapas do formulário ---------- */
-.lp-form-caixa.a-mudar { transition: height .6s cubic-bezier(.22,1,.36,1); }
-/* Como minimizar uma janela no Mac: o passo 1 encolhe para dentro do botão, o passo 2 sai de lá e cresce */
-.lp-form.a-sair-passo { transform-origin: 50% 100%; animation: genio-sair .5s cubic-bezier(.55,0,.8,.25) forwards; pointer-events: none; }
-.lp-form.a-entrar-passo { transform-origin: 50% 100%; animation: genio-entrar .65s cubic-bezier(.16,1,.3,1) both; }
-@keyframes genio-sair {
-  0% { transform: none; opacity: 1; filter: none; }
-  35% { transform: translateY(3%) scale(.9, .96); opacity: .95; }
-  100% { transform: translateY(14%) scale(.14, .05); opacity: 0; filter: blur(3px); }
-}
-@keyframes genio-entrar {
-  0% { transform: translateY(14%) scale(.14, .05); opacity: 0; filter: blur(3px); }
-  45% { opacity: 1; filter: none; }
-  70% { transform: translateY(1%) scale(.97, .985); }
-  100% { transform: none; opacity: 1; filter: none; }
-}
+.lp-form-caixa.a-mudar { transition: height .9s cubic-bezier(.65,0,.35,1); }
+/* As etapas cruzam-se no mesmo sítio: a antiga apaga-se, a nova aparece com um deslize mínimo */
+.lp-form-caixa { position: relative; }
+.lp-form-caixa.a-mudar { overflow: hidden; }
+.lp-form.a-sair-passo { animation: passo-sair .5s cubic-bezier(.4,0,.6,1) forwards; pointer-events: none; }
+.lp-form.a-entrar-passo { animation: passo-entrar .75s cubic-bezier(.22,1,.36,1) .38s both; }
+@keyframes passo-sair { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-14px) scale(.985); } }
+@keyframes passo-entrar { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
 
 /* ---------- Botão de enviar: a carregar e feito ---------- */
 .botao__estado { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; opacity: 0; transform: scale(.6); transition: opacity .25s ease, transform .45s cubic-bezier(.34,1.56,.64,1); }
@@ -644,7 +637,7 @@ body.lp-obrigado { background: var(--noite); }
 .lp .noite:has(> .lp-queda--hero) { position: relative; isolation: isolate; overflow: hidden; }
 .noite:has(> .lp-queda--hero) > :not(.lp-queda) { position: relative; z-index: 1; }
 .lp .noite:has(> .lp-queda--hero)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18%; z-index: 0; pointer-events: none; background: linear-gradient(rgba(19,26,43,0), var(--noite) 92%); }
-.noite > .lp-queda--hero { position: absolute; z-index: 0; inset: 30% auto 0 0; width: 60%; background: none;
+.noite > .lp-queda--hero { position: absolute; z-index: 0; top: 30svh; left: 0; height: 70svh; width: 60%; background: none;
   -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%); mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%); }
 .lp-queda--hero::before, .lp-queda--hero::after { display: none; }
 .lp-hero .lp-logo3d--vazio { visibility: hidden; }
