@@ -1,7 +1,8 @@
 // Logo da Oddwork em 3D no topo da landing page.
 // Computador e telemóvel, desde que haja WebGL; carrega a biblioteca depois da página estar pronta.
 // Sem WebGL fica o símbolo plano que já está no HTML.
-const lugar = document.querySelector("[data-logo3d]");
+// O lugar do logo serve de referência para centrar; o 3D só aparece se tiver data-logo3d.
+const lugar = document.querySelector(".lp-logo3d");
 const telemovel = matchMedia("(max-width: 900px)").matches;
 const semMovimento = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -33,7 +34,7 @@ if (lugar) {
   addEventListener("resize", () => { lugar.style.removeProperty("--desvio"); centrarNoTexto(); }, { passive: true });
 }
 
-if (lugar && temWebGL()) {
+if (lugar && lugar.hasAttribute("data-logo3d") && temWebGL()) {
   const iniciar = () => import("/assets/vendor/three.module.min.js").then(arrancar).catch(() => {});
   if ("requestIdleCallback" in window) requestIdleCallback(iniciar, { timeout: 1500 });
   else setTimeout(iniciar, 400);

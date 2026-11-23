@@ -1,5 +1,5 @@
-// Fim da página: o símbolo da Oddwork caído e cravado no chão, numa cratera com fendas a brilhar.
-// Só carrega quando o fim da página se aproxima. Sem WebGL a faixa fica só com o brilho em CSS.
+// Topo da página: o símbolo da Oddwork caído e cravado no chão, numa cratera com fendas a brilhar.
+// Só carrega quando a cena está perto do ecrã. Sem WebGL a faixa fica só com o brilho em CSS.
 const lugar = document.querySelector("[data-queda]");
 const semMovimento = matchMedia("(prefers-reduced-motion: reduce)").matches;
 

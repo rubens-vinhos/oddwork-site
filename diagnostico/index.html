@@ -26,8 +26,8 @@
     })();
   </script>
   <link rel="preload" href="/assets/fontes/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=20261122u">
-  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261122u">
+  <link rel="stylesheet" href="/site.css?v=20261123a">
+  <link rel="stylesheet" href="/diagnostico/lp.css?v=20261123a">
   <script>
     // Ecrã de carregamento: marca antes de pintar (1.ª visita da sessão = animação completa).
     (function (d) {
@@ -71,6 +71,7 @@
 
   <!-- ============ Topo + hero com formulário ============ -->
   <div class="noite">
+    <div class="lp-queda lp-queda--hero" data-queda aria-hidden="true"></div>
     <header class="topo">
       <span class="marca" aria-label="Oddwork"><svg viewBox="-420 -420 840 840" fill="currentColor" aria-hidden="true"><use href="#simbolo"/></svg><span>the<em>odd</em>work</span></span>
     </header>
@@ -85,7 +86,7 @@
         <a class="botao lp-hero__cta" href="#formulario-lugar" data-ir-form data-rastrear="lp-cta-topo">Fazer o diagnóstico grátis</a>
         <a class="botao botao--vidro lp-hero__exemplos" href="/exemplos/" data-chuva data-rastrear="lp-exemplos">Ver exemplos</a>
         <span class="lp-hero__desce" aria-hidden="true"></span>
-        <div class="lp-logo3d" data-logo3d aria-hidden="true">
+        <div class="lp-logo3d lp-logo3d--vazio" aria-hidden="true">
           <svg class="lp-logo3d__plano" viewBox="-420 -420 840 840" fill="currentColor"><use href="#simbolo"/></svg>
         </div>
       </div>
@@ -165,9 +166,9 @@
     </section>
   </main>
 
-  <footer class="rodape lp-rodape lp-rodape--queda">
+  <footer class="rodape lp-rodape">
     <!-- a nave caída e cravada no chão, por trás dos links do rodapé -->
-    <div class="lp-queda" data-queda aria-hidden="true"></div>
+    
     <nav class="rodape__links" aria-label="Rodapé">
       <a href="/privacidade.html">Privacidade</a>
       <a href="/termos.html">Termos</a>
@@ -302,10 +303,10 @@
   <script src="/config.js"></script>
   <script src="/cookies.js"></script>
   <script src="/anuncios.js"></script>
-  <script src="/diagnostico/lp.js?v=20261122u"></script>
-  <script type="module" src="/diagnostico/lp3d.js?v=20261122u"></script>
-  <script type="module" src="/diagnostico/lp-queda.js?v=4"></script>
+  <script src="/diagnostico/lp.js?v=20261123a"></script>
+  <script type="module" src="/diagnostico/lp3d.js?v=20261123a"></script>
+  <script type="module" src="/diagnostico/lp-queda.js?v=5"></script>
   <script src="/rastreio.js"></script>
-  <script src="/site.js?v=20261122u"></script>
+  <script src="/site.js?v=20261123a"></script>
 </body>
 </html>
