@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Canoa havaiana em Itajaí — Motirõ Clube de Canoa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --tinta:#14111C; --tinta-2:#5B5666; --linha:#E7E4EA; --fundo:#FFFFFF; --pedra:#F4F3F1; --laranja:#FF9416; --roxo:#4E1A78; --noite:#0E0C17; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Figtree,system-ui,sans-serif;color:var(--tinta);background:var(--fundo);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;letter-spacing:-.025em;line-height:1}
+a{color:inherit}
+.max{max-width:1200px;margin:0 auto;padding:0 28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;font-weight:600;font-size:16px;text-decoration:none;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn--sol{background:var(--laranja);color:#1A0E00}
+.btn--vidro{background:rgba(14,12,23,.32);border:1px solid rgba(255,255,255,.4);color:#fff;backdrop-filter:blur(10px)}
+.btn--tinta{background:var(--tinta);color:#fff}
+.so-tel{display:none}
+
+/* HERO */
+.hero{position:relative;height:100svh;min-height:640px;color:#fff;overflow:hidden;background:#1a1530}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,20,.55) 0%,rgba(10,8,20,0) 38%,rgba(10,8,20,0) 70%,rgba(10,8,20,.5) 100%);pointer-events:none}
+.topo{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding-top:24px}
+.topo img{height:40px}
+.topo nav{display:flex;gap:30px;font-size:15px;font-weight:500}
+.topo nav a{text-decoration:none;opacity:.85}
+.hero__texto{position:absolute;z-index:2;left:0;right:0;bottom:9vh}
+.hero h1{font-size:clamp(48px,7vw,104px);max-width:11ch;text-shadow:0 2px 30px rgba(0,0,0,.25)}
+.hero p{font-size:clamp(17px,1.4vw,20px);max-width:470px;margin:20px 0 30px;color:rgba(255,255,255,.88)}
+.botoes{display:flex;gap:12px;flex-wrap:wrap}
+.agora{position:absolute;z-index:2;right:28px;top:88px;white-space:nowrap;margin:0;padding:8px 14px;border-radius:999px;background:rgba(14,12,23,.35);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);font-size:13px;font-weight:500;color:rgba(255,255,255,.9)}
+.proxima{position:absolute;z-index:2;right:28px;bottom:9vh;display:flex;flex-direction:column;gap:4px;padding:16px 20px;border-radius:16px;background:rgba(14,12,23,.38);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(14px);font-size:14px;min-width:220px}
+.proxima b{font-family:"Bricolage Grotesque";font-size:30px;font-weight:600;letter-spacing:-.02em}
+.proxima span{color:rgba(255,255,255,.75)}
+.proxima i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7CF2B0;margin-right:8px;box-shadow:0 0 0 4px rgba(124,242,176,.22)}
+
+section{padding:110px 0}
+.cab{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:44px}
+.cab h2{font-size:clamp(38px,4.6vw,64px)}
+.cab p{color:var(--tinta-2);font-size:17px;max-width:460px;justify-self:end}
+
+/* nome */
+.nome{background:var(--noite);color:#fff;padding:120px 0}
+.nome .max{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:end}
+.nome h2{font-size:clamp(40px,5.4vw,80px)}
+.nome h2 span{color:var(--laranja)}
+.nome p{color:#B9B3C6;font-size:19px;max-width:440px}
+
+/* grade */
+.grade{border-top:1px solid var(--linha)}
+.linha{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--linha);padding:18px 0;align-items:center}
+.linha h3{font-size:22px}
+.aulas{display:flex;gap:12px;flex-wrap:wrap}
+.aula{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:center;min-width:300px;padding:14px 18px;border-radius:14px;background:var(--pedra);text-decoration:none;transition:background .2s}
+.aula:hover{background:#ECEAE6}
+.aula b{grid-row:span 2;font-family:"Bricolage Grotesque";font-size:34px;font-weight:600;letter-spacing:-.03em}
+.aula small{font-size:14px;color:var(--tinta-2)}
+.aula em{font-style:normal;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px}
+.barra{flex:1;height:4px;border-radius:4px;background:#DEDBD6;overflow:hidden;max-width:120px}
+.barra span{display:block;height:100%;background:var(--tinta)}
+.aula--quase em{color:#C4620A} .aula--quase .barra span{background:var(--laranja)}
+.aula--lotada{opacity:.6}
+.nota{margin-top:16px;font-size:13px;color:var(--tinta-2)}
+
+/* planos */
+.planos{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha);border-radius:22px;overflow:hidden}
+.plano{background:#fff;padding:34px 28px;display:flex;flex-direction:column;min-height:330px}
+.plano h3{font-size:20px;color:var(--tinta-2);font-weight:500}
+.plano .num{font-size:56px;margin:18px 0 6px}
+.plano .num small{font-family:Figtree;font-size:15px;font-weight:500;color:var(--tinta-2);letter-spacing:0}
+.plano p{color:var(--tinta-2);flex:1}
+.plano .btn{margin-top:24px;min-height:46px;font-size:15px}
+.plano--full{background:var(--noite);color:#fff}
+.plano--full h3{color:var(--laranja)} .plano--full p,.plano--full .num small{color:#B9B3C6}
+.avulsos{display:flex;gap:36px;flex-wrap:wrap;margin-top:24px;color:var(--tinta-2);font-size:15px}
+.avulsos b{color:var(--tinta);font-weight:600}
+
+/* capitão */
+.capitao{background:var(--pedra)}
+.capitao .max{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.foto{aspect-ratio:4/5;border-radius:24px;background:linear-gradient(160deg,#2B2440,#0E0C17);display:flex;align-items:flex-end;padding:24px;color:rgba(255,255,255,.6);font-size:14px}
+.capitao h2{font-size:clamp(38px,4.6vw,64px);margin-bottom:24px}
+.capitao p{font-size:19px;color:#34303C;margin-bottom:16px;max-width:520px}
+.anos{display:flex;gap:44px;margin:34px 0 36px;border-top:1px solid #DCD9D4;padding-top:24px}
+.anos b{display:block;font-family:"Bricolage Grotesque";font-size:40px;font-weight:600;letter-spacing:-.03em}
+.anos span{font-size:14px;color:var(--tinta-2)}
+
+/* antes de remar */
+.lista{display:grid;grid-template-columns:repeat(4,1fr);gap:36px}
+.lista div{border-top:1px solid var(--tinta);padding-top:20px}
+.lista h3{font-size:24px;margin-bottom:10px}
+.lista p{color:var(--tinta-2)}
+
+.final{background:var(--noite);color:#fff;text-align:center;padding:130px 0}
+.final h2{font-size:clamp(44px,6vw,88px);max-width:14ch;margin:0 auto 22px}
+.final p{color:#B9B3C6;font-size:18px;margin-bottom:34px}
+.final .botoes{justify-content:center}
+footer{background:var(--noite);color:#8D869C;border-top:1px solid #26222F;padding:36px 0;font-size:14px}
+footer .max{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+footer img{height:32px} footer a{color:#fff}
+
+@media (max-width:900px){
+  .topo nav{display:none} .topo img{height:34px}
+  .hero__texto{bottom:4vh;top:auto}
+  .hero h1{font-size:46px}
+  .so-pc{display:none} .so-tel{display:inline}
+  .botoes .btn{white-space:nowrap}
+  .hero p{font-size:16px;margin:14px 0 22px}
+  .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.45) 0%,rgba(10,8,20,0) 22%,rgba(10,8,20,0) 50%,rgba(10,8,20,.7) 100%)}
+  .botoes{flex-direction:row!important;gap:10px}
+  .botoes .btn{width:auto!important;flex:1;min-height:50px;padding:0 14px;font-size:15px}
+  .botoes .btn--sol{flex:1.5}
+  .btn--vidro{background:rgba(14,12,23,.35);border-color:rgba(255,255,255,.45)}
+  .proxima{left:28px;right:auto;top:92px;bottom:auto;flex-direction:row;align-items:center;gap:10px;min-width:0;padding:8px 14px;border-radius:999px;white-space:nowrap;font-size:13px}
+  .proxima b{font-size:14px;font-family:Figtree;letter-spacing:0}
+  .agora{left:28px;right:auto;top:140px}
+  .proxima span:first-child{display:none}
+  .proxima::before{content:"";width:8px;height:8px;border-radius:50%;background:#7CF2B0;box-shadow:0 0 0 4px rgba(124,242,176,.22)}
+  .cab,.nome .max,.capitao .max{grid-template-columns:1fr;gap:20px}
+  .cab p{justify-self:start}
+  section,.nome{padding:76px 0}
+  .linha{grid-template-columns:1fr;gap:12px}
+  .aula{min-width:0;width:100%}
+  .planos{grid-template-columns:1fr 1fr}
+  .lista{grid-template-columns:1fr 1fr}
+  .foto{aspect-ratio:4/3}
+}
+@media (max-width:540px){ .planos,.lista{grid-template-columns:1fr} .plano{min-height:0} .botoes{flex-direction:column} .botoes .btn{width:100%} }
+
+/* painel de teste (maquete) */
+.teste{position:fixed;z-index:50;right:20px;bottom:20px;font-family:Figtree,sans-serif;color:#fff}
+.teste__abre{border:0;border-radius:999px;padding:12px 18px;background:#14111C;color:#fff;font:600 14px Figtree;box-shadow:0 10px 30px rgba(0,0,0,.35);cursor:pointer}
+.teste__caixa{display:none;width:300px;padding:16px 18px 18px;border-radius:18px;background:rgba(20,17,28,.88);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.teste.aberto .teste__caixa{display:block} .teste.aberto .teste__abre{display:none}
+.teste__topo{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.teste__topo button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+.teste label{display:block;font-size:13px;color:rgba(255,255,255,.8);margin-top:10px}
+.teste output{float:right;font-weight:600;color:#fff}
+.teste input[type=range]{width:100%;margin-top:6px;accent-color:#FF9416}
+.teste__check{display:flex!important;align-items:center;gap:8px}
+.teste__check input{accent-color:#FF9416;width:16px;height:16px}
+.teste__real{margin-top:14px;width:100%;border:1px solid rgba(255,255,255,.3);background:none;color:#fff;border-radius:999px;padding:10px;font:600 13px Figtree;cursor:pointer}
+@media (max-width:900px){ .teste{left:12px;right:12px;top:22px;bottom:auto} .teste__abre{float:right;padding:9px 14px;font-size:13px} .teste__caixa{width:auto} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <canvas data-oceano aria-hidden="true"></canvas>
+  <div class="max topo">
+    <img src="logo-branco.png" alt="Motirõ Clube de Canoa">
+    <nav><a href="#">O Capitão</a><a href="#">Antes de remar</a><a href="#">Planos e horários</a><a href="#">Passeios exclusivos</a><a href="#">Contato</a></nav>
+  </div>
+  <div class="hero__texto"><div class="max">
+    <h1>O dia começa no mar.</h1>
+    <p>Canoa havaiana em Itajaí. Remadas às 6h, de segunda a sábado, saindo da Fazenda.</p>
+    <div class="botoes">
+      <a class="btn btn--sol" href="#"><span class="so-pc">Marcar aula experimental</span><span class="so-tel">Aula experimental</span></a>
+      <a class="btn btn--vidro" href="#">Inscreva-se</a>
+    </div>
+  </div></div>
+  <p class="agora" data-agora hidden></p>
+  <div class="proxima"><span><i></i>Próxima remada</span><b>Amanhã, 6:00</b><span>4 vagas de 12</span></div>
+</header>
+
+<div class="nome">
+  <div class="max">
+    <h2>Numa canoa, <span>ninguém rema sozinho.</span></h2>
+    <p>Motirõ é uma palavra tupi-guarani: a reunião de pessoas para construir ou colher algo juntas, ajudando umas às outras.</p>
+  </div>
+</div>
+
+<section>
+  <div class="max">
+    <div class="cab"><h2>As remadas da semana</h2><p>Cada remada leva até 12 pessoas. Escolha um horário com vaga ou entre na lista de espera das lotadas.</p></div>
+    <div class="grade">
+      <div class="linha"><h3>Segunda</h3><div class="aulas">
+        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:58%"></span></span>5 vagas</em></a>
+        <a class="aula" href="#"><b>8:15</b><small>Treino</small><em><span class="barra"><span style="width:33%"></span></span>8 vagas</em></a></div></div>
+      <div class="linha"><h3>Terça</h3><div class="aulas">
+        <a class="aula aula--quase" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:83%"></span></span>Últimas 2 vagas</em></a></div></div>
+      <div class="linha"><h3>Quarta</h3><div class="aulas">
+        <a class="aula aula--lotada" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:100%"></span></span>Lotada · lista de espera</em></a></div></div>
+      <div class="linha"><h3>Quinta</h3><div class="aulas">
+        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:50%"></span></span>6 vagas</em></a></div></div>
+      <div class="linha"><h3>Sexta</h3><div class="aulas">
+        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:66%"></span></span>4 vagas</em></a>
+        <a class="aula" href="#"><b>7:45</b><small>Remada extra</small><em><span class="barra"><span style="width:25%"></span></span>9 vagas</em></a></div></div>
+      <div class="linha"><h3>Sábado</h3><div class="aulas">
+        <a class="aula aula--quase" href="#"><b>7:00</b><small>Remada</small><em><span class="barra"><span style="width:92%"></span></span>Última vaga</em></a></div></div>
+    </div>
+    <p class="nota">Vagas de exemplo nesta maquete. No site, vêm do painel em tempo real.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="max">
+    <div class="cab"><h2>Planos</h2><p>Horários fixos toda semana. Mensalidade com vencimento no dia 10, paga por Pix.</p></div>
+    <div class="planos">
+      <div class="plano"><h3>1x por semana</h3><div class="num">R$ 195<small> /mês</small></div><p>1 horário fixo.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
+      <div class="plano"><h3>2x por semana</h3><div class="num">R$ 285<small> /mês</small></div><p>2 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
+      <div class="plano"><h3>3x por semana</h3><div class="num">R$ 340<small> /mês</small></div><p>3 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
+      <div class="plano plano--full"><h3>Full</h3><div class="num">R$ 380<small> /mês</small></div><p>Todas as remadas da semana, incluindo o treino de segunda 8:15.</p><a class="btn btn--sol" href="#">Escolher</a></div>
+    </div>
+    <div class="avulsos"><span><b>Aula experimental</b> R$ 75, descontados da primeira mensalidade</span><span><b>Passeio avulso</b> R$ 75</span><span><b>Passeios exclusivos</b> grupos a partir de 8 pessoas</span></div>
+  </div>
+</section>
+
+<section class="capitao">
+  <div class="max">
+    <div class="foto">Foto do Capitão (provisório)</div>
+    <div>
+      <h2>O Capitão</h2>
+      <p>Luciano Silveiro entrou num barco pela primeira vez em 1991, aos 13 anos, como timoneiro do avô, remador de um clube de Porto Alegre.</p>
+      <p>Nunca se afastou do mar e do surfe. A canoa havaiana virou a ponte entre esses dois mundos: a técnica do remo com a liberdade do oceano.</p>
+      <div class="anos"><div><b>1991</b><span>Primeiro barco</span></div><div><b>2018</b><span>Chega a Itajaí</span></div><div><b>2019</b><span>Nasce o Motirõ</span></div></div>
+      <a class="btn btn--tinta" href="#">Conhecer a história</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="max">
+    <div class="cab"><h2>Antes de remar</h2><p>Saída: Av. Min. Victor Konder, Fazenda, Itajaí–SC.</p></div>
+    <div class="lista">
+      <div><h3>Nadar</h3><p>Não precisa saber nadar, mas é recomendável.</p></div>
+      <div><h3>Pés</h3><p>Venha de sandália ou chinelo: a remada é descalça.</p></div>
+      <div><h3>Sol</h3><p>Traga protetor solar e água.</p></div>
+      <div><h3>Mergulho</h3><p>No meio da aula tem uma parada para mergulho, pra quem quiser.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="max">
+    <h2>Venha remar com a gente uma manhã.</h2>
+    <p>Aula experimental por R$ 75, descontados se você fechar um plano.</p>
+    <div class="botoes"><a class="btn btn--sol" href="#">Marcar aula experimental</a><a class="btn btn--vidro" href="#">Ver planos e horários</a></div>
+  </div>
+</div>
+<footer>
+  <div class="max">
+    <img src="logo-branco.png" alt="Motirõ Clube de Canoa">
+    <span>Av. Min. Victor Konder, Fazenda, Itajaí–SC · <a href="#">@canoamotiro</a> · <a href="#">WhatsApp</a> · <a href="#">Privacidade</a></span>
+    <span>Feito pela <a href="#">Oddwork</a></span>
+  </div>
+</footer>
+<script src="oceano.js"></script>
+<!-- Painel de teste (só na maquete; no site real o céu segue o tempo de Itajaí sozinho) -->
+<div class="teste" data-teste>
+  <button class="teste__abre" type="button" data-teste-abre>Testar céu</button>
+  <div class="teste__caixa">
+    <div class="teste__topo"><b>Testar céu</b><button type="button" data-teste-fecha aria-label="Fechar">×</button></div>
+    <label>Hora em Itajaí <output data-o="hora">--:--</output><input type="range" min="0" max="23.98" step="0.05" data-c="hora"></label>
+    <label>Nuvens <output data-o="nuvem"></output><input type="range" min="0" max="1" step="0.01" data-c="nuvem"></label>
+    <label>Chuva <output data-o="chuva"></output><input type="range" min="0" max="1" step="0.01" data-c="chuva"></label>
+    <label>Mar agitado <output data-o="mar"></output><input type="range" min="0" max="1" step="0.01" data-c="mar"></label>
+    <label class="teste__check"><input type="checkbox" data-c="tempestade"> Trovoada com relâmpagos</label>
+    <button class="teste__real" type="button" data-teste-real>Voltar ao tempo real</button>
+  </div>
+</div>
+<script>
+(() => {
+  const raiz = document.querySelector("[data-teste]");
+  const c = (n) => raiz.querySelector(`[data-c="${n}"]`), o = (n) => raiz.querySelector(`[data-o="${n}"]`);
+  const hhmm = (h) => `${String(Math.floor(h)).padStart(2,"0")}:${String(Math.floor((h % 1)*60)).padStart(2,"0")}`;
+  const pct = (v) => `${Math.round(v*100)}%`;
+  function mostra(){
+    const api = window.ceuTeste; if (!api) return;
+    const v = api.valores(), h = api.horaItajai();
+    c("hora").value = h; o("hora").textContent = hhmm(h);
+    for (const k of ["nuvem","chuva","mar"]) { c(k).value = v[k]; o(k).textContent = pct(v[k]); }
+    c("tempestade").checked = !!v.tempestade;
+  }
+  c("hora").addEventListener("input", (e) => { window.ceuTeste.hora(+e.target.value); o("hora").textContent = hhmm(+e.target.value); });
+  for (const k of ["nuvem","chuva","mar"]) c(k).addEventListener("input", (e) => {
+    const v = window.ceuTeste.definir(k, +e.target.value);
+    for (const j of ["nuvem","chuva","mar"]) { c(j).value = v[j]; o(j).textContent = pct(v[j]); }
+  });
+  c("tempestade").addEventListener("change", (e) => { const v = window.ceuTeste.definir("tempestade", e.target.checked); c("chuva").value = v.chuva; o("chuva").textContent = pct(v.chuva); });
+  raiz.querySelector("[data-teste-real]").addEventListener("click", () => { window.ceuTeste.real(); setTimeout(mostra, 1500); });
+  raiz.querySelector("[data-teste-abre]").addEventListener("click", () => { raiz.classList.add("aberto"); mostra(); });
+  raiz.querySelector("[data-teste-fecha]").addEventListener("click", () => raiz.classList.remove("aberto"));
+  if (matchMedia("(min-width: 901px)").matches) raiz.classList.add("aberto");
+  setTimeout(mostra, 1500);
+})();
+</script>
+
+</body>
+</html>
