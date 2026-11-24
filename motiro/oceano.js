@@ -556,10 +556,14 @@ const params = new URLSearchParams(location.search);
 // fase da lua: 0 nova, .5 cheia (mês sinódico a partir de uma lua nova conhecida)
 function faseReal(ms){ const jd = ms/86400000 + 2440587.5; return (((jd - 2451550.26)/29.530588853) % 1 + 1) % 1; }
 let faseTeste = null;
-let horaTeste = params.get("hora") ? params.get("hora").split(":").reduce((h, m) => +h + m/60) : null;
-let modo = params.get("tempo");
+// TEMPO_REAL = true volta a seguir a hora e o tempo de Itajaí (versão guardada em oceano-tempo-real.js)
+const TEMPO_REAL = false;
+const HORA_POENTE = 18 + 35/60;                              // sempre o pôr do sol, com o sol a pousar atrás do morro
+let horaTeste = !TEMPO_REAL && !params.get("hora") ? HORA_POENTE : params.get("hora") ? params.get("hora").split(":").reduce((h, m) => +h + m/60) : null;
+let modo = params.get("tempo") || (TEMPO_REAL ? null : "limpo");
 function agoraMs(){
   if (horaTeste == null) return Date.now();
+  if (!TEMPO_REAL) return Date.UTC(2026, 10, 24, 3) + horaTeste*3600e3;   // dia fixo: o pôr do sol fica sempre igual
   const hoje = new Date(Date.now() - 3*3600e3);
   return Date.UTC(hoje.getUTCFullYear(), hoje.getUTCMonth(), hoje.getUTCDate(), 3) + horaTeste*3600e3;
 }
@@ -617,8 +621,13 @@ function simulacao(){
     agitado: { nuvem: .5, chuva: 0, mar: 1, vento: .9, tempestade: false } }[m] || {});
 }
 simulacao(); Object.assign(atual, alvo);
-buscaTempo();
-setInterval(buscaTempo, 10*60*1000);
+if (TEMPO_REAL) {
+  buscaTempo();
+  setInterval(buscaTempo, 10*60*1000);
+} else {
+  simulacao();
+  Object.assign(atual, alvo);                                // já abre no pôr do sol, sem transição
+}
 
 // ---------- relâmpagos ----------
 let raio = 0, proxRaio = 0, raioPos = [0, 0], pisca = [];
@@ -684,7 +693,7 @@ function canoaPasso(ms, dt, elev){
 window.ceuTeste = {
   hora(h){ horaTeste = h; },
   tempo(m){ modo = m; simulacao(); if (ultimo) rotulo({ ...ultimo, weather_code: { limpo: 0, nublado: 3, chuva: 63, tempestade: 95, agitado: 2 }[m] }); },
-  real(){ horaTeste = null; modo = null; manual = false; faseTeste = null; buscaTempo(); },
+  real(){ manual = false; faseTeste = null; if (TEMPO_REAL) { horaTeste = null; modo = null; buscaTempo(); } else { horaTeste = HORA_POENTE; modo = "limpo"; simulacao(); } },
   lua(f){ faseTeste = f; },
   canoa(a, s = 1){ if (!CANOA_LIGADA) return; can.ativo = true; can.a = a; can.s = s; can.vis = 1; },
   fase(){ return faseTeste ?? faseReal(agoraMs()); },

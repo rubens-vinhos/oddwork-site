@@ -149,9 +149,9 @@ footer img{height:32px} footer a{color:#fff}
 /* versão limpa: só o mar e o logo */
 body.limpo{background:#1a1530;overflow:hidden}
 body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,rgba(10,8,20,0) 45%)}
-.marca{position:absolute;z-index:2;left:50%;top:34%;transform:translate(-50%,-50%);margin:0;line-height:0}
+.marca{position:absolute;z-index:2;left:50%;top:41%;transform:translate(-50%,-50%);margin:0;line-height:0}
 .marca img{width:clamp(220px,30vw,460px);height:auto;filter:drop-shadow(0 4px 28px rgba(0,0,0,.28))}
-@media (max-width:900px){ .marca{top:22%} .marca img{width:min(68vw,300px)} }
+@media (max-width:900px){ .marca{top:28%} .marca img{width:min(68vw,300px)} }
 </style>
 </head>
 <body class="limpo">
@@ -173,7 +173,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
     <label>Mar agitado <output data-o="mar"></output><input type="range" min="0" max="1" step="0.01" data-c="mar"></label>
     <label>Lua <output data-o="lua"></output><input type="range" min="0" max="1" step="0.005" data-c="lua"></label>
     <label class="teste__check"><input type="checkbox" data-c="tempestade"> Trovoada com relâmpagos</label>
-    <button class="teste__real" type="button" data-teste-real>Voltar ao tempo real</button>
+    <button class="teste__real" type="button" data-teste-real>Voltar ao pôr do sol</button>
   </div>
 </div>
 <script>
