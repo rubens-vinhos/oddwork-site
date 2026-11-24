@@ -115,7 +115,7 @@ vec3 ceu(vec3 rd){
   c += vec3(1.,.38,.08)*pow(d, 10.)*.45*OCASO*brilho + tom*pow(d, 90.)*1.4*visSol + tom*pow(d, 8.)*.25*DIA*brilho;
   c += vec3(1.,.82,.55)*smoothstep(.99935,.9996,d)*7.*visSol;
   // lua (fase real; no hemisfério sul a crescente acende do lado esquerdo)
-  float visLua = (NOITE + OCASO*.35) * (1. - chuva*.95) * (1. - nuvem*.92);
+  float visLua = (NOITE + OCASO*.35*smoothstep(.04, .12, fase)*smoothstep(.42, .28, fase)) * (1. - chuva*.95) * (1. - nuvem*.92);
   if (visLua > .001) {
     float dm = dot(rd, LUA);
     float raioLua = .021;
@@ -174,6 +174,7 @@ vec3 ceu(vec3 rd){
   return c;
 }
 
+float detalhe = 1.;
 float altura(vec2 p){
   float h = 0., a = mix(.13, .95, mar*mar), f = .2;
   vec2 d = normalize(vec2(.9,.45));
@@ -182,10 +183,11 @@ float altura(vec2 p){
   for(int i=0;i<6;i++){
     float x = dot(d,p)*f + t*sqrt(f*9.8)*vel;
     float w = .5+.5*sin(x + noise(p*f*.7)*2.);
-    h += a*w*w;
+    // ondas reais: cristas afiadas e vales largos, mais afiadas quanto mais agitado
+    h += a*pow(w, i < 2 ? mix(2., 3.6, mar) : 2.)*(i < 2 ? 1. : detalhe);
     d = r*d; f *= 1.82; a *= .5;
   }
-  h += mix(.025, .08, mar)*fbm(p*1.2 + vec2(t*.2, t*.08));
+  h += detalhe*mix(.025, .08, mar)*fbm(p*1.2 + vec2(t*.2, t*.08));
   return h;
 }
 
@@ -263,13 +265,24 @@ void main(){
   } else {
     float dist = -ro.y/rd.y;
     vec3 p = ro + rd*dist;
+    detalhe = exp(-dist*.035);
+    // mar agitado: as ondas sobem de verdade (refina o ponto onde o olhar bate na água)
+    if (mar > .25) {
+      float A0 = mix(.13, .95, mar*mar);
+      float perto = exp(-dist*.05);
+      for (int j = 0; j < 4; j++) {
+        float hh = (altura(p.xz) - A0*.45)*smoothstep(.25, .6, mar)*perto;
+        dist = mix(dist, (ro.y - hh)/-rd.y, .65);
+        p = ro + rd*dist;
+      }
+    }
     float e2 = .03 + dist*.004;
     float k = exp(-dist*.012);
     float hx = altura(p.xz+vec2(e2,0.)) - altura(p.xz-vec2(e2,0.));
     float hz = altura(p.xz+vec2(0.,e2)) - altura(p.xz-vec2(0.,e2));
-    float forca = mix(1.2, 2.2, mar);
+    float forca = mix(1.2, 2.3, mar)*mix(.5, 1., detalhe);
     vec3 n = normalize(vec3(-hx/(2.*e2)*k*forca, 1., -hz/(2.*e2)*k*forca));
-    vec3 rf = reflect(rd, n); rf.y = abs(rf.y);
+    vec3 rf = reflect(rd, n); rf.y = max(abs(rf.y), .075*smoothstep(.2, .5, mar)); rf = normalize(rf);
     float fres = .02 + .98*pow(1.-max(dot(n,-rd),0.), 5.);
     vec3 fundo = mix(vec3(.015,.015,.045), vec3(.05,.12,.13), DIA) + vec3(.12,.04,.05)*max(dot(n, SOL),0.)*OCASO;
     float hgt = altura(p.xz);
@@ -277,8 +290,15 @@ void main(){
     fundo += vec3(.10,.08,.12)*crista*(1.-mar);
     col = mix(fundo, ceu(rf)*.8, fres);
     float A = mix(.13, .95, mar*mar);
-    float espuma = smoothstep(A*.95, A*1.35, hgt + .25*A*fbm(p.xz*.8 + t*.4)) * smoothstep(.25, .7, mar) * mix(.4, 1., k);
-    col = mix(col, vec3(.9,.93,.95)*(.2 + luzGeral*.8), espuma*.85);
+    // luz a atravessar a crista: o verde-água das ondas
+    float corpo = smoothstep(A*.5, A*1.1, hgt);
+    col += mix(vec3(.02,.09,.08), vec3(.05,.2,.17), DIA)*corpo*(DIA*.9 + OCASO*.35 + .05)*smoothstep(.2, .7, mar)*k*(1. - fres);
+    // espuma: renda fina no topo das cristas, a desfazer-se
+    float renda = fbm(p.xz*vec2(2.4, .9) + t*vec2(.25, .1));
+    float espuma = smoothstep(A*1., A*1.3, hgt + .35*A*(renda - .5));
+    espuma *= smoothstep(.32, .62, fbm(p.xz*5.5 - t*.35)) * .7 + .3*smoothstep(A*1.2, A*1.45, hgt);
+    espuma *= smoothstep(.3, .75, mar) * mix(.1, 1., smoothstep(.2, .85, detalhe));
+    col = mix(col, vec3(.86,.9,.92)*(.14 + luzGeral*.7), clamp(espuma, 0., 1.)*.8);
     float visSol = smoothstep(-.03, .01, SOL.y) * (1. - nuvem*.85) * (1. - chuva*.9);
     float rug = mix(60., 900., 1.-k);
     float sp = pow(max(dot(rf, SOL),0.), rug);
@@ -451,7 +471,9 @@ new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canva
 (function frame(){
   if (visivel){
     const ms = performance.now();
-    for (const k of ["nuvem","chuva","mar","vento"]) atual[k] += (alvo[k] - atual[k])*.02;
+    const agora = performance.now(), dt = Math.min(.25, (agora - (frame.ult || agora))/1000); frame.ult = agora;
+    const passo = 1 - Math.exp(-dt*1.2);   // ~2 s para mudar de tempo, igual em qualquer ecrã
+    for (const k of ["nuvem","chuva","mar","vento"]) atual[k] += (alvo[k] - atual[k])*passo;
     atual.tempestade = alvo.tempestade;
     relampago(ms);
     const s = sol(agoraMs());
