@@ -288,23 +288,50 @@ vec2 mapaCanoa(vec3 p){
                    min(sdCap(p, vec3(-2.2, .3, 0.), vec3(-2.2, .46, 1.), max(.045, fino)), sdCap(p, vec3(-2.2, .46, 1.), vec3(-2.3, .1, 1.9), max(.04, fino))));
   if (iako < r.x) r = vec2(iako, 3.);
   if (p.y > -.2 && p.y < 2. && abs(p.z) < 1.7 && ax < 5.6) {
-    vec3 L = vec3(sin(rLean), cos(rLean), 0.);
     for (int i = 0; i < 6; i++) {
-      float x0 = 4.3 - float(i)*1.72;
-      float lado = mod(float(i), 2.) < .5 ? 1. : -1.;
-      vec3 anca = vec3(x0, .12, 0.);
-      vec3 ombro = anca + L*.6;
-      float tronco = min(sdCap(p, anca, ombro, .19), sdCap(p, ombro - L*.05 + vec3(0., 0., .2), ombro - L*.05 - vec3(0., 0., .2), .12));
-      if (tronco < r.x) r = vec2(tronco, 4.);
-      float cab = length(p - (ombro + L*.27)) - .125;
-      vec3 D = normalize(vec3(sin(rTh), -cos(rTh), lado*.3));
-      vec3 B = ombro + vec3(.28 + .3*rAlc, -.12 + rSobe*.4, lado*.34);
-      vec3 T = B - D*.55 + vec3(0., 0., -lado*.1);
+      float fi = float(i);
+      float x0 = 4.3 - fi*1.72;
+      float lado = mod(fi, 2.) < .5 ? 1. : -1.;
+      // cada remador com um atraso mínimo, como gente a sério
+      float ph = fract(t*1.05 - fi*.012);
+      float alc = ph < .55 ? 1. - ph/.55 : smoothstep(.55, 1., ph);
+      float sobe = ph < .55 ? 0. : sin(3.1416*(ph - .55)/.45)*.3;
+      float th = mix(-.35, .6, alc);
+      float lean = .1 + .3*alc;
+      vec3 L = vec3(sin(lean), cos(lean), 0.);
+      float rot = lado*(.25*alc - .1);                       // o tronco roda para o lado do remo
+      vec3 Lz = vec3(-sin(rot)*.0, 0., 1.);
+      vec3 anca = vec3(x0, .1, 0.);
+      vec3 cintura = anca + L*.22;
+      vec3 ombro = anca + L*.62;
+      // tronco: mais estreito na cintura, largo nos ombros
+      vec3 pa = p - anca, ba = ombro - anca;
+      float hh = clamp(dot(pa, ba)/dot(ba, ba), 0., 1.);
+      vec3 qq = pa - ba*hh;
+      qq.z *= mix(1.05, .72, hh);                            // ombros largos
+      float tronco = length(qq) - mix(.15, .14, hh);
+      vec3 oE = ombro + vec3(sin(rot)*.08, -.03, .2), oD = ombro + vec3(-sin(rot)*.08, -.03, -.2);
+      tronco = min(tronco, sdCap(p, oE, oD, .085));
+      if (tronco < r.x) r = vec2(tronco, 4. + fi*.01);
+      float pescoco = sdCap(p, ombro, ombro + L*.12, max(.055, fino));
+      vec3 cabC = ombro + L*.26 + vec3(.02, 0., 0.);
+      float cab = length((p - cabC)*vec3(1., .92, 1.08)) - .115;
+      float cabelo = max(length(p - cabC - vec3(-.025, .03, 0.)) - .118, -(dot(p - cabC, normalize(vec3(.75, -.45, 0.))) + .02));
+      if (cabelo < r.x) r = vec2(cabelo, 7.);
+      // remo: mão de baixo perto da água, mão de cima no punho em T
+      vec3 D = normalize(vec3(sin(th), -cos(th), lado*.3));
+      vec3 B = ombro + vec3(.3 + .32*alc, -.16 + sobe*.4, lado*.36);
+      vec3 T = B - D*.58 + vec3(0., 0., -lado*.12);
       vec3 E = B + D*1.0;
-      float bracos = min(sdCap(p, ombro + vec3(0., 0., lado*.14), B, max(.05, fino)), sdCap(p, ombro - vec3(0., 0., lado*.14), T, max(.05, fino)));
-      float pele = min(cab, bracos);
-      if (pele < r.x) r = vec2(pele, 5.);
-      float remo = min(sdCap(p, T, E, max(.022, fino)), sdCap(p, B + D*.62, E, max(.075, fino)));
+      vec3 sB = lado > 0. ? oE : oD, sT = lado > 0. ? oD : oE;
+      vec3 cB = mix(sB, B, .5) + vec3(-.06, -.1, lado*.06);   // cotovelos
+      vec3 cT = mix(sT, T, .5) + vec3(-.04, -.06, -lado*.08);
+      float bracos = min(min(sdCap(p, sB, cB, max(.058, fino)), sdCap(p, cB, B, max(.048, fino))),
+                         min(sdCap(p, sT, cT, max(.058, fino)), sdCap(p, cT, T, max(.048, fino))));
+      float pele = min(min(cab, pescoco), bracos);
+      if (pele < r.x) r = vec2(pele, 5. + fi*.01);
+      float remo = min(sdCap(p, T, E, max(.02, fino)), sdCap(p, B + D*.6, E, max(.08, fino)));
+      remo = min(remo, sdCap(p, T - vec3(.07, 0., 0.), T + vec3(.07, 0., 0.), max(.025, fino)));
       if (remo < r.x) r = vec2(remo, 6.);
     }
   }
@@ -339,17 +366,25 @@ vec4 canoaCor(vec3 ro, vec3 rd, out float tC){
   vec3 q = paraCanoa(pw);
   vec3 nl = normalCanoa(q);
   vec3 n = normalize(nl.x*cH + nl.y*vec3(0., 1., 0.) + nl.z*cZ);
-  vec3 alb = mat < 1.5 ? vec3(.82,.8,.76) : mat < 2.5 ? vec3(.05,.05,.06) : mat < 3.5 ? vec3(.12,.12,.13)
-           : mat < 4.5 ? (q.x > 1. ? vec3(.06,.1,.2) : q.x > -2. ? vec3(.5,.12,.08) : vec3(.08,.09,.1)) : mat < 5.5 ? vec3(.42,.27,.18) : vec3(.03,.03,.035);
+  float quem = fract(mat)*100.;                         // índice do remador
+  vec3 alb;
+  if (mat < 1.5) alb = vec3(.86,.85,.82);
+  else if (mat < 2.5) alb = vec3(.05,.05,.06);
+  else if (mat < 3.5) alb = vec3(.12,.12,.13);
+  else if (mat < 4.5) alb = mod(quem + .5, 3.) < 1. ? vec3(.2,.06,.32) : mod(quem + .5, 3.) < 2. ? vec3(.035,.035,.045) : vec3(.07,.1,.17);   // lycra roxa, preta, azul-escura
+  else if (mat < 5.5) alb = mix(vec3(.52,.34,.22), vec3(.3,.18,.11), fract(quem*.37 + .2));               // tons de pele
+  else if (mat < 6.5) alb = vec3(.03,.03,.035);
+  else alb = vec3(.025,.02,.018);                                                                         // cabelo
   if (mat < 1.5) alb = mix(alb, vec3(1.,.55,.1), smoothstep(.2, .26, q.y)*.85);   // faixa laranja na borda
   float visSolC = smoothstep(-.03, .02, SOL.y)*(1. - nuvem*.75)*(1. - chuva*.85);
   vec3 corSol = mix(vec3(1.,.55,.25), vec3(1.,.96,.88), DIA)*mix(.6, 2.2, DIA)*visSolC;
   float dif = max(dot(n, SOL), 0.);
   vec3 ceuL = paleta(.35)*(.55 + .45*n.y);
   vec3 agua = paleta(.02)*.35*max(-n.y, 0.);
-  vec3 cor = alb*(corSol*dif + ceuL*.9 + agua);
+  float oclu = mat > 3.5 ? .55 + .45*smoothstep(.2, 1.1, q.y) : 1.;   // corpos mais escuros junto ao casco
+  vec3 cor = alb*(corSol*dif*1.15 + ceuL*.42*oclu + agua);
   cor += corSol*pow(max(dot(reflect(rd, n), SOL), 0.), 24.)*(mat < 1.5 || mat > 5.5 ? .35 : .05);
-  cor += paleta(.05)*pow(1. - max(dot(n, -rd), 0.), 4.)*.25;                          // contorno de luz
+  cor += paleta(.05)*pow(1. - max(dot(n, -rd), 0.), 4.)*.15;                          // contorno de luz
   float neb = (1. - exp(-tmin*(.008 + chuva*.05 + nuvem*.006)))*mix(.45, .62, chuva);
   cor = mix(cor, paleta(.01)*mix(1., .8, chuva), neb);
   return vec4(cor, cob);
@@ -617,7 +652,7 @@ function canoaPasso(ms, dt, elev){
     }
   } else {
     can.a += can.s*(2.4/dc)*dt;                               // ~2,4 m/s, velocidade real de uma OC6
-    if (can.a*can.s > meia) { can.ativo = false; can.ate = ms + 15000 + Math.random()*20000; }
+    if (can.a*can.s > meia) { can.ativo = false; can.ate = ms + 5000; }
   }
   can.vis += ((can.ativo && pode ? 1 : 0) - can.vis)*(1 - Math.exp(-dt*1.5));
   gl.uniform4f(u.canoa, can.a, can.s, can.vis, dc);
