@@ -32,7 +32,7 @@ function centrarNoTexto() {
 function posicionarNave() {
   const cena = document.querySelector(".lp-queda--hero"), ex = document.querySelector(".lp-hero__exemplos");
   if (!cena || !ex) return;
-  if (!matchMedia("(min-width: 901px)").matches) { cena.style.removeProperty("top"); cena.style.removeProperty("height"); return; }
+  if (!matchMedia("(min-width: 901px)").matches) { cena.style.removeProperty("top"); cena.style.removeProperty("height"); cena.style.removeProperty("--corte"); return; }
   // A cena ocupa o espaço entre o botão e o fundo do topo: a nave encolhe para caber inteira.
   const caixa = cena.parentElement.getBoundingClientRect();
   const fundo = Math.min(caixa.height, innerHeight - caixa.top) + 40;
@@ -40,6 +40,8 @@ function posicionarNave() {
   const altura = Math.max(360, (fundo - exFundo - 6) / 0.88);
   cena.style.top = Math.round(fundo - altura) + "px";
   cena.style.height = Math.round(altura) + "px";
+  // Só desvanece o chão quando a cena chega ao fim do topo (em ecrãs baixos fica toda à vista).
+  cena.style.setProperty("--corte", Math.round(fundo - caixa.height) + "px");
 }
 document.fonts.ready.then(posicionarNave);
 addEventListener("resize", posicionarNave, { passive: true });

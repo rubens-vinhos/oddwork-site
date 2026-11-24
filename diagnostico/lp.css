@@ -655,9 +655,9 @@ body.lp-obrigado { background: var(--noite); }
 /* Computador: o chão da nave desvanece antes do fim do topo (sem linha de corte). */
 @media (min-width: 901px) {
   .noite > .lp-queda--hero {
-    -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - 190px), transparent calc(100% - 40px));
+    -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - var(--corte, 40px) - 150px), transparent calc(100% - var(--corte, 40px)));
     -webkit-mask-composite: source-in;
-    mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - 190px), transparent calc(100% - 40px));
+    mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - var(--corte, 40px) - 150px), transparent calc(100% - var(--corte, 40px)));
     mask-composite: intersect;
   }
 }
