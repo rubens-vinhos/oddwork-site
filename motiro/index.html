@@ -152,6 +152,22 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
 .marca{position:absolute;z-index:2;left:50%;top:41%;transform:translate(-50%,-50%);margin:0;line-height:0}
 .marca img{width:clamp(220px,30vw,460px);height:auto;filter:drop-shadow(0 4px 28px rgba(0,0,0,.28))}
 @media (max-width:900px){ .marca{top:28%} .marca img{width:min(68vw,300px)} }
+/* botões de vidro sobre o mar */
+html{scroll-behavior:smooth}
+.vidros{position:absolute;z-index:2;left:0;right:0;bottom:11vh;display:flex;justify-content:center;flex-wrap:wrap;gap:12px;padding:0 20px}
+.vidro{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;color:#fff;text-decoration:none;font-weight:600;font-size:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.38);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 30px rgba(20,6,30,.25);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  transition:background .25s,transform .25s,border-color .25s}
+.vidro:hover{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.12));border-color:rgba(255,255,255,.6);transform:translateY(-1px)}
+.vidro:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.vidro--forte{background:linear-gradient(180deg,rgba(255,148,22,.55),rgba(255,148,22,.32));border-color:rgba(255,190,120,.6)}
+.vidro--forte:hover{background:linear-gradient(180deg,rgba(255,148,22,.7),rgba(255,148,22,.45))}
+@media (max-width:900px){
+  .vidros{bottom:7vh;gap:10px}
+  .vidro{min-height:48px;padding:0 20px;font-size:15px}
+  .vidro--forte{flex-basis:100%;max-width:320px}
+}
 </style>
 </head>
 <body class="limpo">
@@ -159,6 +175,11 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
 <header class="hero">
   <canvas data-oceano aria-hidden="true"></canvas>
   <h1 class="marca"><img src="logo-branco.png?v=2" alt="Motirõ Clube de Canoa"></h1>
+  <nav class="vidros" aria-label="Atalhos">
+    <a class="vidro vidro--forte" href="#planos">Inscreva-se</a>
+    <a class="vidro" href="#horarios">Aula experimental</a>
+    <a class="vidro" href="#capitao">O Capitão</a>
+  </nav>
 </header>
 
 <div class="nome">
@@ -168,7 +189,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
   </div>
 </div>
 
-<section>
+<section id="horarios">
   <div class="max">
     <div class="cab"><h2>As remadas da semana</h2><p>Cada remada leva até 12 pessoas. Escolha um horário com vaga ou entre na lista de espera das lotadas.</p></div>
     <div class="grade">
@@ -191,7 +212,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
   </div>
 </section>
 
-<section style="padding-top:0">
+<section style="padding-top:0" id="planos">
   <div class="max">
     <div class="cab"><h2>Planos</h2><p>Horários fixos toda semana. Mensalidade com vencimento no dia 10, paga por Pix.</p></div>
     <div class="planos">
@@ -204,7 +225,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
   </div>
 </section>
 
-<section class="capitao">
+<section class="capitao" id="capitao">
   <div class="max">
     <div class="foto">Foto do Capitão (provisório)</div>
     <div>
@@ -217,7 +238,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
   </div>
 </section>
 
-<section>
+<section id="antes">
   <div class="max">
     <div class="cab"><h2>Antes de remar</h2><p>Saída: Av. Min. Victor Konder, Fazenda, Itajaí–SC.</p></div>
     <div class="lista">
@@ -236,7 +257,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
     <div class="botoes"><a class="btn btn--sol" href="#">Marcar aula experimental</a><a class="btn btn--vidro" href="#">Ver planos e horários</a></div>
   </div>
 </div>
-<footer>
+<footer id="contato">
   <div class="max">
     <img src="logo-branco.png?v=2" alt="Motirõ Clube de Canoa">
     <span>Av. Min. Victor Konder, Fazenda, Itajaí–SC · <a href="#">@canoamotiro</a> · <a href="#">WhatsApp</a> · <a href="#">Privacidade</a></span>
