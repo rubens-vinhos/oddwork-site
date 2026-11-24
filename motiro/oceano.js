@@ -646,7 +646,7 @@ function canoaPasso(ms, dt, elev){
   const pode = CANOA_LIGADA && elev > -.06 && !atual.tempestade;           // de dia e no nascer/pôr do sol, nunca com trovoada
   if (!can.ativo) {
     if (pode && ms > can.ate) {
-      can.ativo = true; can.s = Math.random() < .5 ? 1 : -1;
+      can.ativo = true; can.s = -1;   // sempre da direita para a esquerda
       can.a = can.primeira ? can.s*(-.15 - Math.random()*.35)*meia : -can.s*meia;
       can.primeira = false;
     }
