@@ -651,3 +651,13 @@ body.lp-obrigado { background: var(--noite); }
 .lp-voo { background: radial-gradient(40rem 20rem at 50% 55%, rgba(242,106,33,.10), transparent 70%), #0D1222; }
 .lp-voo--pronta canvas { opacity: 1; }
 .lp-voo::before { height: 16%; background: linear-gradient(var(--noite), rgba(19,26,43,0)); }
+
+/* Computador: o chão da nave desvanece antes do fim do topo (sem linha de corte). */
+@media (min-width: 901px) {
+  .noite > .lp-queda--hero {
+    -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - 190px), transparent calc(100% - 40px));
+    -webkit-mask-composite: source-in;
+    mask-image: radial-gradient(ellipse 50% 60% at 50% 60%, #000 60%, transparent 100%), linear-gradient(#000 calc(100% - 190px), transparent calc(100% - 40px));
+    mask-composite: intersect;
+  }
+}
