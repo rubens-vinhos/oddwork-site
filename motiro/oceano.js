@@ -109,11 +109,11 @@ vec3 ceu(vec3 rd){
   float y = max(rd.y, 0.);
   vec3 c = paleta(y);
   float d = max(dot(rd, SOL), 0.);
-  float visSol = smoothstep(-.03, .01, SOL.y) * (1. - nuvem*.85) * (1. - chuva*.9);
+  float visSol = smoothstep(-.03, .01, SOL.y) * (1. - nuvem*.85) * (1. - chuva*.6);
   float brilho = smoothstep(-.03, .01, SOL.y) * (1. - nuvem*.5) * (1. - chuva*.55);
   vec3 tom = mix(vec3(1.,.55,.18), vec3(1.,.92,.75), DIA);
-  c += vec3(1.,.38,.08)*pow(d, 10.)*.45*OCASO*brilho + tom*pow(d, 90.)*1.4*visSol + tom*pow(d, 8.)*.25*DIA*brilho;
-  c += vec3(1.,.82,.55)*smoothstep(.99935,.9996,d)*7.*visSol;
+  c += vec3(1.,.38,.08)*pow(d, 10.)*.45*OCASO*brilho + tom*pow(d, 90.)*.75*visSol + tom*pow(d, 8.)*.25*DIA*brilho;
+  c += mix(vec3(1.,.6,.3), vec3(1.,.85,.6), DIA)*smoothstep(.99935,.9996,d)*mix(1.7, 5., DIA)*visSol;   // disco do sol sem estourar
   // lua (fase real; no hemisfério sul a crescente acende do lado esquerdo)
   float visLua = (NOITE + OCASO*.35*smoothstep(.04, .12, fase)*smoothstep(.42, .28, fase)) * (1. - chuva*.95) * (1. - nuvem*.92);
   if (visLua > .001) {
@@ -445,7 +445,7 @@ void main(){
     float visSol = smoothstep(-.03, .01, SOL.y) * (1. - nuvem*.85) * (1. - chuva*.9);
     float rug = mix(60., 900., 1.-k);
     float sp = pow(max(dot(rf, SOL),0.), rug);
-    col += mix(vec3(1.,.62,.28), vec3(1.,.95,.85), DIA)*sp*mix(4.,18.,1.-k)*visSol;
+    col += mix(vec3(1.,.58,.26), vec3(1.,.95,.85), DIA)*sp*mix(4.,18.,1.-k)*mix(.45, 1., DIA)*visSol;
     float spL = pow(max(dot(rf, LUA),0.), rug*.8);
     col += vec3(.75,.82,1.)*spL*mix(1.2, 5., 1.-k)*(1. - cos(fase*6.2832))*.5*NOITE*(1.-nuvem*.8)*(1.-chuva);
     float an = (aneis(p.xz*1.6, 0.) + aneis(p.xz*2.3 + 5.7, 9.)) * k;
@@ -558,9 +558,9 @@ function faseReal(ms){ const jd = ms/86400000 + 2440587.5; return (((jd - 245155
 let faseTeste = null;
 // TEMPO_REAL = true volta a seguir a hora e o tempo de Itajaí (versão guardada em oceano-tempo-real.js)
 const TEMPO_REAL = false;
-const HORA_POENTE = 18 + 35/60;                              // sempre o pôr do sol, com o sol a pousar atrás do morro
+const HORA_POENTE = 18 + 45/60;                              // sempre o pôr do sol, com o sol a pousar atrás do morro
 let horaTeste = !TEMPO_REAL && !params.get("hora") ? HORA_POENTE : params.get("hora") ? params.get("hora").split(":").reduce((h, m) => +h + m/60) : null;
-let modo = params.get("tempo") || (TEMPO_REAL ? null : "limpo");
+let modo = params.get("tempo");
 function agoraMs(){
   if (horaTeste == null) return Date.now();
   if (!TEMPO_REAL) return Date.UTC(2026, 10, 24, 3) + horaTeste*3600e3;   // dia fixo: o pôr do sol fica sempre igual
@@ -604,6 +604,10 @@ async function buscaTempo(){
     aplica(w);
     const onda = r2?.current?.wave_height;
     alvo.mar = Math.max(onda != null ? Math.min(1, Math.max(0, (onda - .4)/1.6)) : 0, alvo.vento*.8);
+    if (!TEMPO_REAL) {                                       // pôr do sol fixo: do tempo real só entram a chuva e o mar
+      alvo.tempestade = false;
+      alvo.nuvem = alvo.chuva > 0 ? .45 : .15;
+    }
     simulacao();
     ultimo = { ...w };
     rotulo(modo ? { ...w, weather_code: { limpo: 0, nublado: 3, chuva: 63, tempestade: 95, agitado: 2 }[modo] ?? w.weather_code } : w);
@@ -621,13 +625,12 @@ function simulacao(){
     agitado: { nuvem: .5, chuva: 0, mar: 1, vento: .9, tempestade: false } }[m] || {});
 }
 simulacao(); Object.assign(atual, alvo);
-if (TEMPO_REAL) {
-  buscaTempo();
-  setInterval(buscaTempo, 10*60*1000);
-} else {
-  simulacao();
-  Object.assign(atual, alvo);                                // já abre no pôr do sol, sem transição
+if (!TEMPO_REAL) {                                         // abre logo no pôr do sol limpo; a chuva entra quando chegarem os dados
+  Object.assign(alvo, { nuvem: .15, chuva: 0, mar: .15, vento: .1, tempestade: false });
+  Object.assign(atual, alvo);
 }
+buscaTempo();
+setInterval(buscaTempo, 10*60*1000);
 
 // ---------- relâmpagos ----------
 let raio = 0, proxRaio = 0, raioPos = [0, 0], pisca = [];
@@ -693,7 +696,7 @@ function canoaPasso(ms, dt, elev){
 window.ceuTeste = {
   hora(h){ horaTeste = h; },
   tempo(m){ modo = m; simulacao(); if (ultimo) rotulo({ ...ultimo, weather_code: { limpo: 0, nublado: 3, chuva: 63, tempestade: 95, agitado: 2 }[m] }); },
-  real(){ manual = false; faseTeste = null; if (TEMPO_REAL) { horaTeste = null; modo = null; buscaTempo(); } else { horaTeste = HORA_POENTE; modo = "limpo"; simulacao(); } },
+  real(){ manual = false; faseTeste = null; if (TEMPO_REAL) { horaTeste = null; modo = null; buscaTempo(); } else { horaTeste = HORA_POENTE; modo = null; buscaTempo(); } },
   lua(f){ faseTeste = f; },
   canoa(a, s = 1){ if (!CANOA_LIGADA) return; can.ativo = true; can.a = a; can.s = s; can.vis = 1; },
   fase(){ return faseTeste ?? faseReal(agoraMs()); },
