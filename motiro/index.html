@@ -158,7 +158,7 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
 
 <header class="hero">
   <canvas data-oceano aria-hidden="true"></canvas>
-  <h1 class="marca"><img src="logo-branco.png" alt="Motirõ Clube de Canoa"></h1>
+  <h1 class="marca"><img src="logo-branco.png?v=2" alt="Motirõ Clube de Canoa"></h1>
 </header>
 
 <div class="nome">
@@ -238,49 +238,36 @@ body.limpo .hero::after{background:linear-gradient(180deg,rgba(10,8,20,.28) 0%,r
 </div>
 <footer>
   <div class="max">
-    <img src="logo-branco.png" alt="Motirõ Clube de Canoa">
+    <img src="logo-branco.png?v=2" alt="Motirõ Clube de Canoa">
     <span>Av. Min. Victor Konder, Fazenda, Itajaí–SC · <a href="#">@canoamotiro</a> · <a href="#">WhatsApp</a> · <a href="#">Privacidade</a></span>
     <span>Feito pela <a href="#">Oddwork</a></span>
   </div>
 </footer>
-<script src="oceano.js"></script>
+<script src="oceano.js?v=20261124f"></script>
 <!-- Painel de teste (só na maquete; no site real o céu segue o tempo de Itajaí sozinho) -->
 <div class="teste" data-teste>
-  <button class="teste__abre" type="button" data-teste-abre>Testar céu</button>
+  <button class="teste__abre" type="button" data-teste-abre>Testar tempo</button>
   <div class="teste__caixa">
-    <div class="teste__topo"><b>Testar céu</b><button type="button" data-teste-fecha aria-label="Fechar">×</button></div>
-    <label>Hora em Itajaí <output data-o="hora">--:--</output><input type="range" min="0" max="23.98" step="0.05" data-c="hora"></label>
-    <label>Nuvens <output data-o="nuvem"></output><input type="range" min="0" max="1" step="0.01" data-c="nuvem"></label>
+    <div class="teste__topo"><b>Testar tempo</b><button type="button" data-teste-fecha aria-label="Fechar">×</button></div>
     <label>Chuva <output data-o="chuva"></output><input type="range" min="0" max="1" step="0.01" data-c="chuva"></label>
     <label>Mar agitado <output data-o="mar"></output><input type="range" min="0" max="1" step="0.01" data-c="mar"></label>
-    <label>Lua <output data-o="lua"></output><input type="range" min="0" max="1" step="0.005" data-c="lua"></label>
-    <label class="teste__check"><input type="checkbox" data-c="tempestade"> Trovoada com relâmpagos</label>
-    <button class="teste__real" type="button" data-teste-real>Voltar ao pôr do sol</button>
+    <button class="teste__real" type="button" data-teste-real>Voltar ao tempo real</button>
   </div>
 </div>
 <script>
 (() => {
   const raiz = document.querySelector("[data-teste]");
   const c = (n) => raiz.querySelector(`[data-c="${n}"]`), o = (n) => raiz.querySelector(`[data-o="${n}"]`);
-  const hhmm = (h) => `${String(Math.floor(h)).padStart(2,"0")}:${String(Math.floor((h % 1)*60)).padStart(2,"0")}`;
   const pct = (v) => `${Math.round(v*100)}%`;
   function mostra(){
     const api = window.ceuTeste; if (!api) return;
-    const v = api.valores(), h = api.horaItajai();
-    c("hora").value = h; o("hora").textContent = hhmm(h);
-    for (const k of ["nuvem","chuva","mar"]) { c(k).value = v[k]; o(k).textContent = pct(v[k]); }
-    c("tempestade").checked = !!v.tempestade;
-    const f = api.fase(); c("lua").value = f; o("lua").textContent = nomeLua(f);
+    const v = api.valores();
+    for (const k of ["chuva","mar"]) { c(k).value = v[k]; o(k).textContent = pct(v[k]); }
   }
-  const nomeLua = (f) => f < .03 || f > .97 ? "Nova" : f < .22 ? "Crescente" : f < .28 ? "Quarto crescente" : f < .47 ? "Crescente gibosa"
-    : f < .53 ? "Cheia" : f < .72 ? "Minguante gibosa" : f < .78 ? "Quarto minguante" : "Minguante";
-  c("lua").addEventListener("input", (e) => { window.ceuTeste.lua(+e.target.value); o("lua").textContent = nomeLua(+e.target.value); });
-  c("hora").addEventListener("input", (e) => { window.ceuTeste.hora(+e.target.value); o("hora").textContent = hhmm(+e.target.value); });
-  for (const k of ["nuvem","chuva","mar"]) c(k).addEventListener("input", (e) => {
+  for (const k of ["chuva","mar"]) c(k).addEventListener("input", (e) => {
     const v = window.ceuTeste.definir(k, +e.target.value);
-    for (const j of ["nuvem","chuva","mar"]) { c(j).value = v[j]; o(j).textContent = pct(v[j]); }
+    for (const j of ["chuva","mar"]) { c(j).value = v[j]; o(j).textContent = pct(v[j]); }
   });
-  c("tempestade").addEventListener("change", (e) => { const v = window.ceuTeste.definir("tempestade", e.target.checked); c("chuva").value = v.chuva; o("chuva").textContent = pct(v.chuva); });
   raiz.querySelector("[data-teste-real]").addEventListener("click", () => { window.ceuTeste.real(); setTimeout(mostra, 1500); });
   raiz.querySelector("[data-teste-abre]").addEventListener("click", () => { raiz.classList.add("aberto"); mostra(); });
   raiz.querySelector("[data-teste-fecha]").addEventListener("click", () => raiz.classList.remove("aberto"));

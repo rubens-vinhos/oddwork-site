@@ -248,6 +248,7 @@ vec3 vidro(vec2 uv){
 
 vec3 aces(vec3 x){ return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.); }
 
+#ifdef CANOA
 // ---------- canoa havaiana (OC6) em 3D, desenhada por distâncias ----------
 float sdCap(vec3 p, vec3 a, vec3 b, float r){ vec3 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba)/dot(ba, ba), 0., 1.); return length(pa - ba*h) - r; }
 float sdElip(vec3 p, vec3 r){ float k0 = length(p/r), k1 = length(p/(r*r)); return k0*(k0 - 1.)/k1; }
@@ -390,6 +391,7 @@ vec4 canoaCor(vec3 ro, vec3 rd, out float tC){
   return vec4(cor, cob);
 }
 
+#endif
 void main(){
   vec2 uv = (gl_FragCoord.xy - .5*res)/res.y;
   vec3 gv = vec3(0.);
@@ -399,7 +401,9 @@ void main(){
   NOITE = 1. - smoothstep(-.17, -.03, e);
   OCASO = max(1. - DIA - NOITE, 0.);
   vec3 ro = vec3(0., 1.6, t*.6);
+#ifdef CANOA
   if (canoa.z > .001) preparaCanoa(ro);
+#endif
   vec3 rd = normalize(vec3(uv.x, uv.y + pitch, foco));
   vec3 col;
   float luzGeral = DIA + OCASO*.5 + NOITE*.08;
@@ -450,6 +454,7 @@ void main(){
     col += vec3(.75,.82,1.)*spL*mix(1.2, 5., 1.-k)*(1. - cos(fase*6.2832))*.5*NOITE*(1.-nuvem*.8)*(1.-chuva);
     float an = (aneis(p.xz*1.6, 0.) + aneis(p.xz*2.3 + 5.7, 9.)) * k;
     col += vec3(.8,.85,.9)*an*chuva*(.12 + luzGeral*.5);
+#ifdef CANOA
     if (canoa.z > .001) {
       vec3 qc = paraCanoa(p);
       if (abs(qc.x) < 30. && abs(qc.z) < 8.) {
@@ -468,9 +473,11 @@ void main(){
         col = mix(col, vec3(.86,.9,.92)*(.18 + luzGeral*.7), clamp(esp, 0., 1.)*.55*canoa.z*k);
       }
     }
+#endif
     float neb = 1.-exp(-dist*(.008 + chuva*.05 + nuvem*.006));
     col = mix(col, paleta(.01)*mix(1., .8, chuva), neb*mix(.45, .62, chuva));
   }
+#ifdef CANOA
   // canoa a atravessar a baía
   if (canoa.z > .001) {
     float tC;
@@ -478,6 +485,7 @@ void main(){
     float tW = rd.y < 0. ? -ro.y/rd.y : 1e9;
     if (cc.w > 0. && tC < tW) col = mix(col, cc.rgb, cc.w*canoa.z);
   }
+#endif
   col = mix(col, paleta(.05), chuva*.18*(1.-smoothstep(0., .25, abs(rd.y))));
   col = mix(col, paleta(.1)*.9, chuva*.1);
   float fundoLum = dot(col, vec3(.3,.6,.1));
@@ -506,10 +514,18 @@ void main(){
 
 function compila(tipo, src){ const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
   if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
-const prog = gl.createProgram();
-gl.attachShader(prog, compila(gl.VERTEX_SHADER, vs));
-gl.attachShader(prog, compila(gl.FRAGMENT_SHADER, fs));
-gl.linkProgram(prog); gl.useProgram(prog);
+// tenta com a canoa 3D; se a placa gráfica do telemóvel recusar, o mar aparece na mesma sem ela
+function programa(comCanoa){
+  const pr = gl.createProgram();
+  gl.attachShader(pr, compila(gl.VERTEX_SHADER, vs));
+  gl.attachShader(pr, compila(gl.FRAGMENT_SHADER, (comCanoa ? "#define CANOA\n" : "") + fs));
+  gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+  return pr;
+}
+let prog, temCanoa = true;
+try { if (new URLSearchParams(location.search).has("semcanoa")) throw new Error("teste"); prog = programa(true); } catch (e) { console.warn("Sem canoa:", e.message); temCanoa = false; prog = programa(false); }
+gl.useProgram(prog);
 const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
 const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
@@ -704,7 +720,7 @@ window.ceuTeste = {
   definir(k, v){
     modo = null; manual = true;
     alvo[k] = v;
-    if (k === "chuva" && v > .05) alvo.nuvem = Math.max(alvo.nuvem, .75 + v*.25);
+    if (k === "chuva") alvo.nuvem = TEMPO_REAL ? (v > .05 ? Math.max(alvo.nuvem, .75 + v*.25) : alvo.nuvem) : (v > .05 ? .45 : .15);
     if (k === "tempestade" && v) alvo.chuva = Math.max(alvo.chuva, .85);
     if (selo && ultimo) {
       const nome = alvo.tempestade ? "Trovoada" : alvo.chuva > .65 ? "Chuva forte" : alvo.chuva > .3 ? "Chuva" : alvo.chuva > .05 ? "Chuva fraca"
