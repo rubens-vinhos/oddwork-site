@@ -39,70 +39,125 @@ a{color:inherit}
 .proxima span{color:rgba(255,255,255,.75)}
 .proxima i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7CF2B0;margin-right:8px;box-shadow:0 0 0 4px rgba(124,242,176,.22)}
 
-section{padding:110px 0}
-.cab{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:44px}
-.cab h2{font-size:clamp(38px,4.6vw,64px)}
-.cab p{color:var(--tinta-2);font-size:17px;max-width:460px;justify-self:end}
+section{padding:120px 0;position:relative}
+.titulo{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end;margin-bottom:56px}
+.titulo h2{font-size:clamp(40px,5vw,72px);color:var(--roxo)}
+.titulo p{color:var(--tinta-2);font-size:17px;max-width:420px;justify-self:end}
 
-/* nome */
-.nome{background:var(--noite);color:#fff;padding:120px 0}
-.nome .max{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:end}
-.nome h2{font-size:clamp(40px,5.4vw,80px)}
-.nome h2 span{color:var(--laranja)}
-.nome p{color:rgba(255,255,255,.8);font-size:19px;max-width:440px}
+/* revelar: entra como uma remada, curto e firme */
+[data-rev]{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.75,.15,1),transform .9s cubic-bezier(.2,.75,.15,1);transition-delay:calc(var(--i,0)*90ms)}
+[data-rev].visto{opacity:1;transform:none}
 
-/* grade */
-.grade{border-top:1px solid var(--linha)}
-.linha{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--linha);padding:18px 0;align-items:center}
-.linha h3{font-size:22px}
-.aulas{display:flex;gap:12px;flex-wrap:wrap}
-.aula{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:center;min-width:300px;padding:14px 18px;border-radius:14px;background:var(--pedra);text-decoration:none;transition:background .2s}
-.aula:hover{background:#EFE5F6}
-.aula b{grid-row:span 2;font-family:"Bricolage Grotesque";font-size:34px;font-weight:600;letter-spacing:-.03em}
-.aula small{font-size:14px;color:var(--tinta-2)}
-.aula em{font-style:normal;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px}
-.barra{flex:1;height:4px;border-radius:4px;background:#E6DAEF;overflow:hidden;max-width:120px}
-.barra span{display:block;height:100%;background:var(--roxo)}
-.aula--quase em{color:#B85F00} .aula--quase .barra span{background:var(--laranja)}
-.aula--lotada{opacity:.6}
-.nota{margin-top:16px;font-size:13px;color:var(--tinta-2)}
+/* onda que liga o pôr do sol ao roxo */
+.onda{position:relative;height:90px;margin-top:-89px;z-index:3;pointer-events:none}
+.onda svg{width:100%;height:100%;display:block}
+.onda__a{fill:rgba(81,23,125,.55);animation:mar 9s ease-in-out infinite alternate}
+.onda__b{fill:var(--roxo);animation:mar 7s ease-in-out infinite alternate-reverse}
+@keyframes mar{from{transform:translateX(-3%)}to{transform:translateX(3%)}}
+.onda svg path{transform-box:fill-box}
+
+/* manifesto */
+.manifesto{background:#230C2F;color:#fff;padding:110px 0 130px}
+.manifesto::before{content:"";position:absolute;left:0;right:0;top:-260px;height:261px;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(35,12,47,0) 0%,rgba(35,12,47,.18) 30%,rgba(35,12,47,.5) 58%,rgba(35,12,47,.82) 82%,#230C2F 100%)}
+.manifesto__frase{font-size:clamp(46px,7.4vw,118px);line-height:.98;max-width:13ch;letter-spacing:-.035em}
+.manifesto__frase span{color:rgba(255,255,255,.18);transition:color .5s}
+.manifesto__frase span.aceso{color:#fff}
+.manifesto__frase span.l.aceso{color:var(--laranja)}
+.manifesto__pe{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-top:56px;flex-wrap:wrap}
+.manifesto__pe p{font-size:19px;color:rgba(255,255,255,.82);max-width:470px}
+.manifesto__pe b{color:#fff}
+.remadores{display:flex;gap:14px}
+.remadores i{width:12px;height:38px;border-radius:8px;background:rgba(255,255,255,.85);transform-origin:50% 100%;animation:remada 1.6s cubic-bezier(.4,0,.2,1) infinite;animation-delay:calc(var(--n)*40ms)}
+.remadores i:nth-child(1){--n:0}.remadores i:nth-child(2){--n:1}.remadores i:nth-child(3){--n:2}.remadores i:nth-child(4){--n:3}.remadores i:nth-child(5){--n:4}.remadores i:nth-child(6){--n:5;background:var(--laranja)}
+@keyframes remada{0%,100%{transform:rotate(14deg)}55%{transform:rotate(-16deg)}}
+
+/* semana: cada saída é uma canoa de 12 lugares */
+.semana{background:#fff}
+.dias{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.dia h3{font-size:15px;font-family:Figtree;font-weight:600;color:var(--tinta-2);margin:0 0 12px 4px}
+.saida{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:2px 10px;padding:18px 16px 16px;border-radius:20px;background:var(--pedra);text-decoration:none;margin-bottom:12px;border:1px solid transparent;transition:transform .3s cubic-bezier(.2,.75,.15,1),border-color .3s,background .3s}
+.saida:hover{transform:translateY(-3px);border-color:rgba(81,23,125,.25);background:#F2E9F8}
+.saida b{font-family:"Bricolage Grotesque";font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--roxo)}
+.saida small{font-size:13px;color:var(--tinta-2)}
+.lugares{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:14px 0 10px;padding:8px 10px;border-radius:999px;background:#fff}
+.lugares i{aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(81,23,125,.28);transform:scale(.6);opacity:.5;transition:transform .45s cubic-bezier(.3,1.6,.5,1),background .3s,opacity .3s;transition-delay:calc(var(--k)*55ms + 200ms)}
+.visto .lugares i{transform:none;opacity:1}
+.visto .lugares i.o{background:var(--roxo);border-color:var(--roxo)}
+.saida em{grid-column:1/-1;font-style:normal;font-size:13px;font-weight:600;color:var(--roxo)}
+.saida--quase em{color:#B85F00} .visto .saida--quase .lugares i.o{background:var(--laranja);border-color:var(--laranja)}
+.saida--lotada{opacity:.62} .saida--lotada em{color:var(--tinta-2)}
+.nota{margin-top:10px;font-size:13px;color:var(--tinta-2)}
 
 /* planos */
-.planos{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha);border-radius:22px;overflow:hidden}
-.plano{background:#fff;padding:34px 28px;display:flex;flex-direction:column;min-height:330px}
-.plano h3{font-size:20px;color:var(--tinta-2);font-weight:500}
-.plano .num{font-size:56px;margin:18px 0 6px}
-.plano .num small{font-family:Figtree;font-size:15px;font-weight:500;color:var(--tinta-2);letter-spacing:0}
-.plano p{color:var(--tinta-2);flex:1}
-.plano .btn{margin-top:24px;min-height:46px;font-size:15px}
-.plano--full{background:var(--noite);color:#fff}
-.plano--full h3{color:var(--laranja)} .plano--full p,.plano--full .num small{color:rgba(255,255,255,.8)}
-.avulsos{display:flex;gap:36px;flex-wrap:wrap;margin-top:24px;color:var(--tinta-2);font-size:15px}
+.planos-sec{background:var(--pedra)}
+.planos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.plano{position:relative;background:#fff;border-radius:26px;padding:30px 26px 26px;display:flex;flex-direction:column;min-height:360px;transition:transform .35s cubic-bezier(.2,.75,.15,1),box-shadow .35s}
+.plano:hover{transform:translateY(-6px);box-shadow:0 24px 50px -24px rgba(81,23,125,.35)}
+.plano h3{font-size:17px;font-family:Figtree;font-weight:600;color:var(--tinta-2)}
+.semanal{display:flex;gap:6px;margin:18px 0 22px}
+.semanal i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 11px Figtree;font-style:normal;color:rgba(81,23,125,.45);border:1.5px solid rgba(81,23,125,.2);transition:background .4s,color .4s,border-color .4s;transition-delay:calc(var(--k)*70ms + 250ms)}
+.visto .semanal i.o{background:var(--roxo);color:#fff;border-color:var(--roxo)}
+.preco{font-family:"Bricolage Grotesque";font-size:22px;font-weight:600;color:var(--roxo);letter-spacing:-.02em}
+.preco b{font-size:64px;letter-spacing:-.04em;font-weight:600}
+.preco small{font-family:Figtree;font-size:15px;font-weight:500;color:var(--tinta-2);letter-spacing:0;margin-left:4px}
+.plano p{color:var(--tinta-2);flex:1;margin-top:8px}
+.plano .btn{margin-top:22px;min-height:48px;font-size:15px}
+.plano--full{background:var(--roxo);color:#fff;transform-origin:50% 100%}
+.plano--full h3{color:var(--laranja)} .plano--full .preco,.plano--full .preco b{color:#fff} .plano--full p,.plano--full .preco small{color:rgba(255,255,255,.8)}
+.plano--full .semanal i{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.6)}
+.visto.plano--full .semanal i.o{background:var(--laranja);border-color:var(--laranja);color:var(--tinta)}
+.avulsos{display:flex;gap:36px;flex-wrap:wrap;margin-top:28px;color:var(--tinta-2);font-size:15px}
 .avulsos b{color:var(--roxo);font-weight:600}
 
-/* capitão */
-.capitao{background:var(--pedra)}
-.capitao .max{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-.foto{aspect-ratio:4/5;border-radius:24px;background:linear-gradient(160deg,#6A2499,#2E0A49);display:flex;align-items:flex-end;padding:24px;color:rgba(255,255,255,.6);font-size:14px}
-.capitao h2{font-size:clamp(38px,4.6vw,64px);margin-bottom:24px}
-.capitao p{font-size:19px;color:var(--tinta);margin-bottom:16px;max-width:520px}
-.anos{display:flex;gap:44px;margin:34px 0 36px;border-top:1px solid var(--linha);padding-top:24px}
-.anos b{display:block;font-family:"Bricolage Grotesque";font-size:40px;font-weight:600;letter-spacing:-.03em}
-.anos span{font-size:14px;color:var(--tinta-2)}
+/* capitão: a linha do tempo desenha-se com o scroll */
+.capitao{background:#fff;--prog:0}
+.capitao .max{display:grid;grid-template-columns:1fr 1.05fr;gap:80px;align-items:center}
+.foto{aspect-ratio:4/5;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(165deg,#7A2EB0 0%,var(--roxo) 45%,#2A0B42 100%)}
+.foto::before{content:"";position:absolute;inset:-10% -10% auto;height:70%;background:radial-gradient(60% 50% at 50% 100%,rgba(255,144,0,.55),transparent 70%);transform:translateY(var(--par,0px))}
+.foto span{position:absolute;left:24px;bottom:22px;color:rgba(255,255,255,.65);font-size:14px}
+.capitao h2{font-size:clamp(40px,5vw,72px);color:var(--roxo);margin-bottom:24px}
+.capitao__texto p{font-size:19px;color:var(--tinta);margin-bottom:16px;max-width:520px}
+.linha-tempo{list-style:none;position:relative;display:grid;grid-template-columns:repeat(3,1fr);margin:40px 0 40px;padding-top:26px}
+.linha-tempo::before,.linha-tempo::after{content:"";position:absolute;left:0;top:6px;height:2px;border-radius:2px}
+.linha-tempo::before{right:0;background:var(--linha)}
+.linha-tempo::after{width:calc(var(--prog)*100%);background:var(--laranja);transition:width .15s linear}
+.linha-tempo li{position:relative;opacity:.25;transition:opacity .4s}
+.linha-tempo li::before{content:"";position:absolute;left:0;top:-26px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--linha);transition:background .3s,border-color .3s}
+.capitao[style*="--prog"] .linha-tempo li{opacity:calc(.25 + var(--on,0)*.75)}
+.linha-tempo li:nth-child(1){--on:clamp(0, calc(var(--prog)*20), 1)}
+.linha-tempo li:nth-child(2){--on:clamp(0, calc((var(--prog) - .33)*20), 1)}
+.linha-tempo li:nth-child(3){--on:clamp(0, calc((var(--prog) - .66)*20), 1)}
+.linha-tempo li b{display:block;font-family:"Bricolage Grotesque";font-size:42px;font-weight:600;letter-spacing:-.03em;color:var(--roxo)}
+.linha-tempo li span{font-size:14px;color:var(--tinta-2)}
 
-/* antes de remar */
-.lista{display:grid;grid-template-columns:repeat(4,1fr);gap:36px}
-.lista div{border-top:2px solid var(--roxo);padding-top:20px}
-.lista h3{font-size:24px;margin-bottom:10px}
-.lista p{color:var(--tinta-2)}
+/* antes de remar: ícones desenhados */
+.antes{background:var(--pedra)}
+.lista{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.item{background:#fff;border-radius:24px;padding:28px 24px}
+.item svg{width:48px;height:48px;fill:none;stroke:var(--roxo);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:22px}
+.item svg *{stroke-dasharray:140;stroke-dashoffset:140;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);transition-delay:calc(var(--i,0)*120ms + 250ms)}
+.item.visto svg *{stroke-dashoffset:0}
+.item h3{font-size:24px;margin-bottom:8px;color:var(--roxo)}
+.item p{color:var(--tinta-2)}
 
-.final{background:var(--noite);color:#fff;text-align:center;padding:130px 0}
-.final h2{font-size:clamp(44px,6vw,88px);max-width:14ch;margin:0 auto 22px}
-.final p{color:rgba(255,255,255,.8);font-size:18px;margin-bottom:34px}
-.final .botoes{justify-content:center}
-footer{background:var(--roxo-fundo);color:rgba(255,255,255,.65);border-top:1px solid rgba(255,255,255,.1);padding:36px 0;font-size:14px}
+/* final: o pôr do sol volta */
+.final{background:linear-gradient(180deg,var(--roxo) 0%,#7B1F7E 45%,#C8456A 75%,#FF9000 100%);color:#fff;text-align:center;padding:150px 0 170px;overflow:hidden}
+.final__sol{position:absolute;left:50%;bottom:-160px;width:340px;height:340px;margin-left:-170px;border-radius:50%;background:radial-gradient(circle,#FFE1B0 0%,#FFB347 40%,rgba(255,144,0,0) 70%);animation:sol 8s ease-in-out infinite alternate;pointer-events:none}
+@keyframes sol{from{transform:translateY(0) scale(1)}to{transform:translateY(-24px) scale(1.06)}}
+.final .max{position:relative}
+.final h2{font-size:clamp(46px,6.4vw,96px);max-width:13ch;margin:0 auto 22px}
+.final p{color:rgba(255,255,255,.88);font-size:18px;margin-bottom:34px}
+.final .botoes{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+footer{background:var(--roxo-fundo);color:rgba(255,255,255,.65);padding:36px 0;font-size:14px}
 footer .max{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 footer img{height:32px} footer a{color:#fff}
+
+@media (prefers-reduced-motion: reduce){
+  [data-rev]{opacity:1;transform:none;transition:none}
+  .onda path,.remadores i,.final__sol{animation:none}
+  .item svg *{stroke-dashoffset:0;transition:none}
+}
 
 @media (max-width:900px){
   .topo nav{display:none} .topo img{height:34px}
@@ -121,16 +176,20 @@ footer img{height:32px} footer a{color:#fff}
   .agora{left:28px;right:auto;top:140px;max-width:calc(100% - 56px);white-space:normal;border-radius:16px;font-size:12.5px;line-height:1.35}
   .proxima span:first-child{display:none}
   .proxima::before{content:"";width:8px;height:8px;border-radius:50%;background:#7CF2B0;box-shadow:0 0 0 4px rgba(124,242,176,.22)}
-  .cab,.nome .max,.capitao .max{grid-template-columns:1fr;gap:20px}
-  .cab p{justify-self:start}
-  section,.nome{padding:76px 0}
-  .linha{grid-template-columns:1fr;gap:12px}
-  .aula{min-width:0;width:100%}
+  .titulo,.capitao .max{grid-template-columns:1fr;gap:18px}
+  .titulo p{justify-self:start}
+  section{padding:84px 0}
+  .manifesto::before{height:161px;top:-160px}
+  .manifesto{padding:70px 0 90px}
+  .dias{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:72%;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 28px 8px;margin:0 -28px;scrollbar-width:none}
+  .dias::-webkit-scrollbar{display:none}
+  .dia{scroll-snap-align:start}
   .planos{grid-template-columns:1fr 1fr}
   .lista{grid-template-columns:1fr 1fr}
   .foto{aspect-ratio:4/3}
+  .capitao .max{gap:40px}
 }
-@media (max-width:540px){ .planos,.lista{grid-template-columns:1fr} .plano{min-height:0} .botoes{flex-direction:column} .botoes .btn{width:100%} }
+@media (max-width:540px){ .planos,.lista{grid-template-columns:1fr} .plano{min-height:0} .final .botoes{flex-direction:column;align-items:stretch} }
 
 /* painel de teste (maquete) */
 .teste{position:fixed;z-index:50;right:20px;bottom:20px;font-family:Figtree,sans-serif;color:#fff}
@@ -184,81 +243,100 @@ html{scroll-behavior:smooth}
   </nav>
 </header>
 
-<div class="nome">
-  <div class="max">
-    <h2>Numa canoa, <span>ninguém rema sozinho.</span></h2>
-    <p>Motirõ é uma palavra tupi-guarani: a reunião de pessoas para construir ou colher algo juntas, ajudando umas às outras.</p>
-  </div>
-</div>
 
-<section id="horarios">
+
+<section class="manifesto" data-manifesto>
   <div class="max">
-    <div class="cab"><h2>As remadas da semana</h2><p>Cada remada leva até 12 pessoas. Escolha um horário com vaga ou entre na lista de espera das lotadas.</p></div>
-    <div class="grade">
-      <div class="linha"><h3>Segunda</h3><div class="aulas">
-        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:58%"></span></span>5 vagas</em></a>
-        <a class="aula" href="#"><b>8:15</b><small>Treino</small><em><span class="barra"><span style="width:33%"></span></span>8 vagas</em></a></div></div>
-      <div class="linha"><h3>Terça</h3><div class="aulas">
-        <a class="aula aula--quase" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:83%"></span></span>Últimas 2 vagas</em></a></div></div>
-      <div class="linha"><h3>Quarta</h3><div class="aulas">
-        <a class="aula aula--lotada" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:100%"></span></span>Lotada · lista de espera</em></a></div></div>
-      <div class="linha"><h3>Quinta</h3><div class="aulas">
-        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:50%"></span></span>6 vagas</em></a></div></div>
-      <div class="linha"><h3>Sexta</h3><div class="aulas">
-        <a class="aula" href="#"><b>6:00</b><small>Remada</small><em><span class="barra"><span style="width:66%"></span></span>4 vagas</em></a>
-        <a class="aula" href="#"><b>7:45</b><small>Remada extra</small><em><span class="barra"><span style="width:25%"></span></span>9 vagas</em></a></div></div>
-      <div class="linha"><h3>Sábado</h3><div class="aulas">
-        <a class="aula aula--quase" href="#"><b>7:00</b><small>Remada</small><em><span class="barra"><span style="width:92%"></span></span>Última vaga</em></a></div></div>
+    <h2 class="manifesto__frase" aria-label="Numa canoa, ninguém rema sozinho."><span>Numa</span> <span>canoa,</span> <span class="l">ninguém</span> <span class="l">rema</span> <span class="l">sozinho.</span></h2>
+    <div class="manifesto__pe" data-rev>
+      <p><b>Motirõ</b> é uma palavra tupi-guarani: a reunião de pessoas para construir ou colher algo juntas, ajudando umas às outras.</p>
+      <div class="remadores" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</section>
+
+<section class="semana" id="horarios">
+  <div class="max">
+    <header class="titulo" data-rev>
+      <h2>As remadas da semana</h2>
+      <p>Cada remada leva até 12 pessoas. Escolha um horário com vaga ou entre na lista de espera das lotadas.</p>
+    </header>
+    <div class="dias">
+      <div class="dia" data-rev style="--i:0"><h3>Segunda</h3>
+        <a class="saida" href="#" data-ocupadas="7"><b>6:00</b><small>Remada</small><span class="lugares"></span><em>5 vagas</em></a>
+        <a class="saida" href="#" data-ocupadas="4"><b>8:15</b><small>Treino</small><span class="lugares"></span><em>8 vagas</em></a></div>
+      <div class="dia" data-rev style="--i:1"><h3>Terça</h3>
+        <a class="saida saida--quase" href="#" data-ocupadas="10"><b>6:00</b><small>Remada</small><span class="lugares"></span><em>Últimas 2 vagas</em></a></div>
+      <div class="dia" data-rev style="--i:2"><h3>Quarta</h3>
+        <a class="saida saida--lotada" href="#" data-ocupadas="12"><b>6:00</b><small>Remada</small><span class="lugares"></span><em>Lotada · lista de espera</em></a></div>
+      <div class="dia" data-rev style="--i:3"><h3>Quinta</h3>
+        <a class="saida" href="#" data-ocupadas="6"><b>6:00</b><small>Remada</small><span class="lugares"></span><em>6 vagas</em></a></div>
+      <div class="dia" data-rev style="--i:4"><h3>Sexta</h3>
+        <a class="saida" href="#" data-ocupadas="8"><b>6:00</b><small>Remada</small><span class="lugares"></span><em>4 vagas</em></a>
+        <a class="saida" href="#" data-ocupadas="3"><b>7:45</b><small>Remada extra</small><span class="lugares"></span><em>9 vagas</em></a></div>
+      <div class="dia" data-rev style="--i:5"><h3>Sábado</h3>
+        <a class="saida saida--quase" href="#" data-ocupadas="11"><b>7:00</b><small>Remada</small><span class="lugares"></span><em>Última vaga</em></a></div>
     </div>
     <p class="nota">Vagas de exemplo nesta maquete. No site, vêm do painel em tempo real.</p>
   </div>
 </section>
 
-<section style="padding-top:0" id="planos">
+<section class="planos-sec" id="planos">
   <div class="max">
-    <div class="cab"><h2>Planos</h2><p>Horários fixos toda semana. Mensalidade com vencimento no dia 10, paga por Pix.</p></div>
+    <header class="titulo" data-rev>
+      <h2>Planos</h2>
+      <p>Horários fixos toda semana. Mensalidade com vencimento no dia 10, paga por Pix.</p>
+    </header>
     <div class="planos">
-      <div class="plano"><h3>1x por semana</h3><div class="num">R$ 195<small> /mês</small></div><p>1 horário fixo.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
-      <div class="plano"><h3>2x por semana</h3><div class="num">R$ 285<small> /mês</small></div><p>2 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
-      <div class="plano"><h3>3x por semana</h3><div class="num">R$ 340<small> /mês</small></div><p>3 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></div>
-      <div class="plano plano--full"><h3>Full</h3><div class="num">R$ 380<small> /mês</small></div><p>Todas as remadas da semana, incluindo o treino de segunda 8:15.</p><a class="btn btn--sol" href="#">Escolher</a></div>
+      <article class="plano" data-rev style="--i:0" data-dias="1"><h3>1x por semana</h3><div class="semanal" aria-hidden="true"></div><div class="preco">R$ <b data-conta="195">195</b><small>/mês</small></div><p>1 horário fixo.</p><a class="btn btn--tinta" href="#">Escolher</a></article>
+      <article class="plano" data-rev style="--i:1" data-dias="2"><h3>2x por semana</h3><div class="semanal" aria-hidden="true"></div><div class="preco">R$ <b data-conta="285">285</b><small>/mês</small></div><p>2 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></article>
+      <article class="plano" data-rev style="--i:2" data-dias="3"><h3>3x por semana</h3><div class="semanal" aria-hidden="true"></div><div class="preco">R$ <b data-conta="340">340</b><small>/mês</small></div><p>3 horários fixos.</p><a class="btn btn--tinta" href="#">Escolher</a></article>
+      <article class="plano plano--full" data-rev style="--i:3" data-dias="6"><h3>Full</h3><div class="semanal" aria-hidden="true"></div><div class="preco">R$ <b data-conta="380">380</b><small>/mês</small></div><p>Todas as remadas da semana, incluindo o treino de segunda 8:15.</p><a class="btn btn--sol" href="#">Escolher</a></article>
     </div>
-    <div class="avulsos"><span><b>Aula experimental</b> R$ 75, descontados da primeira mensalidade</span><span><b>Passeio avulso</b> R$ 75</span><span><b>Passeios exclusivos</b> grupos a partir de 8 pessoas</span></div>
+    <div class="avulsos" data-rev><span><b>Aula experimental</b> R$ 75, descontados da primeira mensalidade</span><span><b>Passeio avulso</b> R$ 75</span><span><b>Passeios exclusivos</b> grupos a partir de 8 pessoas</span></div>
   </div>
 </section>
 
-<section class="capitao" id="capitao">
+<section class="capitao" id="capitao" data-capitao>
   <div class="max">
-    <div class="foto">Foto do Capitão (provisório)</div>
-    <div>
-      <h2>O Capitão</h2>
-      <p>Luciano Silveiro entrou num barco pela primeira vez em 1991, aos 13 anos, como timoneiro do avô, remador de um clube de Porto Alegre.</p>
-      <p>Nunca se afastou do mar e do surfe. A canoa havaiana virou a ponte entre esses dois mundos: a técnica do remo com a liberdade do oceano.</p>
-      <div class="anos"><div><b>1991</b><span>Primeiro barco</span></div><div><b>2018</b><span>Chega a Itajaí</span></div><div><b>2019</b><span>Nasce o Motirõ</span></div></div>
-      <a class="btn btn--tinta" href="#">Conhecer a história</a>
+    <div class="foto" data-parallax><span>Foto do Capitão (provisório)</span></div>
+    <div class="capitao__texto">
+      <h2 data-rev>O Capitão</h2>
+      <p data-rev style="--i:1">Luciano Silveiro entrou num barco pela primeira vez em 1991, aos 13 anos, como timoneiro do avô, remador de um clube de Porto Alegre.</p>
+      <p data-rev style="--i:2">Nunca se afastou do mar e do surfe. A canoa havaiana virou a ponte entre esses dois mundos: a técnica do remo com a liberdade do oceano.</p>
+      <ol class="linha-tempo">
+        <li><b>1991</b><span>Primeiro barco</span></li>
+        <li><b>2018</b><span>Chega a Itajaí</span></li>
+        <li><b>2019</b><span>Nasce o Motirõ</span></li>
+      </ol>
+      <a class="btn btn--tinta" href="#" data-rev style="--i:3">Conhecer a história</a>
     </div>
   </div>
 </section>
 
-<section id="antes">
+<section class="antes" id="antes">
   <div class="max">
-    <div class="cab"><h2>Antes de remar</h2><p>Saída: Av. Min. Victor Konder, Fazenda, Itajaí–SC.</p></div>
+    <header class="titulo" data-rev>
+      <h2>Antes de remar</h2>
+      <p>Saída: Av. Min. Victor Konder, Fazenda, Itajaí–SC.</p>
+    </header>
     <div class="lista">
-      <div><h3>Nadar</h3><p>Não precisa saber nadar, mas é recomendável.</p></div>
-      <div><h3>Pés</h3><p>Venha de sandália ou chinelo: a remada é descalça.</p></div>
-      <div><h3>Sol</h3><p>Traga protetor solar e água.</p></div>
-      <div><h3>Mergulho</h3><p>No meio da aula tem uma parada para mergulho, pra quem quiser.</p></div>
+      <div class="item" data-rev style="--i:0"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 30c5 0 5-4 10-4s5 4 10 4 5-4 10-4 5 4 10 4"/><path d="M4 38c5 0 5-4 10-4s5 4 10 4 5-4 10-4 5 4 10 4"/><circle cx="30" cy="14" r="4"/><path d="M14 22l8-6 6 4"/></svg><h3>Nadar</h3><p>Não precisa saber nadar, mas é recomendável.</p></div>
+      <div class="item" data-rev style="--i:1"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4c-7 0-10 8-10 18s3 22 10 22 10-10 10-22S31 4 24 4z"/><path d="M17 20c3 1 5 3 7 6 2-3 4-5 7-6"/><circle cx="24" cy="26" r="1.2"/></svg><h3>Pés</h3><p>Venha de sandália ou chinelo: a remada é descalça.</p></div>
+      <div class="item" data-rev style="--i:2"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="8"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6M10 10l4 4M34 34l4 4M10 38l4-4M34 14l4-4"/></svg><h3>Sol</h3><p>Traga protetor solar e água.</p></div>
+      <div class="item" data-rev style="--i:3"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 22c5 0 5-4 10-4s5 4 10 4 5-4 10-4 5 4 10 4"/><path d="M24 8v24M18 26l6 6 6-6"/><path d="M14 42h20"/></svg><h3>Mergulho</h3><p>No meio da aula tem uma parada para mergulho, pra quem quiser.</p></div>
     </div>
   </div>
 </section>
 
-<div class="final">
+<section class="final">
+  <div class="final__sol" aria-hidden="true"></div>
   <div class="max">
-    <h2>Venha remar com a gente uma manhã.</h2>
-    <p>Aula experimental por R$ 75, descontados se você fechar um plano.</p>
-    <div class="botoes"><a class="btn btn--sol" href="#">Marcar aula experimental</a><a class="btn btn--vidro" href="#">Ver planos e horários</a></div>
+    <h2 data-rev>Venha remar com a gente uma manhã.</h2>
+    <p data-rev style="--i:1">Aula experimental por R$ 75, descontados se você fechar um plano.</p>
+    <div class="botoes" data-rev style="--i:2"><a class="btn btn--sol" href="#horarios">Marcar aula experimental</a><a class="vidro" href="#planos">Ver planos e horários</a></div>
   </div>
-</div>
+</section>
 <footer id="contato">
   <div class="max">
     <img src="logo-branco.png?v=2" alt="Motirõ Clube de Canoa">
@@ -266,6 +344,50 @@ html{scroll-behavior:smooth}
     <span>Feito pela <a href="#">Oddwork</a></span>
   </div>
 </footer>
+<script>
+// ---------- animações de scroll ----------
+(() => {
+  const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // lugares das canoas: 12 lugares, os ocupados acendem um a um
+  document.querySelectorAll(".saida").forEach((a) => {
+    const n = +a.dataset.ocupadas, box = a.querySelector(".lugares");
+    for (let i = 0; i < 12; i++) { const s = document.createElement("i"); if (i < n) s.className = "o"; s.style.setProperty("--k", i); box.appendChild(s); }
+    box.setAttribute("aria-hidden", "true");
+  });
+  // dias da semana em que se rema, em cada plano
+  const D = ["S","T","Q","Q","S","S"];
+  document.querySelectorAll(".plano").forEach((p) => {
+    const n = +p.dataset.dias, alvo = p.querySelector(".semanal");
+    const marca = n === 6 ? [0,1,2,3,4,5] : n === 3 ? [0,2,4] : n === 2 ? [1,3] : [2];
+    D.forEach((d, i) => { const e = document.createElement("i"); e.textContent = d; if (marca.includes(i)) e.className = "o"; e.style.setProperty("--k", i); alvo.appendChild(e); });
+  });
+  // revelar ao entrar no ecrã
+  const conta = (el) => { const fim = +el.dataset.conta; if (calmo) return; const t0 = performance.now();
+    (function f(t){ const k = Math.min(1, (t - t0)/900); el.textContent = Math.round(fim*(1 - Math.pow(1 - k, 3)) + (k < 1 ? 0 : 0)); if (k < 1) requestAnimationFrame(f); else el.textContent = fim; })(t0); };
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("visto");
+    e.target.querySelectorAll?.("[data-conta]").forEach(conta);
+    io.unobserve(e.target);
+  }), { rootMargin: "0px 0px -12% 0px", threshold: .15 });
+  document.querySelectorAll("[data-rev], .linha-tempo").forEach((el) => io.observe(el));
+  if (calmo) document.querySelectorAll("[data-rev], .linha-tempo").forEach((el) => el.classList.add("visto"));
+  // frase do manifesto: as palavras acendem com o scroll; linha do tempo e foto acompanham
+  const frase = document.querySelector("[data-manifesto]"), palavras = [...document.querySelectorAll(".manifesto__frase span")];
+  const cap = document.querySelector("[data-capitao]"), foto = document.querySelector("[data-parallax]");
+  function scroll(){
+    const vh = innerHeight;
+    const r = frase.getBoundingClientRect();
+    const k = Math.min(1, Math.max(0, (vh*.85 - r.top)/(vh*.6)));
+    palavras.forEach((w, i) => w.classList.toggle("aceso", calmo || k > (i + .5)/palavras.length));
+    const rc = cap.getBoundingClientRect();
+    const kc = Math.min(1, Math.max(0, (vh*.8 - rc.top)/(rc.height*.9)));
+    cap.style.setProperty("--prog", calmo ? 1 : kc.toFixed(3));
+    if (!calmo && foto) foto.style.setProperty("--par", ((rc.top + rc.height/2 - vh/2)*-.06).toFixed(1) + "px");
+  }
+  addEventListener("scroll", scroll, { passive: true }); addEventListener("resize", scroll); scroll();
+})();
+</script>
 <script src="oceano.js?v=20261124f"></script>
 <!-- Painel de teste (só na maquete; no site real o céu segue o tempo de Itajaí sozinho) -->
 <div class="teste" data-teste>
