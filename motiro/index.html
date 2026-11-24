@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <title>Canoa havaiana em Itajaí — Motirõ Clube de Canoa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
@@ -260,6 +260,7 @@ footer img{height:32px} footer a{color:#fff}
     <label>Nuvens <output data-o="nuvem"></output><input type="range" min="0" max="1" step="0.01" data-c="nuvem"></label>
     <label>Chuva <output data-o="chuva"></output><input type="range" min="0" max="1" step="0.01" data-c="chuva"></label>
     <label>Mar agitado <output data-o="mar"></output><input type="range" min="0" max="1" step="0.01" data-c="mar"></label>
+    <label>Lua <output data-o="lua"></output><input type="range" min="0" max="1" step="0.005" data-c="lua"></label>
     <label class="teste__check"><input type="checkbox" data-c="tempestade"> Trovoada com relâmpagos</label>
     <button class="teste__real" type="button" data-teste-real>Voltar ao tempo real</button>
   </div>
@@ -276,7 +277,11 @@ footer img{height:32px} footer a{color:#fff}
     c("hora").value = h; o("hora").textContent = hhmm(h);
     for (const k of ["nuvem","chuva","mar"]) { c(k).value = v[k]; o(k).textContent = pct(v[k]); }
     c("tempestade").checked = !!v.tempestade;
+    const f = api.fase(); c("lua").value = f; o("lua").textContent = nomeLua(f);
   }
+  const nomeLua = (f) => f < .03 || f > .97 ? "Nova" : f < .22 ? "Crescente" : f < .28 ? "Quarto crescente" : f < .47 ? "Crescente gibosa"
+    : f < .53 ? "Cheia" : f < .72 ? "Minguante gibosa" : f < .78 ? "Quarto minguante" : "Minguante";
+  c("lua").addEventListener("input", (e) => { window.ceuTeste.lua(+e.target.value); o("lua").textContent = nomeLua(+e.target.value); });
   c("hora").addEventListener("input", (e) => { window.ceuTeste.hora(+e.target.value); o("hora").textContent = hhmm(+e.target.value); });
   for (const k of ["nuvem","chuva","mar"]) c(k).addEventListener("input", (e) => {
     const v = window.ceuTeste.definir(k, +e.target.value);

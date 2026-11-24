@@ -9,7 +9,7 @@ const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
 const fs = `
 precision highp float;
 uniform vec2 res; uniform float t; uniform float pitch; uniform float foco;
-uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float morro;
+uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float morro; uniform vec3 LUA; uniform float fase; uniform vec2 raioX;
 
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
 float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
@@ -39,26 +39,70 @@ vec3 terra(vec3 rd, vec3 c, float d){
   float a = atan(rd.x, rd.z);
   float y = rd.y;
   vec3 neb = paleta(0.);
+  // céu encoberto: em vez de lavar tudo de cinzento, camadas azuladas com neblina na base
+  float cinza = clamp(nuvem*.7 + chuva*.6, 0., 1.);
+  vec3 frio = mix(vec3(.10,.13,.17), vec3(.36,.43,.50), DIA*(1. - chuva*.45));
+  // serra ao longe
   float hf = .012 + .03*noise(vec2(a*5., 1.)) + .01*noise(vec2(a*17., 3.));
-  vec3 serra = mix(vec3(.16,.05,.12), vec3(.30,.40,.46), DIA);
-  if (y < hf) c = mix(c, serra, mix(.72, .35, chuva));
+  if (y < hf) {
+    vec3 serra = mix(vec3(.16,.05,.12), vec3(.30,.40,.46), DIA);
+    serra = mix(serra, frio*1.05, cinza);
+    float nevoa = smoothstep(hf, hf*.15, y);   // mais clara junto à água
+    serra = mix(serra, neb, nevoa*(.25 + cinza*.35));
+    c = mix(c, serra, mix(.8, .62, chuva));
+  }
+  // o morro onde o sol se põe
   float cm = morro;
   float hn = .004 + .05*exp(-pow((a-cm)/.11, 2.)) + .02*exp(-pow((a+.32)/.2, 2.)) + .006*noise(vec2(a*40., 5.));
   if (y < hn) {
-    c = mix(vec3(.045,.018,.05), vec3(.07,.13,.09), DIA);
-    c += vec3(1.,.45,.12)*pow(d, 30.)*.35*OCASO*smoothstep(hn-.004, hn, y)*(1.-nuvem*.8);
-    c = mix(c, neb, chuva*.4 + DIA*.15);
+    vec3 m = mix(vec3(.045,.018,.05), vec3(.07,.13,.09), DIA);
+    vec3 mCinza = mix(vec3(.035,.045,.06), vec3(.10,.15,.15), DIA*(1. - chuva*.4));
+    m = mix(m, mCinza, cinza);
+    float mata = noise(vec2(a*260., y*900.))*.5 + noise(vec2(a*70., y*240.))*.5;
+    m *= .8 + .4*mata*(.4 + DIA*.6);
+    m += vec3(1.,.45,.12)*pow(d, 30.)*.35*OCASO*smoothstep(hn-.004, hn, y)*(1.-nuvem*.8);
+    // borda de luz fria no topo e neblina a subir da água
+    m += frio*.25*smoothstep(hn - .006, hn, y)*cinza;
+    float nevoa = smoothstep(hn*.55, 0., y);
+    m = mix(m, neb, nevoa*(.15 + chuva*.4) + DIA*.08);
+    c = m;
   }
+  // a cidade
   float zona = smoothstep(-.52,-.46,a)*smoothstep(.0,-.08,a) + smoothstep(.3,.36,a)*smoothstep(.62,.5,a)*.7;
   float id = floor(a*170.);
   float hb = (.003 + .012*hash(vec2(id, 1.)) + step(.88, hash(vec2(id, 7.)))*.02) * zona;
   if (y < hb) {
     vec3 predio = mix(vec3(.03,.014,.04), vec3(.42,.44,.47)*(.6+.4*hash(vec2(id,3.))), DIA);
-    float jan = step(mix(.93, .78, NOITE), hash(vec2(floor(a*700.), floor(y*1400.))));
-    predio += vec3(1.,.68,.32)*jan*mix(.55, 1.4, NOITE)*(1.-DIA*(.9 - chuva*.65 - nuvem*.2));
-    c = mix(predio, neb, chuva*.35 + DIA*.12);
+    predio = mix(predio, mix(vec3(.04,.05,.065), vec3(.2,.24,.28), DIA*(1. - chuva*.5))*(.7 + .5*hash(vec2(id,3.))), cinza);
+    predio += frio*.3*smoothstep(hb - .0015, hb, y)*cinza;   // topo apanha a luz do céu
+    float acesa = max(NOITE, cinza*.85);
+    float jan = step(mix(.93, .74, acesa), hash(vec2(floor(a*700.), floor(y*1400.))));
+    predio += vec3(1.,.68,.32)*jan*mix(.55, 1.4, acesa)*(1. - DIA*(.92 - cinza*.82));
+    c = mix(predio, neb, chuva*.22 + DIA*.08);
   }
   return c;
+}
+
+// relâmpago: um traço que desce da nuvem até ao horizonte, com um ramo
+float bx(float y, float sd){
+  return .05*(noise(vec2(y*12. + sd*7., sd)) - .5)*2. + .018*(noise(vec2(y*55. + sd*3., 1.)) - .5)*2. + .006*(noise(vec2(y*190., sd + 2.)) - .5)*2.;
+}
+float desenhoRaio(vec3 rd){
+  float a = atan(rd.x, rd.z) - raioX.x;
+  float y = rd.y, sd = raioX.y;
+  float topo = .4;
+  if (y > topo || y < -.002) return 0.;
+  float lado = sd > .5 ? 1. : -1.;
+  float x = bx(y, sd) + (topo - y)*.06*lado;
+  float d = abs(a - x);
+  float v = exp(-d*1500.)*1.8 + exp(-d*240.)*.35 + exp(-d*45.)*.07;
+  float yb = topo - .1;
+  if (y < yb && y > yb - .16) {
+    float xb = bx(yb, sd) + (topo - yb)*.06*lado - (yb - y)*.5*lado + bx(y*1.6, sd + 5.)*.5;
+    float db = abs(a - xb);
+    v += (exp(-db*1700.)*1.1 + exp(-db*260.)*.18) * smoothstep(yb - .16, yb - .03, y);
+  }
+  return v * smoothstep(topo, topo - .06, y);
 }
 
 vec3 ceu(vec3 rd){
@@ -70,6 +114,28 @@ vec3 ceu(vec3 rd){
   vec3 tom = mix(vec3(1.,.55,.18), vec3(1.,.92,.75), DIA);
   c += vec3(1.,.38,.08)*pow(d, 10.)*.45*OCASO*brilho + tom*pow(d, 90.)*1.4*visSol + tom*pow(d, 8.)*.25*DIA*brilho;
   c += vec3(1.,.82,.55)*smoothstep(.99935,.9996,d)*7.*visSol;
+  // lua (fase real; no hemisfério sul a crescente acende do lado esquerdo)
+  float visLua = (NOITE + OCASO*.35) * (1. - chuva*.95) * (1. - nuvem*.92);
+  if (visLua > .001) {
+    float dm = dot(rd, LUA);
+    float raioLua = .021;
+    vec3 dir = normalize(cross(vec3(0.,1.,0.), LUA)); vec3 cim = cross(LUA, dir);
+    vec2 q = vec2(dot(rd, dir), dot(rd, cim))/raioLua;
+    float ilum = (1. - cos(fase*6.2832))*.5;
+    c += vec3(.75,.8,.95)*(pow(max(dm,0.), 900.)*.25 + pow(max(dm,0.), 90.)*.06)*ilum*visLua*(1.-nuvem*.6);
+    float r2 = dot(q, q);
+    if (r2 < 1. && dm > 0.) {
+      vec3 n = vec3(q, sqrt(1. - r2));
+      float ang = fase*6.2832;
+      vec3 Ls = normalize(vec3(-sin(ang), 0., -cos(ang)));
+      float luz = smoothstep(-.04, .12, dot(n, Ls));
+      float mares = fbm(q*2.6 + 4.) ;
+      vec3 sup = vec3(1.,.97,.9)*mix(.62, 1., smoothstep(.35, .7, mares));
+      vec3 cl = sup*luz*1.35 + vec3(.05,.06,.09);
+      float borda = smoothstep(1., .9, r2);
+      c = mix(c, cl, borda*visLua);
+    }
+  }
   if (rd.y > 0.) {
     vec2 st = vec2(atan(rd.x, rd.z)*260., rd.y*420.);
     float hs = hash(floor(st));
@@ -91,8 +157,20 @@ vec3 ceu(vec3 rd){
     cn *= mix(1., .45, chuva*chuva);
     c = mix(c, cn, nv*mix(.85, .95, nuvem));
   }
-  c += vec3(.75,.78,1.)*raio*(.5 + .5*step(0., rd.y));
+  float aR = atan(rd.x, rd.z) - raioX.x;
+  float claro = mix(1., .35, DIA);
+  c += vec3(.62,.64,.9)*raio*claro*(.12 + .18*step(0., rd.y)) + vec3(.7,.72,1.)*raio*claro*exp(-abs(aR)*4.)*smoothstep(0., .25, rd.y)*(.6 + 1.2*exp(-abs(rd.y - .42)*9.));
+  c += vec3(.85,.88,1.)*desenhoRaio(rd)*min(raio, 1.)*3.;
   if (rd.y < .1) c = terra(rd, c, d);
+  // cortinas de chuva ao longe, a andar com o vento
+  if (chuva > .01 && rd.y < .22) {
+    float an = atan(rd.x, rd.z);
+    float faixa = fbm(vec2(an*6. - t*(.03 + vento*.05), 1.3));
+    float fios = noise(vec2(an*380. + rd.y*40.*vento, rd.y*9. + t*2.5));
+    float cort = smoothstep(.42, .72, faixa) * (1. - smoothstep(.02, .22, rd.y)) * chuva;
+    c = mix(c, c*.72 + paleta(.1)*.18, cort*.65);
+    c += vec3(.7,.75,.85)*cort*fios*.06*(.3 + DIA);
+  }
   return c;
 }
 
@@ -123,27 +201,55 @@ float aneis(vec2 g, float s){
 float chuvaTela(vec2 fc){
   float s = 0.;
   vec2 uv0 = fc/res.y;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     float fi = float(i);
-    float colunas = 90. + fi*55.;
-    float linhas = 7. + fi*3.;
+    float perto = 1. - fi/4.;
+    float colunas = mix(260., 38., perto);
+    float linhas = mix(16., 2.6, perto);
     vec2 q = uv0*vec2(colunas, linhas);
-    q.x += uv0.y*colunas*(.08 + vento*.22);
-    q.y += t*(13. + fi*4.);
+    q.x += uv0.y*colunas*(.06 + vento*.2);
+    q.y += t*mix(22., 3.2, perto);
     vec2 id = floor(q); vec2 f = fract(q);
     float h = hash(id + fi*13.);
     float ox = (hash(id + fi*5.1) - .5)*.6;
-    float traco = smoothstep(.07, 0., abs(f.x - .5 - ox))
-      * smoothstep(0., .08, f.y) * smoothstep(.55, .1, f.y);
-    s += step(1. - chuva*.42, h) * traco * (.8 - fi*.16) * (.5 + .5*hash(id + 2.7));
+    float larg = mix(.04, .11, perto);
+    float traco = smoothstep(larg, 0., abs(f.x - .5 - ox))
+      * smoothstep(0., .1, f.y) * smoothstep(mix(.6, .9, perto), .15, f.y);
+    float dens = mix(.55, .07, perto);
+    s += step(1. - chuva*dens, h) * traco * mix(.5, .26, perto) * (.5 + .5*hash(id + 2.7));
   }
   return s;
+}
+
+// gotas no vidro: pequenas lentes que deformam a vista
+vec3 vidro(vec2 uv){
+  vec2 desvio = vec2(0.); float m = 0.;
+  for (int i = 0; i < 2; i++) {
+    float fi = float(i);
+    vec2 g = uv*mix(7., 15., fi) + fi*3.7;
+    vec2 id = floor(g); vec2 f = fract(g) - .5;
+    float h = hash(id + 9.1 + fi);
+    if (h < chuva*.55) {
+      vec2 c0 = (vec2(hash(id + 1.3), hash(id + 2.9)) - .5)*.5;
+      float desl = fract(t*.04*hash(id + 4.4) + h*7.);
+      c0.y += (smoothstep(.6, 1., desl) - .5)*.0;
+      float r = mix(.1, .3, hash(id + 3.7));
+      vec2 v = (f - c0)/r;
+      float l = length(v*vec2(1., .9));
+      float mi = smoothstep(1., .82, l);
+      desvio += v*r*mi;
+      m = max(m, mi);
+    }
+  }
+  return vec3(desvio, m);
 }
 
 vec3 aces(vec3 x){ return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.); }
 
 void main(){
   vec2 uv = (gl_FragCoord.xy - .5*res)/res.y;
+  vec3 gv = vec3(0.);
+  uv += gv.xy*.09;
   float e = SOL.y;
   DIA = smoothstep(.04, .26, e);
   NOITE = 1. - smoothstep(-.17, -.03, e);
@@ -177,15 +283,28 @@ void main(){
     float rug = mix(60., 900., 1.-k);
     float sp = pow(max(dot(rf, SOL),0.), rug);
     col += mix(vec3(1.,.62,.28), vec3(1.,.95,.85), DIA)*sp*mix(4.,18.,1.-k)*visSol;
+    float spL = pow(max(dot(rf, LUA),0.), rug*.8);
+    col += vec3(.75,.82,1.)*spL*mix(1.2, 5., 1.-k)*(1. - cos(fase*6.2832))*.5*NOITE*(1.-nuvem*.8)*(1.-chuva);
     float an = (aneis(p.xz*1.6, 0.) + aneis(p.xz*2.3 + 5.7, 9.)) * k;
     col += vec3(.8,.85,.9)*an*chuva*(.12 + luzGeral*.5);
     float neb = 1.-exp(-dist*(.008 + chuva*.05 + nuvem*.006));
-    col = mix(col, paleta(.01), neb*mix(.45, .75, chuva));
+    col = mix(col, paleta(.01)*mix(1., .8, chuva), neb*mix(.45, .62, chuva));
   }
   col = mix(col, paleta(.05), chuva*.18*(1.-smoothstep(0., .25, abs(rd.y))));
-  col = mix(col, paleta(.1)*.9, chuva*.12);
-  col += vec3(.78,.82,.9)*chuvaTela(gl_FragCoord.xy)*chuva*(.22 + luzGeral*.5);
-  col += raio*.12;
+  col = mix(col, paleta(.1)*.9, chuva*.1);
+  float fundoLum = dot(col, vec3(.3,.6,.1));
+  col += vec3(.8,.85,.95)*chuvaTela(gl_FragCoord.xy)*chuva*(.08 + fundoLum*.75 + raio*.5);
+  col *= 1. - gv.z*.06;
+  col += vec3(.9,.95,1.)*gv.z*smoothstep(.0, .5, -gv.y - gv.x*.3)*.05*(.4 + fundoLum);
+  col += raio*.03*mix(1., .4, DIA);
+  // tempestade: luz mais baixa e dramática, horizonte mais claro
+  float pesado = smoothstep(.8, 1., chuva);
+  col *= mix(1., mix(.58, .85, smoothstep(-.05, .1, -rd.y + .05)), pesado);
+  // céu encoberto de dia: menos lavado, mais cinema — topo e água mais fundos, luz fria, horizonte aberto
+  float cz = clamp(nuvem*.6 + chuva*.7, 0., 1.)*(1. - OCASO*.7)*(1. - NOITE*.5)*(1. - pesado*.6);
+  float topo = smoothstep(.04, .45, rd.y), agua = smoothstep(.0, -.25, rd.y);
+  col *= mix(1., .8 - topo*.22 - agua*.14, cz);
+  col = mix(col, col*vec3(.9,1.,1.08), cz*.7);
   col = aces(col*mix(.62, .7, DIA));
   col = pow(col, vec3(1.08));
   col = mix(vec3(dot(col, vec3(.299,.587,.114))), col, .9);
@@ -207,7 +326,7 @@ const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
 const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 const U = (n) => gl.getUniformLocation(prog, n);
-const u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro"].map((n) => [n, U(n)]));
+const u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX"].map((n) => [n, U(n)]));
 
 let sunX = .22;
 function ajusta(){
@@ -221,6 +340,9 @@ function ajusta(){
   gl.uniform1f(u.foco, asp < 1 ? .62 : 1.5);
   sunX = asp < 1 ? .1 : .22;
   gl.uniform1f(u.morro, sunX + .1);
+  const l = asp < 1 ? [-.12, .42, 1] : [.34, .2, 1];
+  const n = Math.hypot(...l);
+  gl.uniform3f(u.LUA, l[0]/n, l[1]/n, l[2]/n);
 }
 new ResizeObserver(ajusta).observe(canvas); ajusta();
 
@@ -243,6 +365,9 @@ function sol(ms){
 }
 
 const params = new URLSearchParams(location.search);
+// fase da lua: 0 nova, .5 cheia (mês sinódico a partir de uma lua nova conhecida)
+function faseReal(ms){ const jd = ms/86400000 + 2440587.5; return (((jd - 2451550.26)/29.530588853) % 1 + 1) % 1; }
+let faseTeste = null;
 let horaTeste = params.get("hora") ? params.get("hora").split(":").reduce((h, m) => +h + m/60) : null;
 let modo = params.get("tempo");
 function agoraMs(){
@@ -308,11 +433,16 @@ buscaTempo();
 setInterval(buscaTempo, 10*60*1000);
 
 // ---------- relâmpagos ----------
-let raio = 0, proxRaio = 0;
+let raio = 0, proxRaio = 0, raioPos = [0, 0], pisca = [];
 function relampago(ms){
-  if (!atual.tempestade) { raio *= .9; return; }
-  if (ms > proxRaio) { raio = .9 + Math.random()*.6; proxRaio = ms + 3500 + Math.random()*9000; setTimeout(() => { raio = 1.1; }, 140); }
-  raio *= .86;
+  if (!atual.tempestade) { raio *= .85; return; }
+  if (ms > proxRaio) {
+    raioPos = [-.08 + Math.random()*.5, Math.random()];
+    pisca = [[ms, 1.4], [ms + 70, .15], [ms + 130, 1.2], [ms + 210, .3], [ms + 300, .9]];
+    proxRaio = ms + 4000 + Math.random()*8000;
+  }
+  while (pisca.length && ms >= pisca[0][0]) raio = pisca.shift()[1];
+  raio *= .9;
 }
 
 const t0 = performance.now();
@@ -329,7 +459,8 @@ new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canva
     rel = Math.atan2(Math.sin(rel), Math.cos(rel));
     gl.uniform3f(u.SOL, Math.sin(rel)*Math.cos(s.elev), Math.sin(s.elev), Math.cos(rel)*Math.cos(s.elev));
     gl.uniform1f(u.nuvem, atual.nuvem); gl.uniform1f(u.chuva, atual.chuva);
-    gl.uniform1f(u.mar, atual.mar); gl.uniform1f(u.vento, atual.vento); gl.uniform1f(u.raio, raio);
+    gl.uniform1f(u.fase, faseTeste ?? faseReal(agoraMs()));
+    gl.uniform1f(u.mar, atual.mar); gl.uniform1f(u.vento, atual.vento); gl.uniform1f(u.raio, raio); gl.uniform2f(u.raioX, raioPos[0], raioPos[1]);
     gl.uniform1f(u.t, (ms - t0)/1000 + 20.);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
@@ -340,7 +471,9 @@ new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canva
 window.ceuTeste = {
   hora(h){ horaTeste = h; },
   tempo(m){ modo = m; simulacao(); if (ultimo) rotulo({ ...ultimo, weather_code: { limpo: 0, nublado: 3, chuva: 63, tempestade: 95, agitado: 2 }[m] }); },
-  real(){ horaTeste = null; modo = null; manual = false; buscaTempo(); },
+  real(){ horaTeste = null; modo = null; manual = false; faseTeste = null; buscaTempo(); },
+  lua(f){ faseTeste = f; },
+  fase(){ return faseTeste ?? faseReal(agoraMs()); },
   // controlo fino: nuvem, chuva, mar (0–1) e tempestade (true/false)
   definir(k, v){
     modo = null; manual = true;
