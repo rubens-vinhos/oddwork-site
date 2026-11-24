@@ -28,6 +28,19 @@ function centrarNoTexto() {
   const ex = document.querySelector(".lp-hero__exemplos");
   if (ex) ex.style.setProperty("--desvio", lugar.style.getPropertyValue("--desvio"));
 }
+// A nave caída do topo (no computador) começa sempre abaixo do botão "Ver exemplos".
+function posicionarNave() {
+  const cena = document.querySelector(".lp-queda--hero"), ex = document.querySelector(".lp-hero__exemplos");
+  if (!cena || !ex) return;
+  if (!matchMedia("(min-width: 901px)").matches) { cena.style.removeProperty("top"); return; }
+  const base = cena.parentElement.getBoundingClientRect().top;
+  const alturaCena = innerHeight * 0.7;
+  const topo = ex.getBoundingClientRect().bottom - base + 34 - alturaCena * 0.14;
+  cena.style.top = Math.round(topo) + "px";
+}
+document.fonts.ready.then(posicionarNave);
+addEventListener("resize", posicionarNave, { passive: true });
+
 if (lugar) {
   lugar.style.removeProperty("--desvio");
   document.fonts.ready.then(centrarNoTexto);
