@@ -9,7 +9,7 @@ const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
 const fs = `
 precision highp float;
 uniform vec2 res; uniform float t; uniform float pitch; uniform float foco;
-uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float morro; uniform vec3 LUA; uniform float fase; uniform vec2 raioX;
+uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float morro; uniform vec3 LUA; uniform float fase; uniform vec2 raioX; uniform vec4 canoa;
 
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
 float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
@@ -248,6 +248,113 @@ vec3 vidro(vec2 uv){
 
 vec3 aces(vec3 x){ return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.); }
 
+// ---------- canoa havaiana (OC6) em 3D, desenhada por distâncias ----------
+float sdCap(vec3 p, vec3 a, vec3 b, float r){ vec3 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba)/dot(ba, ba), 0., 1.); return length(pa - ba*h) - r; }
+float sdElip(vec3 p, vec3 r){ float k0 = length(p/r), k1 = length(p/(r*r)); return k0*(k0 - 1.)/k1; }
+vec3 cC, cH, cZ; float cBob, cIncl, cRol, cPx;
+float rAlc, rSobe, rTh, rLean;
+void preparaCanoa(vec3 ro){
+  float dc = canoa.w, ca = canoa.x;
+  cC = vec3(sin(ca)*dc, 0., ro.z + cos(ca)*dc);
+  float giro = -canoa.y*.42;                     // de três-quartos, a vir ligeiramente na nossa direção
+  cH = canoa.y*vec3(cos(ca + giro), 0., -sin(ca + giro));
+  cZ = vec3(cH.z, 0., -cH.x);
+  cBob = .04*sin(t*1.3) + mar*.14*sin(t*.85 + 1.);
+  cIncl = (.004 + mar*.02)*sin(t*.85);
+  cRol = (.01 + mar*.05)*sin(t*1.1 + .5);
+  cPx = dc/(res.y*foco);
+  float ph = fract(t*1.05);
+  rAlc = ph < .55 ? 1. - ph/.55 : smoothstep(.55, 1., ph);
+  rSobe = ph < .55 ? 0. : sin(3.1416*(ph - .55)/.45)*.3;
+  rTh = mix(-.35, .6, rAlc);
+  rLean = .1 + .3*rAlc;
+}
+vec3 paraCanoa(vec3 P){
+  vec3 d = P - cC;
+  vec3 q = vec3(dot(d, cH), d.y - cBob, dot(d, cZ));
+  q.y -= q.x*cIncl + q.z*cRol;
+  return q;
+}
+// devolve distância e material: 1 casco, 2 ama, 3 iako, 4 camisola, 5 pele, 6 remo
+vec2 mapaCanoa(vec3 p){
+  float fino = cPx*.45;
+  float ax = abs(p.x);
+  vec3 ph = p; ph.y -= .3*pow(clamp(ax/6.9, 0., 1.), 3.);
+  float casco = max(sdElip(ph - vec3(0., .04, 0.), vec3(6.9, .5, .27)), ph.y - .3);
+  vec2 r = vec2(casco, 1.);
+  float ama = sdElip(p - vec3(-.3, .02, 1.9), vec3(3., .13, .13));
+  if (ama < r.x) r = vec2(ama, 2.);
+  float iako = min(min(sdCap(p, vec3(1.7, .3, 0.), vec3(1.7, .46, 1.), max(.045, fino)), sdCap(p, vec3(1.7, .46, 1.), vec3(1.6, .1, 1.9), max(.04, fino))),
+                   min(sdCap(p, vec3(-2.2, .3, 0.), vec3(-2.2, .46, 1.), max(.045, fino)), sdCap(p, vec3(-2.2, .46, 1.), vec3(-2.3, .1, 1.9), max(.04, fino))));
+  if (iako < r.x) r = vec2(iako, 3.);
+  if (p.y > -.2 && p.y < 2. && abs(p.z) < 1.7 && ax < 5.6) {
+    vec3 L = vec3(sin(rLean), cos(rLean), 0.);
+    for (int i = 0; i < 6; i++) {
+      float x0 = 4.3 - float(i)*1.72;
+      float lado = mod(float(i), 2.) < .5 ? 1. : -1.;
+      vec3 anca = vec3(x0, .12, 0.);
+      vec3 ombro = anca + L*.6;
+      float tronco = min(sdCap(p, anca, ombro, .19), sdCap(p, ombro - L*.05 + vec3(0., 0., .2), ombro - L*.05 - vec3(0., 0., .2), .12));
+      if (tronco < r.x) r = vec2(tronco, 4.);
+      float cab = length(p - (ombro + L*.27)) - .125;
+      vec3 D = normalize(vec3(sin(rTh), -cos(rTh), lado*.3));
+      vec3 B = ombro + vec3(.28 + .3*rAlc, -.12 + rSobe*.4, lado*.34);
+      vec3 T = B - D*.55 + vec3(0., 0., -lado*.1);
+      vec3 E = B + D*1.0;
+      float bracos = min(sdCap(p, ombro + vec3(0., 0., lado*.14), B, max(.05, fino)), sdCap(p, ombro - vec3(0., 0., lado*.14), T, max(.05, fino)));
+      float pele = min(cab, bracos);
+      if (pele < r.x) r = vec2(pele, 5.);
+      float remo = min(sdCap(p, T, E, max(.022, fino)), sdCap(p, B + D*.62, E, max(.075, fino)));
+      if (remo < r.x) r = vec2(remo, 6.);
+    }
+  }
+  return r;
+}
+vec3 normalCanoa(vec3 p){
+  vec2 e = vec2(.012, -.012);
+  return normalize(e.xyy*mapaCanoa(p + e.xyy).x + e.yyx*mapaCanoa(p + e.yyx).x + e.yxy*mapaCanoa(p + e.yxy).x + e.xxx*mapaCanoa(p + e.xxx).x);
+}
+// traça um raio (em coordenadas do mundo) contra a canoa; devolve cor e cobertura, e a distância em tC
+vec4 canoaCor(vec3 ro, vec3 rd, out float tC){
+  tC = 1e9;
+  vec3 oc = ro - (cC + vec3(0., .5, 0.));
+  float b = dot(oc, rd), c = dot(oc, oc) - 64.;
+  float h = b*b - c;
+  if (h < 0.) return vec4(0.);
+  h = sqrt(h);
+  float t0 = max(-b - h, 0.), t1 = -b + h;
+  float tt = t0, dmin = 1e9, tmin = t0; float mat = 0.; bool bateu = false;
+  for (int i = 0; i < 72; i++) {
+    vec2 m = mapaCanoa(paraCanoa(ro + rd*tt));
+    if (m.x < dmin) { dmin = m.x; tmin = tt; mat = m.y; }
+    if (m.x < .002*tt*.05 + .003) { bateu = true; break; }
+    tt += max(m.x*.8, .01);
+    if (tt > t1) break;
+  }
+  float pxAng = 1./(res.y*foco);
+  float cob = bateu ? 1. : 1. - smoothstep(0., pxAng*tmin*1.1, dmin);
+  if (cob <= 0.) return vec4(0.);
+  tC = tmin;
+  vec3 pw = ro + rd*tmin;
+  vec3 q = paraCanoa(pw);
+  vec3 nl = normalCanoa(q);
+  vec3 n = normalize(nl.x*cH + nl.y*vec3(0., 1., 0.) + nl.z*cZ);
+  vec3 alb = mat < 1.5 ? vec3(.82,.8,.76) : mat < 2.5 ? vec3(.05,.05,.06) : mat < 3.5 ? vec3(.12,.12,.13)
+           : mat < 4.5 ? (q.x > 1. ? vec3(.06,.1,.2) : q.x > -2. ? vec3(.5,.12,.08) : vec3(.08,.09,.1)) : mat < 5.5 ? vec3(.42,.27,.18) : vec3(.03,.03,.035);
+  if (mat < 1.5) alb = mix(alb, vec3(1.,.55,.1), smoothstep(.2, .26, q.y)*.85);   // faixa laranja na borda
+  float visSolC = smoothstep(-.03, .02, SOL.y)*(1. - nuvem*.75)*(1. - chuva*.85);
+  vec3 corSol = mix(vec3(1.,.55,.25), vec3(1.,.96,.88), DIA)*mix(.6, 2.2, DIA)*visSolC;
+  float dif = max(dot(n, SOL), 0.);
+  vec3 ceuL = paleta(.35)*(.55 + .45*n.y);
+  vec3 agua = paleta(.02)*.35*max(-n.y, 0.);
+  vec3 cor = alb*(corSol*dif + ceuL*.9 + agua);
+  cor += corSol*pow(max(dot(reflect(rd, n), SOL), 0.), 24.)*(mat < 1.5 || mat > 5.5 ? .35 : .05);
+  cor += paleta(.05)*pow(1. - max(dot(n, -rd), 0.), 4.)*.25;                          // contorno de luz
+  float neb = (1. - exp(-tmin*(.008 + chuva*.05 + nuvem*.006)))*mix(.45, .62, chuva);
+  cor = mix(cor, paleta(.01)*mix(1., .8, chuva), neb);
+  return vec4(cor, cob);
+}
+
 void main(){
   vec2 uv = (gl_FragCoord.xy - .5*res)/res.y;
   vec3 gv = vec3(0.);
@@ -257,6 +364,7 @@ void main(){
   NOITE = 1. - smoothstep(-.17, -.03, e);
   OCASO = max(1. - DIA - NOITE, 0.);
   vec3 ro = vec3(0., 1.6, t*.6);
+  if (canoa.z > .001) preparaCanoa(ro);
   vec3 rd = normalize(vec3(uv.x, uv.y + pitch, foco));
   vec3 col;
   float luzGeral = DIA + OCASO*.5 + NOITE*.08;
@@ -307,8 +415,33 @@ void main(){
     col += vec3(.75,.82,1.)*spL*mix(1.2, 5., 1.-k)*(1. - cos(fase*6.2832))*.5*NOITE*(1.-nuvem*.8)*(1.-chuva);
     float an = (aneis(p.xz*1.6, 0.) + aneis(p.xz*2.3 + 5.7, 9.)) * k;
     col += vec3(.8,.85,.9)*an*chuva*(.12 + luzGeral*.5);
+    if (canoa.z > .001) {
+      vec3 qc = paraCanoa(p);
+      if (abs(qc.x) < 30. && abs(qc.z) < 8.) {
+        // reflexo: o mesmo raio visto pela câmara espelhada na água, tremido pelas ondas
+        float tR;
+        vec4 rc = canoaCor(vec3(ro.x, -ro.y, ro.z), normalize(vec3(rd.x + n.x*.05, -rd.y, rd.z + n.z*.05)), tR);
+        col = mix(col, rc.rgb*.75, rc.w*.6*(1. - mar*.45)*canoa.z);
+        // espuma onde o casco e o ama tocam a água
+        float bc = length(vec2(qc.x/6.9, qc.z/.3)) - 1.;
+        float ba = length(vec2((qc.x + .3)/3., (qc.z - 1.9)/.15)) - 1.;
+        float esp = smoothstep(.08, 0., abs(bc)*2.) + smoothstep(.12, 0., abs(ba))*.6;
+        // rasto em V atrás da popa
+        float atras = -qc.x - 6.6;
+        float v = atras > 0. ? smoothstep(.35 + atras*.03, 0., abs(abs(qc.z - .1) - atras*.16))*exp(-atras*.07) : 0.;
+        esp += v*(.5 + .5*fbm(qc.xz*3. + t*.5));
+        col = mix(col, vec3(.86,.9,.92)*(.18 + luzGeral*.7), clamp(esp, 0., 1.)*.55*canoa.z*k);
+      }
+    }
     float neb = 1.-exp(-dist*(.008 + chuva*.05 + nuvem*.006));
     col = mix(col, paleta(.01)*mix(1., .8, chuva), neb*mix(.45, .62, chuva));
+  }
+  // canoa a atravessar a baía
+  if (canoa.z > .001) {
+    float tC;
+    vec4 cc = canoaCor(ro, rd, tC);
+    float tW = rd.y < 0. ? -ro.y/rd.y : 1e9;
+    if (cc.w > 0. && tC < tW) col = mix(col, cc.rgb, cc.w*canoa.z);
   }
   col = mix(col, paleta(.05), chuva*.18*(1.-smoothstep(0., .25, abs(rd.y))));
   col = mix(col, paleta(.1)*.9, chuva*.1);
@@ -346,7 +479,7 @@ const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
 const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 const U = (n) => gl.getUniformLocation(prog, n);
-const u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX"].map((n) => [n, U(n)]));
+const u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX","canoa"].map((n) => [n, U(n)]));
 
 let sunX = .22;
 function ajusta(){
@@ -468,6 +601,28 @@ function relampago(ms){
 const t0 = performance.now();
 let visivel = true;
 new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canvas);
+// ---------- canoas a atravessar: uma de cada vez, com o mar vazio entre elas ----------
+const CANOA_LIGADA = true;
+const can = { ativo: false, a: 0, s: 1, ate: 0, vis: 0, primeira: true };
+function canoaPasso(ms, dt, elev){
+  const asp = canvas.width/canvas.height, foco = asp < 1 ? .62 : 1.5;
+  const dc = asp < 1 ? 30 : 44;
+  const meia = Math.atan(asp*.5/foco) + 9/dc;
+  const pode = CANOA_LIGADA && elev > -.06 && !atual.tempestade;           // de dia e no nascer/pôr do sol, nunca com trovoada
+  if (!can.ativo) {
+    if (pode && ms > can.ate) {
+      can.ativo = true; can.s = Math.random() < .5 ? 1 : -1;
+      can.a = can.primeira ? can.s*(-.15 - Math.random()*.35)*meia : -can.s*meia;
+      can.primeira = false;
+    }
+  } else {
+    can.a += can.s*(2.4/dc)*dt;                               // ~2,4 m/s, velocidade real de uma OC6
+    if (can.a*can.s > meia) { can.ativo = false; can.ate = ms + 15000 + Math.random()*20000; }
+  }
+  can.vis += ((can.ativo && pode ? 1 : 0) - can.vis)*(1 - Math.exp(-dt*1.5));
+  gl.uniform4f(u.canoa, can.a, can.s, can.vis, dc);
+}
+
 (function frame(){
   if (visivel){
     const ms = performance.now();
@@ -483,6 +638,7 @@ new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canva
     gl.uniform1f(u.nuvem, atual.nuvem); gl.uniform1f(u.chuva, atual.chuva);
     gl.uniform1f(u.fase, faseTeste ?? faseReal(agoraMs()));
     gl.uniform1f(u.mar, atual.mar); gl.uniform1f(u.vento, atual.vento); gl.uniform1f(u.raio, raio); gl.uniform2f(u.raioX, raioPos[0], raioPos[1]);
+    canoaPasso(ms, dt, s.elev);
     gl.uniform1f(u.t, (ms - t0)/1000 + 20.);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
@@ -495,6 +651,7 @@ window.ceuTeste = {
   tempo(m){ modo = m; simulacao(); if (ultimo) rotulo({ ...ultimo, weather_code: { limpo: 0, nublado: 3, chuva: 63, tempestade: 95, agitado: 2 }[m] }); },
   real(){ horaTeste = null; modo = null; manual = false; faseTeste = null; buscaTempo(); },
   lua(f){ faseTeste = f; },
+  canoa(a, s = 1){ if (!CANOA_LIGADA) return; can.ativo = true; can.a = a; can.s = s; can.vis = 1; },
   fase(){ return faseTeste ?? faseReal(agoraMs()); },
   // controlo fino: nuvem, chuva, mar (0–1) e tempestade (true/false)
   definir(k, v){
