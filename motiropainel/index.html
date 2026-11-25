@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B0F5C">
+<title>Painel do Capitão · Motirõ</title>
+<link rel="icon" href="logo-cor.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --roxo:#51177D; --roxo-fundo:#3B0F5C; --tinta:#2A0B42; --tinta-2:#6B5A7A;
+  --laranja:#FF9000; --pedra:#F7F2FA; --linha:#ECE3F2; --fundo:#FFFFFF;
+  --terra:#8A3A0C; --terra-bg:#FFF3E8; --terra-linha:#EDC4A0;
+  --ok:#1E6B45; --ok-bg:#E2F3E9;
+  --r:14px;
+  --f-tit:'Bricolage Grotesque','Figtree',system-ui,sans-serif;
+  --f-txt:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --nav-h:68px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fundo);color:var(--tinta);font-family:var(--f-txt);font-size:16px;line-height:1.45;overflow-x:hidden}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3{font-family:var(--f-tit);font-weight:600;letter-spacing:-.01em;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--roxo);outline-offset:2px;border-radius:6px}
+.dark :focus-visible,.hdr :focus-visible,#login :focus-visible{outline-color:var(--laranja)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- botões ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:12px;border:1.5px solid #D9C9E6;background:#fff;color:var(--roxo);font-weight:600;cursor:pointer;text-align:center;line-height:1.2;transition:background .15s,border-color .15s,transform .1s}
+.btn:hover{background:var(--pedra);border-color:var(--roxo)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn-p{background:var(--laranja);border-color:var(--laranja);color:var(--tinta)}
+.btn-p:hover{background:#FFA21F;border-color:#FFA21F}
+.btn-r{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.btn-r:hover{background:var(--roxo-fundo);border-color:var(--roxo-fundo)}
+.btn-w{background:var(--terra-bg);border-color:var(--terra-linha);color:var(--terra)}
+.btn-w:hover{background:#FBE3CD;border-color:#DDA67B}
+.btn-g{border-color:transparent;background:transparent;text-decoration:underline;text-underline-offset:3px;padding:8px 10px}
+.btn-g:hover{background:var(--pedra);border-color:transparent}
+.btn-s{min-height:40px;padding:6px 12px;font-size:15px}
+@media(max-width:760px){.btn-s{min-height:44px}}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* ---------- entrada ---------- */
+#login{position:fixed;inset:0;overflow:auto;background:radial-gradient(900px 500px at 85% -10%,#6A2299 0,transparent 60%),radial-gradient(700px 500px at -10% 110%,#51177D 0,transparent 55%),linear-gradient(170deg,#3B0F5C,#2A0B42);display:flex;align-items:center;justify-content:center;padding:24px 16px;color:#fff}
+#login .wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;opacity:.5;pointer-events:none}
+.login-box{position:relative;width:100%;max-width:400px;text-align:center}
+.login-box img{width:150px;height:auto;margin:0 auto 18px;display:block}
+.login-box h1{font-size:2.1rem;font-weight:700}
+.login-box .sub{color:#D9C6EA;margin:6px 0 26px}
+.login-box form{display:grid;gap:12px;text-align:left}
+.login-box label{font-weight:500;font-size:.95rem;color:#EBDDF6}
+.login-box input{width:100%;min-height:50px;border-radius:12px;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);padding:10px 14px;color:#fff;font-size:1rem}
+.login-box input::placeholder{color:#BFA9D3}
+.login-box input:focus{background:rgba(255,255,255,.16);border-color:var(--laranja)}
+.login-err{min-height:22px;color:#FFC9A0;font-weight:600;font-size:.95rem}
+.login-box .btn{width:100%;min-height:50px;font-size:1.05rem}
+.login-sep{display:flex;align-items:center;gap:12px;color:#BFA9D3;margin:22px 0 14px;font-size:.9rem}
+.login-sep::before,.login-sep::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.2)}
+.btn-teste{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.7);color:#fff}
+.btn-teste:hover{background:rgba(255,255,255,.22);border-color:#fff}
+.login-nota{margin-top:12px;font-size:.85rem;color:#BFA9D3}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* ---------- cabeçalho ---------- */
+.hdr{background:var(--roxo-fundo);color:#fff;position:sticky;top:0;z-index:30}
+.hdr-in{max-width:1120px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand img{height:34px;width:auto;flex:none}
+.brand b{display:block;font-family:var(--f-tit);font-weight:600;font-size:1.05rem;line-height:1.15}
+.brand span{display:block;color:#CDB6E2;font-size:.85rem}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tab{position:relative;background:transparent;border:0;color:#DCCAEC;font-weight:600;padding:12px 14px;min-height:44px;border-radius:10px;cursor:pointer}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab[aria-current="page"]{color:#fff}
+.tab[aria-current="page"]::after{content:"";position:absolute;left:14px;right:14px;bottom:3px;height:3px;border-radius:3px;background:var(--laranja)}
+.sair{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;min-height:44px;padding:6px 14px;font-weight:600;cursor:pointer}
+.sair:hover{background:rgba(255,255,255,.12)}
+.demo{background:#F4E8FF;color:var(--tinta);border-bottom:1px solid #E1CDF1;font-size:.9rem}
+.demo-in{max-width:1120px;margin:0 auto;padding:8px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.demo-in span{flex:1;min-width:220px}
+.demo .btn-g{min-height:36px;font-size:.88rem;padding:4px 6px}
+
+.bnav{display:none}
+main{max-width:1120px;margin:0 auto;padding:24px 24px 64px}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;width:min(560px,calc(100vw - 24px));pointer-events:none}
+#toast .t{pointer-events:auto;display:flex;gap:14px;align-items:center;background:var(--tinta);color:#fff;border-radius:14px;padding:10px 10px 10px 18px;box-shadow:0 14px 34px -12px rgba(42,11,66,.6);animation:up .25s ease-out}
+#toast .t p{flex:1;font-weight:500}
+#toast .t .btn{min-height:44px;background:var(--laranja);border-color:var(--laranja);color:var(--tinta)}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+
+/* ---------- blocos comuns ---------- */
+.card{background:#fff;border:1px solid var(--linha);border-radius:18px;padding:18px;box-shadow:0 14px 28px -24px rgba(59,15,92,.45)}
+.pill{display:inline-flex;align-items:center;padding:3px 11px;border-radius:99px;font-size:.84rem;font-weight:600;white-space:nowrap;line-height:1.5}
+.p-ok{background:var(--ok-bg);color:var(--ok)}
+.p-no{background:#FBE6D8;color:var(--terra)}
+.p-nr{background:#EFE9F4;color:#5B4A6B}
+.p-le{background:#FFF0CC;color:#7A5200}
+.p-pe{background:#EFE9F4;color:#4E3C61}
+.p-at{background:#F9D9C2;color:#7A2E06}
+.p-px{background:#EBDDF7;color:var(--roxo)}
+.p-ca{background:#E7E2EB;color:#5B4A6B}
+.aviso{background:var(--terra-bg);border:1px solid var(--terra-linha);color:var(--terra);border-radius:12px;padding:10px 14px;font-weight:500}
+.mut{color:var(--tinta-2)}
+.pg-h{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;margin:8px 0 20px}
+.pg-h h2{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700}
+.pg-h p{color:var(--tinta-2);margin-top:4px}
+.nav2{display:flex;gap:8px;align-items:center}
+.nav2 .lbl{min-width:150px;text-align:center;font-weight:600;font-family:var(--f-tit)}
+.ico-btn{width:44px;height:44px;border-radius:12px;border:1.5px solid #D9C9E6;background:#fff;color:var(--roxo);display:grid;place-items:center;cursor:pointer}
+.ico-btn:hover{background:var(--pedra);border-color:var(--roxo)}
+.ico-btn svg{width:20px;height:20px}
+.field{display:grid;gap:5px}
+.field label,.field .lab{font-weight:600;font-size:.92rem}
+.field input,.field select,.field textarea{width:100%;min-height:46px;border:1.5px solid #D9C9E6;border-radius:12px;padding:9px 12px;background:#fff}
+.field textarea{min-height:84px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--roxo)}
+.hint{font-size:.88rem;color:var(--tinta-2)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.form-grid .full{grid-column:1/-1}
+.err{color:var(--terra);font-weight:600}
+
+/* aprovações */
+.aprov{background:var(--pedra);border:1px solid var(--linha);border-radius:18px;margin-bottom:26px;overflow:hidden}
+.aprov-h{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;background:transparent;border:0;cursor:pointer;text-align:left}
+.aprov-h h2{font-size:1.15rem;flex:1}
+.aprov-h .n{background:var(--laranja);color:var(--tinta);font-weight:700;border-radius:99px;min-width:28px;height:28px;display:grid;place-items:center;font-size:.9rem;padding:0 8px}
+.aprov-h .n.z{background:#E4D9EE;color:var(--tinta-2)}
+.aprov-h svg{width:18px;height:18px;transition:transform .2s;color:var(--tinta-2)}
+.aprov-h[aria-expanded="false"] svg{transform:rotate(-90deg)}
+.aprov-l{list-style:none;margin:0;padding:0 8px 8px}
+.aprov-l li{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 14px;margin:0 8px 8px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.aprov-l .tx{flex:1 1 320px;min-width:0}
+.aprov-l .tx b{display:block;font-weight:600}
+.aprov-l .tx span{color:var(--tinta-2);font-size:.92rem}
+.aprov-l .tx .pill{margin-right:6px;vertical-align:1px}
+.aprov-vazio{padding:0 16px 14px;color:var(--tinta-2)}
+
+/* semana */
+.resumo{display:inline-flex;align-items:center;gap:10px;background:var(--pedra);border-radius:99px;padding:6px 16px 6px 8px;margin-top:10px;font-weight:500}
+.resumo i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--laranja);margin-left:6px}
+.aulas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.aula{padding:0;overflow:hidden}
+.aula-top{display:flex;justify-content:space-between;gap:12px;padding:16px 18px 0}
+.aula .dia{font-weight:600;color:var(--tinta-2);font-size:.95rem}
+.aula .hora{font-family:var(--f-tit);font-weight:700;font-size:2.7rem;line-height:1;color:var(--roxo);letter-spacing:-.03em;display:block;margin:2px 0}
+.aula .tipo{display:inline-block;font-size:.84rem;font-weight:600;color:var(--tinta);background:var(--pedra);border-radius:8px;padding:2px 9px}
+.selo{align-self:flex-start;border-radius:99px;padding:5px 13px;font-weight:700;font-size:.9rem;background:#EBDDF7;color:var(--roxo);font-family:var(--f-tit)}
+.selo.lot{background:#F9D9C2;color:#7A2E06}
+.selo.ref{background:var(--roxo);color:#fff}
+.selo.can{background:#E7E2EB;color:#5B4A6B}
+.aula-b{padding:12px 18px 16px;display:grid;gap:10px}
+.prazo{font-size:.9rem;color:var(--tinta-2)}
+.cont{font-weight:500}
+.bar{height:10px;background:var(--linha);border-radius:99px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;background:var(--roxo);border-radius:99px;transition:width .3s}
+.bar.cheio i{background:var(--laranja)}
+.bar.dois::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#fff}
+.cap{font-size:.92rem}
+.cap.alerta{color:var(--terra);font-weight:600}
+.espera{background:var(--pedra);border-radius:14px;padding:12px 14px}
+.espera h3{font-size:1rem;margin-bottom:6px}
+.espera ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.espera li{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;font-weight:500}
+.espera li .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--roxo);color:#fff;font-size:.8rem;margin-right:8px}
+.espera small{display:block;color:var(--tinta-2);font-weight:400;margin-left:32px}
+.espera .nota{margin-top:10px;font-size:.88rem;color:var(--tinta-2)}
+.confirma{background:var(--terra-bg);border:1px solid var(--terra-linha);border-radius:14px;padding:12px 14px;display:grid;gap:10px;color:var(--terra);font-weight:500}
+.cancelada-msg{background:#F1ECF5;border-radius:14px;padding:12px 14px;display:grid;gap:10px}
+.cancelada-msg b{color:var(--terra)}
+.is-cancel .hora,.is-cancel .dia{opacity:.55}
+.alunos-l{display:grid;gap:0;border-top:1px solid var(--linha);margin-top:4px;padding-top:6px}
+.al{display:grid;gap:8px;padding:10px 0;border-bottom:1px solid var(--linha)}
+.al:last-child{border-bottom:0}
+.al-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between}
+.al-h b{font-weight:600}
+.al .row .btn{flex:1 1 90px}
+.extra-box{background:var(--pedra);border-radius:14px;padding:12px 14px;display:grid;gap:10px}
+.extra-box h3{font-size:1rem}
+.extra-box .row .btn{flex:1 1 170px}
+
+/* remadas */
+.rem-l{display:grid;gap:16px}
+.rem{padding:18px;display:grid;gap:12px}
+.rem-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.rem-top .q{font-weight:600;color:var(--tinta-2)}
+.rem-top h3{font-size:1.45rem;margin-top:2px}
+.rem p.rota{font-weight:500}
+.rem .desc{color:var(--tinta-2)}
+.inscr{display:grid;gap:0}
+.inscr .al{grid-template-columns:1fr auto;align-items:center}
+.vazio{border:1.5px dashed #D9C9E6;border-radius:18px;padding:34px 20px;text-align:center;color:var(--tinta-2);background:var(--pedra)}
+.novo{margin-bottom:18px;padding:20px}
+.novo h3{font-size:1.3rem;margin-bottom:14px}
+
+/* alunos */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-weight:600;font-size:.9rem;color:var(--tinta-2);padding:10px 12px;border-bottom:2px solid var(--linha)}
+.tbl td{padding:12px;border-bottom:1px solid var(--linha);vertical-align:middle}
+.tbl td.nome b{font-weight:600}
+.tbl td.nome .mut{display:block;font-size:.85rem}
+.tbl .acoes{display:flex;gap:6px;flex-wrap:wrap}
+.tbl tr.exp td{background:var(--pedra)}
+.tbl-wrap{padding:6px 10px;overflow:hidden}
+.slots{display:grid;gap:8px}
+.slot{display:flex;align-items:center;gap:12px;border:1.5px solid #E3D6EE;border-radius:12px;padding:8px 12px;min-height:50px;background:#fff;cursor:pointer}
+.slot input{width:20px;height:20px;accent-color:var(--roxo);flex:none}
+.slot .s-t{flex:1;font-weight:600}
+.slot .s-t small{display:block;font-weight:400;color:var(--tinta-2);font-size:.87rem}
+.slot.on{border-color:var(--roxo);background:#F4ECFA}
+.slot.off{background:#F7F4F9;cursor:not-allowed;opacity:.85}
+.slot.off .s-t small{color:var(--terra);font-weight:600}
+.slot .btn{flex:none}
+.cont-s{font-weight:600;color:var(--roxo)}
+.mp{display:grid;gap:14px;padding:6px 0}
+
+/* pagamentos */
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.num{background:var(--pedra);border-radius:18px;padding:16px 18px}
+.num span{font-weight:500;color:var(--tinta-2)}
+.num b{display:block;font-family:var(--f-tit);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.02em;line-height:1.1;margin-top:4px}
+.num.rec{background:var(--roxo);color:#fff}
+.num.rec span{color:#D9C6EA}
+.num.fal b{color:var(--terra)}
+.num.fal{background:var(--terra-bg)}
+.grupo{margin-bottom:24px}
+.grupo h3{font-size:1.25rem;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.grupo h3 .c{font-family:var(--f-txt);font-size:.85rem;font-weight:600;background:var(--pedra);border-radius:99px;padding:2px 10px;color:var(--tinta-2)}
+.pg{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center;padding:12px 14px;border:1px solid var(--linha);border-radius:14px;margin-bottom:8px;background:#fff}
+.pg .chk{width:22px;height:22px;accent-color:var(--roxo)}
+.pg .chk-x{width:22px}
+.pg .nm b{font-weight:600}
+.pg .nm span{display:block;color:var(--tinta-2);font-size:.92rem}
+.pg .ac{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.pg .form-p{grid-column:1/-1;background:var(--pedra);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr 2fr;gap:12px}
+.pg .form-p .row{grid-column:1/-1}
+.lote{position:sticky;top:76px;z-index:20;background:var(--tinta);color:#fff;border-radius:14px;padding:10px 10px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.rodape{margin-top:30px;padding:14px 18px;background:var(--pedra);border-radius:14px;color:var(--tinta-2)}
+.rep{text-align:center;margin-top:28px}
+
+/* ---------- telemóvel ---------- */
+@media(max-width:760px){
+  .hdr-in{padding:8px 14px;gap:10px}
+  .brand img{height:28px}
+  .brand b{font-size:1rem}
+  .tabs{display:none}
+  .sair{margin-left:auto}
+  .demo-in{padding:8px 14px}
+  main{padding:18px 14px calc(var(--nav-h) + 110px)}
+  .bnav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--linha);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -10px 24px -18px rgba(59,15,92,.5)}
+  .bnav button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--nav-h);padding:6px 2px;border:0;background:transparent;color:var(--tinta-2);font-size:.74rem;font-weight:600;cursor:pointer}
+  .bnav svg{width:25px;height:25px}
+  .bnav button[aria-current="page"]{color:var(--roxo)}
+  .bnav button[aria-current="page"]::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 4px 4px;background:var(--laranja)}
+  #toast{bottom:calc(var(--nav-h) + 10px + env(safe-area-inset-bottom))}
+  .aulas{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .nums{grid-template-columns:1fr 1fr}
+  .nums .num:first-child{grid-column:1/-1}
+  .pg{grid-template-columns:auto 1fr}
+  .pg .ac{grid-column:1/-1;justify-content:stretch}
+  .pg .ac .btn{flex:1 1 auto}
+  .pg .form-p{grid-template-columns:1fr}
+  .lote{top:64px}
+  .nav2{width:100%}
+  .nav2 .lbl{flex:1}
+  .pg-h .nav2{justify-content:space-between}
+  /* tabela vira cards */
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl thead{display:none}
+  .tbl-wrap{padding:0;border:0;background:transparent;box-shadow:none}
+  .tbl tr{border:1px solid var(--linha);border-radius:16px;padding:6px 14px;margin-bottom:12px;background:#fff}
+  .tbl td{border:0;padding:6px 0;display:flex;gap:12px;justify-content:space-between;align-items:center;text-align:right}
+  .tbl td::before{content:attr(data-label);font-weight:600;color:var(--tinta-2);font-size:.88rem;text-align:left;flex:none}
+  .tbl td.nome{display:block;text-align:left;padding-top:10px}
+  .tbl td.nome::before{display:none}
+  .tbl td.acoes-td{display:block;padding:8px 0 10px;border-top:1px solid var(--linha);margin-top:6px}
+  .tbl td.acoes-td::before{display:none}
+  .tbl .acoes .btn{flex:1 1 130px}
+  .tbl tr.exp{background:var(--pedra)}
+  .tbl tr.exp td{display:block;background:transparent;padding:10px 0}
+  .tbl tr.exp td::before{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= ENTRADA ================= -->
+<section id="login" hidden aria-labelledby="login-t">
+  <svg class="wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90 C150 40 300 140 450 90 S750 40 900 90 S1100 130 1200 80 V160 H0Z" fill="#51177D" opacity=".55"/><path d="M0 120 C200 70 350 160 600 115 S950 80 1200 120 V160 H0Z" fill="#2A0B42" opacity=".7"/></svg>
+  <div class="login-box">
+    <img src="logo-branco.png" alt="Motirõ Clube de Canoa">
+    <h1 id="login-t">Painel do Capitão</h1>
+    <p class="sub">Acesso do Capitão do clube.</p>
+    <form id="login-form" novalidate>
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" autocomplete="current-password" placeholder="Digite a senha">
+      <p class="login-err" id="login-err" role="alert"></p>
+      <button class="btn btn-p" type="submit">Entrar</button>
+    </form>
+    <div class="login-sep"><span>ou</span></div>
+    <!-- TODO remover modo teste antes de ir para produção -->
+    <button class="btn btn-teste" type="button" id="modo-teste">Entrar sem senha (modo teste)</button>
+    <p class="login-nota">Modo teste abre o painel com dados de exemplo.</p>
+  </div>
+</section>
+
+<!-- ================= PAINEL ================= -->
+<div id="app" hidden>
+  <header class="hdr">
+    <div class="hdr-in">
+      <div class="brand">
+        <img src="logo-branco.png" alt="">
+        <div><b>Motirõ Clube de Canoa</b><span>Painel do clube</span></div>
+      </div>
+      <nav class="tabs" id="tabs-top" aria-label="Seções do painel"></nav>
+      <button type="button" class="sair" id="sair">Sair</button>
+    </div>
+  </header>
+  <div class="demo"><div class="demo-in"><span>Modo demonstração: dados de exemplo, nada é enviado no WhatsApp.</span><button type="button" class="btn btn-g" data-act="reset">Repor dados de exemplo</button></div></div>
+  <main id="main" tabindex="-1"></main>
+  <nav class="bnav" id="tabs-bot" aria-label="Seções do painel"></nav>
+  <div id="toast"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ================= utilitários ================= */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const MES3=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+const DIAC=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const iso2ms=i=>{const p=i.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2]);};
+const ms2iso=ms=>new Date(ms).toISOString().slice(0,10);
+const addDays=(i,n)=>ms2iso(iso2ms(i)+n*864e5);
+const dowOf=i=>new Date(iso2ms(i)).getUTCDay();
+const diffDays=(a,b)=>Math.round((iso2ms(a)-iso2ms(b))/864e5);
+const dmy=i=>{const p=i.split('-');return p[2]+'/'+p[1];};
+const fmtDia=i=>{const d=+i.slice(8);return DIAC[dowOf(i)]+' · '+d+' '+MES3[+i.slice(5,7)-1];};
+const money=n=>'R$ '+Number(n).toLocaleString('pt-BR');
+const dim=(y,m)=>new Date(Date.UTC(y,m,0)).getUTCDate();
+function nowSP(){
+  const f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+  const o={};f.formatToParts(new Date()).forEach(p=>o[p.type]=p.value);
+  return {iso:o.year+'-'+o.month+'-'+o.day,ms:Date.UTC(+o.year,+o.month-1,+o.day,+o.hour,+o.minute)};
+}
+const TODAY=nowSP().iso;
+const MK_NOW=TODAY.slice(0,7);
+const mkAdd=(mk,n)=>{const y=+mk.slice(0,4),m=+mk.slice(5,7)-1+n;const d=new Date(Date.UTC(y,m,1));return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1);};
+const mkLabel=mk=>MESES[+mk.slice(5,7)-1]+' de '+mk.slice(0,4);
+function weekKey(i){const d=dowOf(i);return addDays(i,-((d+6)%7));}
+const TODAY_WK=(dowOf(TODAY)===0)?addDays(TODAY,1):weekKey(TODAY);
+const wkOf=off=>addDays(TODAY_WK,off*7);
+
+/* ================= regras ================= */
+const PLANOS={
+  '1x':{n:1,preco:195,nome:'1x',lbl:'1x · 1 horário fixo'},
+  '2x':{n:2,preco:285,nome:'2x',lbl:'2x · 2 horários fixos'},
+  '3x':{n:3,preco:340,nome:'3x',lbl:'3x · 3 horários fixos'},
+  'full':{n:0,preco:380,nome:'Full',lbl:'Full · todas as remadas'}
+};
+const PRECO_AVULSO=75;
+const SLOTS=[
+  {id:'s1',dow:1,hora:'6:00',tipo:'Remada'},
+  {id:'s2',dow:1,hora:'8:15',tipo:'Treino'},
+  {id:'s3',dow:2,hora:'6:00',tipo:'Remada'},
+  {id:'s4',dow:3,hora:'6:00',tipo:'Remada'},
+  {id:'s5',dow:4,hora:'6:00',tipo:'Remada'},
+  {id:'s6',dow:5,hora:'6:00',tipo:'Remada'},
+  {id:'s7',dow:5,hora:'7:45',tipo:'Remada extra'},
+  {id:'s8',dow:6,hora:'7:00',tipo:'Remada'}
+];
+const ALL_SLOTS=SLOTS.map(s=>s.id);
+const slotOf=id=>SLOTS.find(s=>s.id===id);
+const slotLbl=id=>{const s=slotOf(id);return DIAC[s.dow].slice(0,3)+' '+s.hora;};
+const slotDate=(wk,s)=>addDays(wk,s.dow-1);
+
+/* ================= dados de exemplo ================= */
+const LS_KEY='motiro-painel-demo-v1';
+const SS_KEY='motiro-painel-sessao';
+let S=null;
+
+function seed(){
+  const nomes=[
+    ['Bruno Lima','full',null],['Mariana Souza','full',null],['Rodrigo Martins','full',null],['Patrícia Nunes','full',null],['Felipe Andrade','full',null],
+    ['Juliana Ribeiro','3x',['s1','s4','s8']],['Thiago Barbosa','3x',['s3','s4','s6']],['Larissa Gomes','3x',['s1','s4','s8']],
+    ['Gustavo Pereira','3x',['s3','s5','s8']],['Fernanda Costa','3x',['s4','s6','s8']],['Diego Carvalho','3x',['s1','s3','s5']],
+    ['Aline Moreira','2x',['s4','s8']],['Vinícius Rocha','2x',['s3','s5']],['Beatriz Almeida','2x',['s4','s6']],['Leandro Dias','2x',['s1','s5']],
+    ['Carolina Freitas','2x',['s6','s8']],['Marcelo Pinto','2x',['s3','s6']],['Renata Cardoso','2x',['s1','s8']],['Eduardo Fogaça','2x',['s5','s8']],
+    ['Sofia Mendes','1x',['s4']],['Henrique Araújo','1x',['s1']],['Natália Correia','1x',['s6']],['Paulo Vieira','1x',['s8']],['Tatiane Borges','1x',['s3']]
+  ];
+  const alunos=nomes.map((n,i)=>({id:'a'+(i+1),nome:n[0],whats:'(47) 99'+pad(10+i)+'-'+(2000+i*37),plano:n[1],slots:n[2]||ALL_SLOTS.slice(),venc:10,mat:'ativa',aCancelar:false,faltas:0}));
+  const byN=nm=>alunos.find(a=>a.nome===nm);
+  byN('Renata Cardoso').venc=28; byN('Gustavo Pereira').venc=30; byN('Natália Correia').venc=28;
+  byN('Paulo Vieira').mat='cancelada';
+  byN('Eduardo Fogaça').aCancelar=true;
+  byN('Diego Carvalho').faltas=1;
+
+  const s={seedDay:TODAY,alunos,att:{},reforco:{},cancel:{},espera:{},extras:[],pag:{},passeios:[],remadas:[],nid:100};
+  const wk=TODAY_WK;
+  const nowMs=nowSP().ms;
+  SLOTS.forEach((sl,j)=>{
+    const date=slotDate(wk,sl);
+    const passou=nowMs>iso2ms(addDays(date,-1))+20*36e5;
+    alunos.filter(a=>a.mat!=='cancelada'&&a.slots.includes(sl.id)).forEach((a,k)=>{
+      const i=+a.id.slice(1);
+      const r=(i*7+j*3)%10;
+      let v=null;
+      if(passou){v=r<8?'vem':(r===8?'nao':null);}
+      else{v=r<5?'vem':(r===5?'nao':(r<8?'lembrado':null));}
+      if(sl.id==='s4')v='vem';
+      if(sl.id==='s1'||sl.id==='s8')v=(sl.id==='s8'&&k===13)?'nao':'vem';
+      if(sl.id==='s6')v=(k===10)?'lembrado':'vem';
+      if(v)s.att[wk+'|'+sl.id+'|'+a.id]=v;
+    });
+  });
+  s.reforco[wk+'|s8']=true;
+  s.espera[wk+'|s4']=[
+    {nome:'Camila Duarte',whats:'(47) 99877-1204',plano:'2x',avisado:false},
+    {nome:'Rafael Teixeira',whats:'(47) 99654-8830',plano:'1x',avisado:false}
+  ];
+  s.extras.push({id:'e1',wk:wk,slot:'s5',alunoId:byN('Sofia Mendes').id,tipo:'extra',pago:false,valor:PRECO_AVULSO});
+  // pagamentos de novembro (mês atual)
+  alunos.forEach(a=>{
+    if(a.mat==='cancelada')return;
+    const aberto=['Eduardo Fogaça','Henrique Araújo','Larissa Gomes','Renata Cardoso','Gustavo Pereira','Natália Correia'].includes(a.nome);
+    if(!aberto){
+      const dia=[2,3,5,6,8,9,10,4,7,10,9,5,8,3,6,10,7][ +a.id.slice(1) % 17 ];
+      s.pag[MK_NOW+'|'+a.id]={pago:true,data:MK_NOW+'-'+pad(dia),nota:''};
+    }
+  });
+  byN('Larissa Gomes').venc=15;
+  // remada especial
+  const dom=addDays(wk,6);
+  s.remadas.push({id:'r1',nome:'Remada ao pôr do sol até a Praia Brava',data:dom,hora:'16:30',saida:'Av. Min. Victor Konder, Fazenda',destino:'Praia Brava',km:8,max:16,preco:75,desc:'Saída em grupo, ritmo leve, com parada para ver o pôr do sol. Traga água e protetor.',convidados:23,reforco:false,cancelada:false,
+    inscritos:[
+      {alunoId:byN('Bruno Lima').id,pago:true,devolvido:false},
+      {alunoId:byN('Mariana Souza').id,pago:true,devolvido:false},
+      {alunoId:byN('Juliana Ribeiro').id,pago:true,devolvido:false},
+      {alunoId:byN('Thiago Barbosa').id,pago:false,devolvido:false},
+      {alunoId:byN('Sofia Mendes').id,pago:false,devolvido:false}
+    ]});
+  s.passeios.push({id:'p1',nome:'Família Prado',contato:'(47) 99811-4420',pessoas:10,data:addDays(dom,6),hora:'09:00',destino:'Praia Brava',valor:10*PRECO_AVULSO,estado:'pendente',pago:false});
+  return s;
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){const o=JSON.parse(raw);if(o&&o.seedDay===TODAY&&o.alunos){S=o;return;}}
+  }catch(e){}
+  S=seed();
+}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
+const nid=p=>p+(++S.nid);
+
+/* ================= consultas ================= */
+const aluno=id=>S.alunos.find(a=>a.id===id);
+const ativos=()=>S.alunos.filter(a=>a.mat!=='cancelada');
+const fixos=sid=>ativos().filter(a=>a.slots.includes(sid));
+const attGet=(wk,sid,aid)=>S.att[wk+'|'+sid+'|'+aid]||null;
+const extrasOf=(wk,sid)=>S.extras.filter(e=>e.wk===wk&&e.slot===sid);
+const isRef=(wk,sid)=>!!S.reforco[wk+'|'+sid];
+const isCancel=(wk,sid)=>!!S.cancel[wk+'|'+sid];
+const capOf=(wk,sid)=>isRef(wk,sid)?24:12;
+const conf=(wk,sid)=>fixos(sid).filter(a=>attGet(wk,sid,a.id)==='vem').length+extrasOf(wk,sid).length;
+const seats=(wk,sid)=>fixos(sid).filter(a=>attGet(wk,sid,a.id)!=='nao').length+extrasOf(wk,sid).length;
+const lotada=(wk,sid)=>conf(wk,sid)>=capOf(wk,sid);
+const prazoMs=(wk,sl)=>iso2ms(addDays(slotDate(wk,sl),-1))+20*36e5;
+const prazoPassou=(wk,sl)=>nowSP().ms>prazoMs(wk,sl);
+const planoOf=a=>PLANOS[a.plano];
+const eNome=e=>e.alunoId?(aluno(e.alunoId)||{nome:'Aluno'}).nome:e.nome;
+
+function dueIso(mk,a){const y=+mk.slice(0,4),m=+mk.slice(5,7);return mk+'-'+pad(Math.min(a.venc,dim(y,m)));}
+function payRec(mk,a){
+  const k=mk+'|'+a.id;
+  if(S.pag[k])return S.pag[k];
+  if(mk<MK_NOW&&a.mat!=='cancelada')return {pago:true,data:mk+'-'+pad(Math.min(a.venc,28)),nota:'',auto:true};
+  return {pago:false};
+}
+function payState(mk,a){
+  if(a.mat==='cancelada')return {st:'cancelada'};
+  const r=payRec(mk,a);
+  if(r.pago)return {st:'pago',r:r};
+  const due=dueIso(mk,a);
+  if(TODAY>due)return {st:'atrasado',dias:diffDays(TODAY,due),due:due};
+  return {st:'pendente',due:due};
+}
+function setPaid(mk,a,data,nota){S.pag[mk+'|'+a.id]={pago:true,data:data||TODAY,nota:nota||''};}
+
+/* ================= estado da interface ================= */
+const ui={tab:'semana',weekOff:0,monthOff:0,exp:{},confirm:null,aprovOpen:!matchMedia('(max-width:760px)').matches,toast:'',fn:null,
+  ni:{open:false,nome:'',whats:'',plano:'2x',slots:[],msg:''},
+  mp:null, rf:null, remOpen:{}, sel:{}, payForm:null, matConf:null, remConf:null};
+const curWk=()=>wkOf(ui.weekOff);
+const curMk=()=>mkAdd(MK_NOW,ui.monthOff);
+function say(m){ui.toast=m;}
+
+/* ================= componentes ================= */
+const ICON={
+  semana:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  remadas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 13.5c3 2.5 6 2.5 9.5 0s6.500 2.500 9.500 0"/><path d="M4 10h16l-2.500 3.500h-11z"/><path d="M12 10V4l4 3"/></svg>',
+  alunos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.500" r="3.200"/><path d="M3 19.500c.5-3.300 3-5 6-5s5.500 1.700 6 5"/><circle cx="17" cy="9.500" r="2.500"/><path d="M17.500 14.500c2 .3 3.300 1.700 3.700 4.500"/></svg>',
+  pagamentos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"/><circle cx="12" cy="12" r="2.800"/><path d="M6.500 9.500v.01M17.500 14.500v.01"/></svg>',
+  esq:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.500 6l-6 6 6 6"/></svg>',
+  dir:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.500 6l6 6-6 6"/></svg>',
+  baixo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.500l6 6 6-6"/></svg>'
+};
+const TABS=[['semana','Semana'],['remadas','Remadas especiais'],['alunos','Alunos'],['pagamentos','Pagamentos']];
+function btn(act,label,cls,a,b,c,extra){
+  return '<button type="button" class="btn '+(cls||'')+'" data-act="'+act+'"'+(a!=null?' data-a="'+esc(a)+'"':'')+(b!=null?' data-b="'+esc(b)+'"':'')+(c!=null?' data-c="'+esc(c)+'"':'')+(extra||'')+'>'+label+'</button>';
+}
+const pill=(t,c)=>'<span class="pill '+c+'">'+t+'</span>';
+
+/* ---------- aprovações e pendências ---------- */
+function aprovHTML(){
+  const it=[];
+  S.passeios.forEach(p=>{
+    const desc=p.pessoas+' pessoas · '+fmtDia(p.data)+' às '+p.hora+' · até '+p.destino+' · '+money(p.valor);
+    if(p.estado==='pendente')it.push({tag:pill('Passeio exclusivo','p-px'),t:'Pedido de '+esc(p.nome),d:desc+' · contato '+esc(p.contato),b:btn('pasOk','Aprovar','btn-p btn-s',p.id)+btn('pasNo','Recusar','btn-w btn-s',p.id)});
+    else if(p.estado==='aprovado'&&!p.pago)it.push({tag:pill('Aguardando Pix','p-px'),t:'Passeio exclusivo de '+esc(p.nome),d:desc,b:btn('pasPay','Marcar pago','btn-p btn-s',p.id)});
+  });
+  S.extras.filter(e=>!e.pago).forEach(e=>{
+    const sl=slotOf(e.slot);
+    it.push({tag:pill('Aguardando Pix','p-px'),t:'Aula extra de '+esc(eNome(e)),d:fmtDia(slotDate(e.wk,sl))+' às '+sl.hora+' · '+money(e.valor),b:btn('extraPay','Marcar pago','btn-p btn-s',e.id)});
+  });
+  S.remadas.filter(r=>!r.cancelada).forEach(r=>{
+    r.inscritos.filter(i=>!i.pago).forEach(i=>{
+      it.push({tag:pill('Aguardando Pix','p-px'),t:'Inscrição de '+esc(aluno(i.alunoId).nome)+' na remada especial',d:esc(r.nome)+' · '+fmtDia(r.data)+' · '+money(r.preco),b:btn('remPay','Marcar pago','btn-p btn-s',r.id,i.alunoId)});
+    });
+  });
+  ativos().filter(a=>a.aCancelar).forEach(a=>{
+    const ps=payState(MK_NOW,a);
+    it.push({tag:pill('Matrícula a cancelar','p-at'),t:esc(a.nome)+' · '+planoOf(a).nome+' · '+money(planoOf(a).preco),d:ps.st==='atrasado'?'Atrasado há '+ps.dias+' dias. O sistema avisou que a matrícula está a cancelar por atraso.':'Matrícula marcada para cancelar por atraso.',b:btn('aprovCancel','Cancelar','btn-w btn-s',a.id)+btn('jaPagou','Já pagou','btn-p btn-s',a.id)});
+  });
+  const n=it.length;
+  let h='<section class="aprov" aria-labelledby="aprov-t"><button type="button" class="aprov-h" data-act="aprovToggle" aria-expanded="'+ui.aprovOpen+'" aria-controls="aprov-b"><h2 id="aprov-t">Aprovações e pendências</h2><span class="n'+(n?'':' z')+'" aria-label="'+n+' pendentes">'+n+'</span>'+ICON.baixo+'</button><div id="aprov-b"'+(ui.aprovOpen?'':' hidden')+'>';
+  if(!n)h+='<p class="aprov-vazio">Nada pendente por aqui.</p>';
+  else h+='<ul class="aprov-l">'+it.map(x=>'<li><div class="tx"><b>'+x.tag+x.t+'</b><span>'+x.d+'</span></div><div class="row">'+x.b+'</div></li>').join('')+'</ul>';
+  return h+'</div></section>';
+}
+
+/* ---------- Semana ---------- */
+function semanaTitulo(wk){
+  const a=wk,b=addDays(wk,5);
+  const ma=+a.slice(5,7)-1,mb=+b.slice(5,7)-1;
+  return ma===mb?'Semana de '+(+a.slice(8))+' a '+(+b.slice(8))+' de '+MESES[mb]:'Semana de '+(+a.slice(8))+' de '+MESES[ma]+' a '+(+b.slice(8))+' de '+MESES[mb];
+}
+function attPill(wk,sl,v){
+  if(v==='vem')return pill('Vem','p-ok');
+  if(v==='nao')return pill('Não vem','p-no');
+  const passou=prazoPassou(wk,sl);
+  if(passou)return pill('Não confirmou · pode remar se houver vaga','p-nr');
+  if(v==='lembrado')return pill('Lembrado','p-le');
+  return pill('Sem resposta','p-nr');
+}
+function aulaHTML(wk,sl){
+  const sid=sl.id,date=slotDate(wk,sl),key=wk+'|'+sid;
+  const cancel=isCancel(wk,sid),ref=isRef(wk,sid),cap=capOf(wk,sid);
+  const fx=fixos(sid),ex=extrasOf(wk,sid);
+  const c=conf(wk,sid),lot=c>=cap;
+  const nao=fx.filter(a=>attGet(wk,sid,a)==='nao'||attGet(wk,sid,a.id)==='nao').length;
+  const sem=fx.filter(a=>{const v=attGet(wk,sid,a.id);return v===null||v==='lembrado';}).length;
+  const total=fx.length+ex.length;
+  const selo=cancel?['Cancelada','can']:lot?['Lotada','lot']:ref?['Com reforço','ref']:[c+'/12',''];
+  let capTxt;
+  if(!ref)capTxt=c>=12?'Lotada com 12. Confirme o reforço para abrir até 24':'Até 12 pessoas, sem reforço';
+  else capTxt=c>=24?'Lotada: 24 de 24 (com reforço)':'Reforço confirmado: aceita até 24';
+  const alerta=(!ref&&c>=12)||(ref&&c>=24);
+  const exp=!!ui.exp[key];
+  let h='<article class="card aula'+(cancel?' is-cancel':'')+'" aria-label="'+DIAC[sl.dow]+' '+sl.hora+'"><div class="aula-top"><div><span class="dia">'+DIAC[sl.dow]+' · '+(+date.slice(8))+' '+MES3[+date.slice(5,7)-1]+'</span><span class="hora">'+sl.hora+'</span><span class="tipo">'+sl.tipo+'</span></div><span class="selo '+selo[1]+'">'+selo[0]+'</span></div><div class="aula-b">';
+  h+='<p class="prazo">Confirmação até '+DIAS[dowOf(addDays(date,-1))]+' 20:00</p>';
+  if(cancel){
+    const avis=fx.filter(a=>attGet(wk,sid,a.id)!=='nao').length+ex.length;
+    h+='<div class="cancelada-msg"><p><b>Cancelada por mau tempo.</b> '+avis+' alunos avisados no WhatsApp.</p><div class="row">'+btn('cancelUndo','Desfazer cancelamento','',sid)+'</div></div>';
+    return h+'</div></article>';
+  }
+  h+='<p class="cont"><strong>'+c+' de '+total+' confirmaram</strong> · '+nao+' não vem · '+sem+' sem resposta</p>';
+  h+='<div class="bar'+(lot?' cheio':'')+(ref?' dois':'')+'" role="img" aria-label="Ocupação: '+c+' de '+cap+'"><i style="width:'+Math.min(100,c/cap*100)+'%"></i></div>';
+  h+='<p class="cap'+(alerta?' alerta':'')+'">'+capTxt+'</p>';
+  if(!ref&&c>=12)h+='<div class="row">'+btn('reforco','Confirmei o reforço: abrir até 24','btn-p',sid)+'</div>';
+  if(ref)h+='<div class="row">'+btn('reforcoUndo','Reforço confirmado ✓ (desfazer)','btn-s',sid)+'</div>';
+  const es=S.espera[key]||[];
+  if(es.length){
+    h+='<div class="espera"><h3>Lista de espera</h3><ol>'+es.map((p,i)=>'<li><span><span class="n">'+(i+1)+'</span>'+esc(p.nome)+'<small>'+(p.avisado?'avisado da vaga, aguardando resposta':'na fila')+'</small></span><span class="row">'+(p.avisado?btn('waitOk','Aceitou a vaga','btn-s btn-p',sid,i):'')+btn('waitDel','Tirar da fila','btn-s btn-g',sid,i)+'</span></li>').join('')+'</ol><p class="nota">Se alguém sai da turma ou desiste da vaga, o próximo da fila é avisado na hora no WhatsApp e tem até as 21h da véspera para confirmar.</p></div>';
+  }
+  h+='<div class="row">'+btn('toggleList',exp?'Esconder':'Ver alunos','btn-s',key)+btn('cancelAsk','Cancelar por mau tempo','btn-w btn-s',sid)+'</div>';
+  if(ui.confirm===key)h+='<div class="confirma" role="alertdialog" aria-label="Confirmar cancelamento"><p>Cancelar '+DIAC[sl.dow]+' '+sl.hora+' por mau tempo? Os alunos são avisados no WhatsApp.</p><div class="row">'+btn('cancelYes','Sim, cancelar','btn-w',sid)+btn('cancelNo','Voltar','',sid)+'</div></div>';
+  if(exp){
+    h+='<div class="alunos-l">';
+    h+=fx.map(a=>{
+      const v=attGet(wk,sid,a.id);
+      return '<div class="al"><div class="al-h"><b>'+esc(a.nome)+'</b>'+attPill(wk,sl,v)+'</div><div class="row">'+btn('vem','Vem','btn-s',sid,a.id)+btn('nao','Não vem','btn-s',sid,a.id)+btn('lembrar','Lembrar no WhatsApp','btn-s',sid,a.id,null,(v==='vem'||v==='nao')?' disabled':'')+'</div></div>';
+    }).join('');
+    h+=ex.map(e=>{
+      const tag=e.tipo==='extra'?(e.pago?pill('Extra pago','p-ok'):pill('Aguardando Pix','p-px')):e.tipo==='reposicao'?pill('Reposição','p-ok'):pill('Vaga da lista de espera','p-ok');
+      return '<div class="al"><div class="al-h"><b>'+esc(eNome(e))+' <span class="mut" style="font-weight:400">· fora do plano</span></b>'+tag+'</div><div class="row">'+(e.tipo==='extra'&&!e.pago?btn('extraPay','Marcar pago','btn-s btn-p',e.id):'')+btn('extraDel','Remover vaga','btn-s',e.id)+'</div></div>';
+    }).join('');
+    h+='</div>';
+    h+='<div class="extra-box"><h3>Aula extra ou reposição (fora do plano do aluno)</h3><div class="field"><label for="ex-'+sid+'">Aluno</label><select id="ex-'+sid+'" data-bind="exsel.'+sid+'">'+ativos().map(a=>'<option value="'+a.id+'"'+((ui.exsel&&ui.exsel[sid]===a.id)?' selected':'')+'>'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('extraSend','Enviar aula extra ('+money(PRECO_AVULSO)+')','btn-p',sid)+btn('repoSend','Reposição de falta (grátis)','',sid)+'</div></div>';
+  }
+  return h+'</div></article>';
+}
+function tabSemana(){
+  const wk=curWk();
+  let X=0,Y=0;
+  SLOTS.forEach(sl=>{if(isCancel(wk,sl.id))return;X+=conf(wk,sl.id);Y+=fixos(sl.id).length+extrasOf(wk,sl.id).length;});
+  let h='<div class="pg-h"><div><h2>'+semanaTitulo(wk)+'</h2><p class="resumo" role="status"><i></i>'+X+' de '+Y+' presenças confirmadas na semana</p></div><div class="nav2"><button type="button" class="ico-btn" data-act="weekNav" data-a="-1" aria-label="Semana anterior">'+ICON.esq+'</button><span class="lbl">'+(ui.weekOff===0?'Esta semana':ui.weekOff>0?'Daqui a '+ui.weekOff+(ui.weekOff===1?' semana':' semanas'):'Há '+(-ui.weekOff)+(ui.weekOff===-1?' semana':' semanas'))+'</span><button type="button" class="ico-btn" data-act="weekNav" data-a="1" aria-label="Semana seguinte">'+ICON.dir+'</button></div></div>';
+  h+='<div class="aulas">'+SLOTS.map(sl=>aulaHTML(wk,sl)).join('')+'</div>';
+  return h;
+}
+
+/* ---------- Remadas especiais ---------- */
+function remCap(r){return r.max<=12?r.max:(r.reforco?r.max:12);}
+function avisoMax(n){
+  if(!(n>=1&&n<=24))return '<span class="err">O máximo de pessoas tem que ser entre 1 e 24.</span>';
+  return n<=12?'Até 12 pessoas: equipe normal, sem reforço.':'Acima de 12: as inscrições param em 12 até você confirmar que pediu reforço.';
+}
+function remFormHTML(){
+  const f=ui.rf;
+  return '<form class="card novo" id="rem-form" novalidate><h3>Nova remada especial</h3><div class="form-grid">'+
+  '<div class="field full"><label for="rf-nome">Nome da remada</label><input id="rf-nome" data-bind="rf.nome" value="'+esc(f.nome)+'" placeholder="Ex.: Remada de aniversário do clube" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-data">Data</label><input id="rf-data" type="date" data-bind="rf.data" value="'+esc(f.data)+'"></div>'+
+  '<div class="field"><label for="rf-hora">Horário de saída</label><input id="rf-hora" type="time" data-bind="rf.hora" value="'+esc(f.hora)+'"></div>'+
+  '<div class="field"><label for="rf-saida">Local de saída</label><input id="rf-saida" data-bind="rf.saida" value="'+esc(f.saida)+'" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-dest">Até onde vai</label><input id="rf-dest" data-bind="rf.destino" value="'+esc(f.destino)+'" placeholder="Ex.: Praia Brava" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-km">Distância (km)</label><input id="rf-km" type="number" min="0" step="0.5" inputmode="decimal" data-bind="rf.km" value="'+esc(f.km)+'"></div>'+
+  '<div class="field"><label for="rf-max">Máximo de pessoas (até 24)</label><input id="rf-max" type="number" min="1" max="24" inputmode="numeric" data-bind="rf.max" data-live="max" value="'+esc(f.max)+'" aria-describedby="rf-aviso"></div>'+
+  '<div class="field"><label for="rf-preco">Preço por pessoa (R$)</label><input id="rf-preco" type="number" min="0" inputmode="numeric" data-bind="rf.preco" value="'+esc(f.preco)+'"></div>'+
+  '<div class="field full"><p id="rf-aviso" class="aviso" aria-live="polite">'+avisoMax(+f.max)+'</p></div>'+
+  '<div class="field full"><label for="rf-desc">Descrição</label><textarea id="rf-desc" data-bind="rf.desc" placeholder="O que o aluno precisa saber: ritmo, o que levar, parada…">'+esc(f.desc)+'</textarea></div>'+
+  '</div><p class="err" id="rf-err" role="alert" style="margin-top:12px">'+esc(f.err||'')+'</p><div class="row" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="remCreate">Criar e enviar convite para '+ativos().length+' alunos</button>'+btn('remNew','Cancelar','')+'</div></form>';
+}
+function remCard(r){
+  const cap=remCap(r),n=r.inscritos.length,lot=n>=cap;
+  const selo=r.cancelada?['Cancelada','can']:lot?['Lotada','lot']:['Inscrições abertas',''];
+  const open=!!ui.remOpen[r.id];
+  let h='<article class="card rem'+(r.cancelada?' is-cancel':'')+'"><div class="rem-top"><div><span class="q">'+fmtDia(r.data)+' · '+esc(r.hora)+'</span><h3>'+esc(r.nome)+'</h3></div><span class="selo '+selo[1]+'">'+selo[0]+'</span></div>';
+  h+='<p class="rota">Saída: '+esc(r.saida)+' até '+esc(r.destino)+(r.km?' · '+esc(r.km)+' km':'')+'</p>';
+  if(r.desc)h+='<p class="desc">'+esc(r.desc)+'</p>';
+  h+='<p><strong>'+money(r.preco)+' por pessoa</strong> · convite enviado para '+r.convidados+' alunos</p>';
+  if(r.cancelada){
+    const pagos=r.inscritos.filter(i=>i.pago);
+    h+='<div class="cancelada-msg"><p><b>Remada cancelada.</b> '+n+' inscritos avisados no WhatsApp.</p>';
+    if(pagos.length){h+='<p>Quem já pagou e precisa receber de volta:</p><div class="inscr">'+pagos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.devolvido?pill('Devolvido','p-ok'):pill('Pago '+money(r.preco),'p-px'))+'</div>'+(i.devolvido?'':'<div>'+btn('remRefund','Marcar devolvido','btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join('')+'</div>';}
+    else h+='<p class="mut">Ninguém tinha pago ainda, nada a devolver.</p>';
+    return h+'</div></article>';
+  }
+  h+='<div class="bar'+(lot?' cheio':'')+'" role="img" aria-label="Vagas: '+n+' de '+cap+'"><i style="width:'+Math.min(100,n/cap*100)+'%"></i></div>';
+  h+='<p class="cap">Vagas: '+n+' de '+cap+' ocupadas'+(r.max>12?' (máximo '+r.max+' com reforço)':'')+'</p>';
+  let refTxt;
+  if(r.max<=12)refTxt='Equipe normal, sem reforço.';
+  else if(r.reforco)refTxt='Reforço confirmado: aceita até '+r.max+'.';
+  else refTxt=n>=12?'Inscrições paradas em 12. Confirme o reforço para abrir até '+r.max+'.':'Até 12 pessoas sem reforço. Acima disso, confirme o reforço.';
+  h+='<p class="cap'+((r.max>12&&!r.reforco&&n>=12)?' alerta':'')+'">'+refTxt+'</p>';
+  h+='<div class="row">'+btn('remToggle',open?'Esconder inscritos':'Ver inscritos ('+n+')','btn-s',r.id);
+  if(r.max>12)h+=r.reforco?btn('remRefUndo','Reforço confirmado ✓ (desfazer)','btn-s',r.id):btn('remRef','Confirmei o reforço','btn-s btn-p',r.id);
+  h+=btn('remCancelAsk','Cancelar remada','btn-w btn-s',r.id)+'</div>';
+  if(ui.remConf===r.id)h+='<div class="confirma" role="alertdialog"><p>Cancelar esta remada? Os inscritos são avisados e você vê a lista de quem pagou para devolver.</p><div class="row">'+btn('remCancelYes','Sim, cancelar remada','btn-w',r.id)+btn('remCancelNo','Voltar','',r.id)+'</div></div>';
+  if(open){
+    h+='<div class="alunos-l inscr">'+(n?r.inscritos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</div>'+(i.pago?'':'<div>'+btn('remPay','Marcar pago','btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join(''):'<p class="mut" style="padding:8px 0">Ninguém inscrito ainda.</p>');
+    const livres=ativos().filter(a=>!r.inscritos.some(i=>i.alunoId===a.id));
+    h+='</div>';
+    if(livres.length)h+='<div class="extra-box"><h3>Inscrever aluno</h3><div class="field"><label for="ri-'+r.id+'">Aluno</label><select id="ri-'+r.id+'" data-bind="risel.'+r.id+'">'+livres.map(a=>'<option value="'+a.id+'">'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('remAdd','Inscrever (aguardando Pix)','btn-p',r.id)+'</div></div>';
+  }
+  return h+'</article>';
+}
+function tabRemadas(){
+  let h='<div class="pg-h"><div><h2>Remadas especiais</h2><p style="max-width:62ch">Passeios exclusivos e remadas fora da agenda. Ao criar, o convite com a descrição e a chave Pix vai para todos os alunos ativos no WhatsApp. A vaga fica garantida quando você marca o pagamento.</p></div>'+(ui.rf?'':'<button type="button" class="btn btn-p" data-act="remNew">Nova remada especial</button>')+'</div>';
+  if(ui.rf)h+=remFormHTML();
+  const l=S.remadas.slice().sort((a,b)=>a.data<b.data?-1:1);
+  h+=l.length?'<div class="rem-l">'+l.map(remCard).join('')+'</div>':'<div class="vazio"><p>Nenhuma remada especial marcada. Crie a primeira no botão acima.</p></div>';
+  return h;
+}
+
+/* ---------- seletor de horários (inscrição / mudar plano) ---------- */
+function lotadasFull(){return SLOTS.filter(s=>seats(TODAY_WK,s.id)>=capOf(TODAY_WK,s.id)).map(s=>s.id);}
+function slotPicker(f,opts){
+  opts=opts||{};
+  const own=opts.own||[];
+  const wk=TODAY_WK;
+  const p=PLANOS[f.plano];
+  let h='';
+  if(f.plano==='full'){
+    const lot=SLOTS.filter(s=>{const ocupa=seats(wk,s.id)-(own.includes(s.id)?1:0);return ocupa>=capOf(wk,s.id);}).map(s=>slotLbl(s.id)+' (lotada)');
+    h+='<p class="hint">Plano Full: o aluno entra em todas as remadas da semana.</p>';
+    if(lot.length)h+='<p class="aviso" role="alert">Plano Full indisponível agora: '+lot.join(', ')+'</p>';
+    return h;
+  }
+  h+='<p class="cont-s" aria-live="polite">Escolha '+p.n+(p.n===1?' horário fixo':' horários fixos')+' ('+f.slots.length+' de '+p.n+')</p><div class="slots">';
+  SLOTS.forEach(s=>{
+    const sel=f.slots.includes(s.id);
+    const treino=s.tipo==='Treino';
+    const ocupa=seats(wk,s.id)-(own.includes(s.id)?1:0);
+    const cap=capOf(wk,s.id);
+    const cheio=ocupa>=cap;
+    const livres=cap-ocupa;
+    const bloqueado=treino||(cheio&&!sel);
+    const limite=!sel&&f.slots.length>=p.n;
+    let sub;
+    if(treino)sub='Só no plano Full';
+    else if(cheio)sub=cap===12?'Lotada com 12 · sem reforço':'Lotada com 24';
+    else sub=livres+' de '+cap+' vagas livres'+(cap===24?' (com reforço)':'');
+    const id=opts.pre+'-'+s.id;
+    h+='<div class="slot'+(sel?' on':'')+((bloqueado||limite)?' off':'')+'"><input type="checkbox" id="'+id+'" data-chg="'+opts.chg+'" data-a="'+s.id+'"'+(sel?' checked':'')+((bloqueado||limite)?' disabled':'')+'><label class="s-t" for="'+id+'">'+slotLbl(s.id)+' · '+s.tipo+'<small>'+sub+'</small></label>'+(cheio&&!treino&&opts.espera?btn('niWait','Lista de espera','btn-s',s.id):'')+'</div>';
+  });
+  return h+'</div>';
+}
+function planOptions(sel){return Object.keys(PLANOS).map(k=>'<option value="'+k+'"'+(k===sel?' selected':'')+'>'+PLANOS[k].lbl+' · '+money(PLANOS[k].preco)+'/mês</option>').join('');}
+
+/* ---------- Alunos ---------- */
+function niHTML(){
+  const f=ui.ni;
+  const fullBlock=f.plano==='full'&&lotadasFull().length>0;
+  return '<form class="card novo" id="ni-form" novalidate><h3>Nova inscrição</h3><div class="form-grid">'+
+  '<div class="field"><label for="ni-nome">Nome</label><input id="ni-nome" data-bind="ni.nome" value="'+esc(f.nome)+'" autocomplete="off"></div>'+
+  '<div class="field"><label for="ni-whats">WhatsApp</label><input id="ni-whats" type="tel" inputmode="tel" data-bind="ni.whats" value="'+esc(f.whats)+'" placeholder="(47) 99999-9999" autocomplete="off"></div>'+
+  '<div class="field full"><label for="ni-plano">Plano</label><select id="ni-plano" data-bind="ni.plano" data-chg="niPlano">'+planOptions(f.plano)+'</select></div>'+
+  '<div class="full">'+slotPicker(f,{pre:'ni',chg:'niSlot',espera:true})+'</div></div>'+
+  '<p class="err" role="alert" id="ni-err" style="margin-top:12px">'+esc(f.msg)+'</p><div class="row" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="niSubmit"'+(fullBlock?' disabled':'')+'>Confirmar inscrição</button>'+btn('niToggle','Cancelar','')+'</div></form>';
+}
+function mpHTML(a){
+  const f=ui.mp;
+  const blocked=f.plano==='full'&&SLOTS.some(s=>{const o=seats(TODAY_WK,s.id)-(a.slots.includes(s.id)?1:0);return o>=capOf(TODAY_WK,s.id);});
+  return '<tr class="exp"><td colspan="6"><div class="mp"><h3>Mudar plano de '+esc(a.nome)+'</h3><p>Plano atual: <b>'+planoOf(a).nome+'</b> · '+money(planoOf(a).preco)+'/mês · '+a.slots.map(slotLbl).join(', ')+'</p><div class="field" style="max-width:420px"><label for="mp-plano">Novo plano</label><select id="mp-plano" data-bind="mp.plano" data-chg="mpPlano">'+planOptions(f.plano)+'</select></div>'+slotPicker(f,{pre:'mp',chg:'mpSlot',own:a.slots})+'<p class="hint">O novo valor vale a partir deste mês.</p><p class="err" role="alert">'+esc(f.msg||'')+'</p><div class="row">'+btn('mpSave','Salvar mudança','btn-p',a.id,null,null,blocked?' disabled':'')+btn('mpCancel','Cancelar','')+'</div></div></td></tr>';
+}
+function tabAlunos(){
+  const n=ativos().length;
+  let h='<div class="pg-h"><div><h2>Alunos ('+n+' ativos)</h2></div>'+(ui.ni.open?'':'<button type="button" class="btn btn-p" data-act="niToggle">Nova inscrição</button>')+'</div>';
+  if(ui.ni.open)h+=niHTML();
+  h+='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th scope="col">Nome</th><th scope="col">Plano</th><th scope="col">Valor</th><th scope="col">Horários fixos</th><th scope="col">'+MESES[+MK_NOW.slice(5,7)-1][0].toUpperCase()+MESES[+MK_NOW.slice(5,7)-1].slice(1)+'</th><th scope="col">Matrícula</th></tr></thead><tbody>';
+  const lista=S.alunos.slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  lista.forEach(a=>{
+    const ps=payState(MK_NOW,a);
+    const st=ps.st==='pago'?pill('Pago','p-ok'):ps.st==='pendente'?pill('Pendente','p-pe'):ps.st==='atrasado'?pill('Atrasado','p-at'):pill('Saiu da turma','p-ca');
+    const canc=a.mat==='cancelada';
+    let ac;
+    if(ui.matConf===a.id)ac='<span class="err" style="flex:1 1 100%">Sai das turmas e das cobranças?</span>'+btn('matYes','Sim, cancelar','btn-w btn-s',a.id)+btn('matNo','Voltar','btn-s',a.id);
+    else if(canc)ac=btn('matReativar','Reativar','btn-s btn-p',a.id);
+    else ac=btn('mpOpen','Mudar plano','btn-s',a.id)+btn('matAsk','Cancelar matrícula','btn-w btn-s',a.id);
+    h+='<tr><td class="nome" data-label="Nome"><b>'+esc(a.nome)+'</b><span class="mut">'+esc(a.whats)+(a.faltas?' · '+a.faltas+' falta a repor':'')+'</span></td><td data-label="Plano">'+planoOf(a).nome+'</td><td data-label="Valor">'+money(planoOf(a).preco)+'</td><td data-label="Horários fixos">'+(a.plano==='full'?'Todas as remadas':a.slots.map(slotLbl).join(', '))+'</td><td data-label="'+MESES[+MK_NOW.slice(5,7)-1]+'">'+st+'</td><td class="acoes-td"><div class="acoes">'+ac+'</div></td></tr>';
+    if(ui.mp&&ui.mp.id===a.id)h+=mpHTML(a);
+  });
+  return h+'</tbody></table></div>';
+}
+
+/* ---------- Pagamentos ---------- */
+function extrasMes(mk){
+  const l=[];
+  S.extras.forEach(e=>{
+    if(e.tipo!=='extra')return;
+    const d=slotDate(e.wk,slotOf(e.slot));
+    if(d.slice(0,7)!==mk)return;
+    l.push({k:'e'+e.id,t:'Aula extra · '+esc(eNome(e)),d:fmtDia(d)+' · '+slotOf(e.slot).hora,v:e.valor,pago:e.pago,act:['extraPay',e.id]});
+  });
+  S.remadas.forEach(r=>{
+    if(r.cancelada||r.data.slice(0,7)!==mk)return;
+    r.inscritos.forEach(i=>l.push({k:'r'+r.id+i.alunoId,t:'Remada especial · '+esc(aluno(i.alunoId).nome),d:esc(r.nome)+' · '+fmtDia(r.data),v:r.preco,pago:i.pago,act:['remPay',r.id,i.alunoId]}));
+  });
+  S.passeios.forEach(p=>{
+    if(p.estado!=='aprovado'||p.data.slice(0,7)!==mk)return;
+    l.push({k:'p'+p.id,t:'Passeio exclusivo · '+esc(p.nome),d:fmtDia(p.data)+' · '+p.pessoas+' pessoas',v:p.valor,pago:p.pago,act:['pasPay',p.id]});
+  });
+  return l;
+}
+function pgRow(mk,a,ps){
+  const pr=planoOf(a);
+  const sel=!!ui.sel[a.id];
+  const abre=ui.payForm&&ui.payForm.id===a.id;
+  const sub=pr.nome+' · '+money(pr.preco);
+  let tag='',ac='',chk='<span class="chk-x"></span>';
+  if(ps.st==='pago'){tag=pill('Pago','p-ok');ac=btn('payUndo','Desfazer','btn-s btn-g',a.id);}
+  else if(ps.st==='atrasado'||ps.st==='pendente'){
+    tag=ps.st==='atrasado'?pill('Atrasado há '+ps.dias+(ps.dias===1?' dia':' dias'),'p-at'):pill('Pendente · vence '+dmy(ps.due),'p-pe');
+    chk='<input type="checkbox" class="chk" data-chg="selToggle" data-a="'+a.id+'"'+(sel?' checked':'')+' aria-label="Selecionar '+esc(a.nome)+'">';
+    ac=btn('payOpen','Marcar pago','btn-s btn-p',a.id)+btn('lembrete','Reenviar lembrete','btn-s',a.id);
+  }else{tag=pill('Saiu da turma','p-ca');}
+  let h='<div class="pg">'+chk+'<div class="nm"><b>'+esc(a.nome)+'</b><span>'+sub+(ps.st==='pago'&&ps.r&&ps.r.data?' · pago em '+dmy(ps.r.data)+(ps.r.nota?' · '+esc(ps.r.nota):''):'')+'</span><span style="margin-top:4px">'+tag+'</span></div><div class="ac">'+ac+'</div>';
+  if(abre)h+='<div class="form-p"><div class="field"><label for="pf-data">Data do pagamento</label><input id="pf-data" type="date" data-bind="payForm.data" value="'+esc(ui.payForm.data)+'"></div><div class="field"><label for="pf-nota">Nota (opcional)</label><input id="pf-nota" data-bind="payForm.nota" value="'+esc(ui.payForm.nota)+'" placeholder="Ex.: Pix do cônjuge" autocomplete="off"></div><div class="row">'+btn('payConfirm','Confirmar pagamento','btn-p',a.id)+btn('payCancel','Voltar','')+'</div></div>';
+  return h+'</div>';
+}
+function tabPagamentos(){
+  const mk=curMk();
+  const gr={atrasado:[],pendente:[],pago:[],cancelada:[]};
+  S.alunos.forEach(a=>{const ps=payState(mk,a);gr[ps.st].push([a,ps]);});
+  const ex=extrasMes(mk);
+  let prev=0,rec=0;
+  [].concat(gr.atrasado,gr.pendente,gr.pago).forEach(x=>{const v=planoOf(x[0]).preco;prev+=v;if(x[1].st==='pago')rec+=v;});
+  ex.forEach(x=>{prev+=x.v;if(x.pago)rec+=x.v;});
+  const nSel=Object.keys(ui.sel).filter(k=>ui.sel[k]).length;
+  let h='<div class="pg-h"><div><h2>Pagamentos de '+MESES[+mk.slice(5,7)-1]+'</h2><p>Vencimento no dia 10, ou na data combinada com o aluno.</p></div><div class="nav2"><button type="button" class="ico-btn" data-act="monthNav" data-a="-1" aria-label="Mês anterior">'+ICON.esq+'</button><span class="lbl">'+mkLabel(mk)+'</span><button type="button" class="ico-btn" data-act="monthNav" data-a="1" aria-label="Mês seguinte">'+ICON.dir+'</button></div></div>';
+  h+='<div class="nums"><div class="num"><span>Previsto no mês</span><b>'+money(prev)+'</b></div><div class="num rec"><span>Recebido</span><b>'+money(rec)+'</b></div><div class="num fal"><span>Falta receber</span><b>'+money(prev-rec)+'</b></div></div>';
+  if(nSel)h+='<div class="lote" role="group" aria-label="Seleção em lote"><span>'+nSel+(nSel===1?' selecionado':' selecionados')+'</span>'+btn('batch','Marcar selecionados como pagos','btn-p')+'</div>';
+  const G=[['atrasado','Atrasados'],['pendente','Pendentes'],['pago','Pagos'],['cancelada','Cancelados']];
+  G.forEach(g=>{
+    const l=gr[g[0]];
+    if(!l.length)return;
+    l.sort((x,y)=>x[0].nome.localeCompare(y[0].nome,'pt-BR'));
+    h+='<section class="grupo" aria-label="'+g[1]+'"><h3>'+g[1]+' <span class="c">'+l.length+'</span></h3>'+l.map(x=>pgRow(mk,x[0],x[1])).join('')+'</section>';
+  });
+  h+='<section class="grupo" aria-label="Extras do mês"><h3>Aulas extra, remadas especiais e passeios <span class="c">'+ex.length+'</span></h3>';
+  h+=ex.length?ex.map(x=>'<div class="pg"><span class="chk-x"></span><div class="nm"><b>'+x.t+'</b><span>'+x.d+' · '+money(x.v)+'</span><span style="margin-top:4px">'+(x.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</span></div><div class="ac">'+(x.pago?'':btn(x.act[0],'Marcar pago','btn-s btn-p',x.act[1],x.act[2]))+'</div></div>').join(''):'<p class="mut">Nada fora das mensalidades neste mês.</p>';
+  h+='</section><p class="rodape">O aluno recebe a chave Pix no WhatsApp. Quando o dinheiro cair, marque como pago aqui e o aluno recebe o recibo.</p>';
+  return h;
+}
+
+/* ================= render ================= */
+function renderNav(){
+  const mk=(cls)=>TABS.map(t=>'<button type="button" class="'+cls+'" data-act="tab" data-a="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':'')+'>'+(cls==='tab'?'':ICON[t[0]])+'<span>'+(cls==='tab'?t[1]:(t[0]==='remadas'?'Remadas':t[1]))+'</span></button>').join('');
+  $('#tabs-top').innerHTML=mk('tab');
+  $('#tabs-bot').innerHTML=mk('b');
+}
+const $=(s)=>document.querySelector(s);
+function render(){
+  if(!S)return;
+  const act=document.activeElement;
+  const fk=act&&act.dataset&&act.dataset.act?{act:act.dataset.act,a:act.dataset.a,b:act.dataset.b}:null;
+  const fid=act&&act.id&&act.closest&&act.closest('#main')?act.id:null;
+  const sy=window.scrollY;
+  renderNav();
+  let h=aprovHTML();
+  h+=ui.tab==='semana'?tabSemana():ui.tab==='remadas'?tabRemadas():ui.tab==='alunos'?tabAlunos():tabPagamentos();
+  $('#main').innerHTML=h;
+  $('#toast').innerHTML=ui.toast?'<div class="t" role="status"><p>'+esc(ui.toast)+'</p><button type="button" class="btn" data-act="toastOk">Ok</button></div>':'<div role="status"></div>';
+  window.scrollTo(0,sy);
+  let el=null;
+  if(ui.fn){el=$(ui.fn);ui.fn=null;}
+  if(!el&&fid)el=document.getElementById(fid);
+  if(!el&&fk){
+    el=document.querySelector('[data-act="'+fk.act+'"]'+(fk.a!=null?'[data-a="'+CSS.escape(fk.a)+'"]':'')+(fk.b!=null?'[data-b="'+CSS.escape(fk.b)+'"]':''));
+  }
+  if(el&&el.focus)el.focus({preventScroll:true});
+}
+
+/* ================= ações ================= */
+const H={};
+H.tab=a=>{ui.tab=a;ui.confirm=null;ui.matConf=null;ui.remConf=null;window.scrollTo(0,0);};
+H.toastOk=()=>{ui.toast='';};
+H.aprovToggle=()=>{ui.aprovOpen=!ui.aprovOpen;};
+H.reset=()=>{S=seed();ui.exp={};ui.confirm=null;ui.rf=null;ui.mp=null;ui.ni={open:false,nome:'',whats:'',plano:'2x',slots:[],msg:''};ui.sel={};ui.payForm=null;ui.matConf=null;ui.remConf=null;ui.weekOff=0;ui.monthOff=0;say('Dados de exemplo repostos.');};
+/* Semana */
+H.weekNav=a=>{ui.weekOff+=+a;ui.confirm=null;};
+H.toggleList=a=>{ui.exp[a]=!ui.exp[a];};
+function notifyWait(wk,sid){
+  const l=S.espera[wk+'|'+sid]||[];
+  if(l.some(p=>p.avisado))return '';
+  if(conf(wk,sid)>=capOf(wk,sid))return '';
+  const p=l[0];if(!p)return '';
+  p.avisado=true;
+  return ' Lista de espera: aviso de vaga enviado no WhatsApp para '+p.nome+', que tem até as 21h da véspera para confirmar.';
+}
+H.vem=(sid,aid)=>{
+  const wk=curWk(),a=aluno(aid);
+  if(attGet(wk,sid,aid)==='vem'){say(a.nome+' já está confirmado.');return;}
+  if(conf(wk,sid)>=capOf(wk,sid)){say(isRef(wk,sid)?'Aula lotada: 24 é o máximo, com ou sem reforço.':'Aula lotada com 12. Confirme o reforço antes de marcar mais alguém.');return;}
+  S.att[wk+'|'+sid+'|'+aid]='vem';
+  say('Presença de '+a.nome+' confirmada em '+slotLbl(sid)+'.');
+};
+H.nao=(sid,aid)=>{
+  const wk=curWk(),a=aluno(aid);
+  S.att[wk+'|'+sid+'|'+aid]='nao';
+  say(a.nome+' não vem em '+slotLbl(sid)+'.'+notifyWait(wk,sid));
+};
+H.lembrar=(sid,aid)=>{
+  const wk=curWk(),a=aluno(aid);
+  S.att[wk+'|'+sid+'|'+aid]='lembrado';
+  say('Lembrete enviado para '+a.nome+' no WhatsApp.');
+};
+H.reforco=sid=>{const wk=curWk();S.reforco[wk+'|'+sid]=true;say('Reforço confirmado em '+slotLbl(sid)+': a aula aceita até 24.'+notifyWait(wk,sid));};
+H.reforcoUndo=sid=>{
+  const wk=curWk();
+  if(conf(wk,sid)>12){say('Não dá para desfazer: já há '+conf(wk,sid)+' confirmados e sem reforço o máximo é 12.');return;}
+  delete S.reforco[wk+'|'+sid];say('Reforço desfeito em '+slotLbl(sid)+': a aula volta a aceitar até 12.');
+};
+H.cancelAsk=sid=>{ui.confirm=curWk()+'|'+sid;ui.fn='[data-act="cancelYes"][data-a="'+sid+'"]';};
+H.cancelNo=sid=>{ui.confirm=null;ui.fn='[data-act="cancelAsk"][data-a="'+sid+'"]';};
+H.cancelYes=sid=>{
+  const wk=curWk();S.cancel[wk+'|'+sid]=true;ui.confirm=null;
+  const n=fixos(sid).filter(a=>attGet(wk,sid,a.id)!=='nao').length+extrasOf(wk,sid).length;
+  say(slotLbl(sid)+' cancelada por mau tempo. '+n+' alunos avisados no WhatsApp.');
+  ui.fn='[data-act="cancelUndo"][data-a="'+sid+'"]';
+};
+H.cancelUndo=sid=>{const wk=curWk();delete S.cancel[wk+'|'+sid];say('Cancelamento desfeito: '+slotLbl(sid)+' volta à agenda. Alunos avisados no WhatsApp.');};
+H.waitOk=(sid,i)=>{
+  const wk=curWk(),k=wk+'|'+sid,l=S.espera[k]||[],p=l[+i];if(!p)return;
+  if(conf(wk,sid)>=capOf(wk,sid)){say('Sem vaga livre agora.');return;}
+  l.splice(+i,1);S.extras.push({id:nid('e'),wk:wk,slot:sid,alunoId:null,nome:p.nome,tipo:'espera',pago:true,valor:0});
+  say(p.nome+' aceitou a vaga em '+slotLbl(sid)+' e saiu da lista de espera.');
+};
+H.waitDel=(sid,i)=>{const k=curWk()+'|'+sid,l=S.espera[k]||[],p=l.splice(+i,1)[0];say((p?p.nome:'Pessoa')+' saiu da lista de espera de '+slotLbl(sid)+'.');};
+H.extraSend=sid=>{
+  const wk=curWk(),sel=$('#ex-'+sid),aid=sel?sel.value:null,a=aluno(aid);if(!a)return;
+  if(a.slots.includes(sid)){say(a.nome+' já tem vaga fixa nesta aula.');return;}
+  if(extrasOf(wk,sid).some(e=>e.alunoId===aid)){say(a.nome+' já tem uma vaga extra nesta aula.');return;}
+  if(conf(wk,sid)>=capOf(wk,sid)){say('Aula lotada: não dá para encaixar '+a.nome+'. '+(isRef(wk,sid)?'24 é o máximo.':'Confirme o reforço primeiro.'));return;}
+  S.extras.push({id:nid('e'),wk:wk,slot:sid,alunoId:aid,tipo:'extra',pago:false,valor:PRECO_AVULSO});
+  say('Aula extra enviada para '+a.nome+': '+money(PRECO_AVULSO)+' com a chave Pix no WhatsApp. Vaga aguardando pagamento.');
+};
+H.repoSend=sid=>{
+  const wk=curWk(),sel=$('#ex-'+sid),aid=sel?sel.value:null,a=aluno(aid);if(!a)return;
+  if(!a.faltas){say(a.nome+' não tem falta para repor. Fora do plano, é aula extra paga.');return;}
+  if(a.slots.includes(sid)){say(a.nome+' já tem vaga fixa nesta aula.');return;}
+  if(conf(wk,sid)>=capOf(wk,sid)){say('Aula lotada: não dá para encaixar '+a.nome+'.');return;}
+  a.faltas--;S.extras.push({id:nid('e'),wk:wk,slot:sid,alunoId:aid,tipo:'reposicao',pago:true,valor:0});
+  say('Reposição liberada para '+a.nome+' em '+slotLbl(sid)+'. Aluno avisado no WhatsApp.');
+};
+H.extraPay=id=>{const e=S.extras.find(x=>x.id===id);if(!e)return;e.pago=true;say('Pagamento de '+eNome(e)+' registrado ('+money(e.valor)+'). Recibo enviado no WhatsApp.');};
+H.extraDel=id=>{const i=S.extras.findIndex(x=>x.id===id);if(i<0)return;const e=S.extras.splice(i,1)[0];if(e.tipo==='reposicao'&&e.alunoId)aluno(e.alunoId).faltas++;say('Vaga extra de '+eNome(e)+' removida.');};
+/* Remadas */
+H.remNew=()=>{ui.rf=ui.rf?null:{nome:'',data:'',hora:'07:00',saida:'Av. Min. Victor Konder, Fazenda',destino:'',km:'',max:16,preco:75,desc:'',err:''};ui.fn=ui.rf?'#rf-nome':'[data-act="remNew"]';};
+H.remCreate=()=>{
+  const f=ui.rf;
+  if(!f.nome.trim()||!f.data||!f.saida.trim()||!f.destino.trim()){f.err='Preencha nome, data, local de saída e até onde vai.';ui.fn='#rf-err';return;}
+  const m=Number(f.max);
+  if(!Number.isInteger(m)||m<1||m>24){f.err='O máximo de pessoas tem que ser entre 1 e 24.';ui.fn='#rf-max';return;}
+  const n=ativos().length;
+  S.remadas.push({id:nid('r'),nome:f.nome.trim(),data:f.data,hora:f.hora||'07:00',saida:f.saida.trim(),destino:f.destino.trim(),km:f.km,max:m,preco:Number(f.preco)||0,desc:f.desc.trim(),convidados:n,reforco:false,cancelada:false,inscritos:[]});
+  ui.rf=null;say('Remada «'+f.nome.trim()+'» criada. Convite enviado para '+n+' alunos no WhatsApp.');
+};
+H.remToggle=id=>{ui.remOpen[id]=!ui.remOpen[id];};
+H.remRef=id=>{const r=S.remadas.find(x=>x.id===id);r.reforco=true;say('Reforço confirmado: a remada aceita até '+r.max+'.');};
+H.remRefUndo=id=>{const r=S.remadas.find(x=>x.id===id);if(r.inscritos.length>12){say('Não dá para desfazer: já há '+r.inscritos.length+' inscritos.');return;}r.reforco=false;say('Reforço desfeito: as inscrições voltam a parar em 12.');};
+H.remCancelAsk=id=>{ui.remConf=id;ui.fn='[data-act="remCancelYes"][data-a="'+id+'"]';};
+H.remCancelNo=id=>{ui.remConf=null;ui.fn='[data-act="remCancelAsk"][data-a="'+id+'"]';};
+H.remCancelYes=id=>{const r=S.remadas.find(x=>x.id===id);r.cancelada=true;ui.remConf=null;const p=r.inscritos.filter(i=>i.pago).length;say('Remada cancelada. '+r.inscritos.length+' inscritos avisados no WhatsApp. '+(p?p+' pagaram: devolva e marque na lista.':'Ninguém tinha pago.'));};
+H.remPay=(rid,aid)=>{const r=S.remadas.find(x=>x.id===rid),i=r.inscritos.find(x=>x.alunoId===aid);i.pago=true;say('Pagamento de '+aluno(aid).nome+' registrado: vaga garantida na remada. Recibo enviado no WhatsApp.');};
+H.remRefund=(rid,aid)=>{const r=S.remadas.find(x=>x.id===rid),i=r.inscritos.find(x=>x.alunoId===aid);i.devolvido=true;say('Devolução de '+money(r.preco)+' para '+aluno(aid).nome+' marcada.');};
+H.remAdd=rid=>{
+  const r=S.remadas.find(x=>x.id===rid),sel=$('#ri-'+rid);if(!sel)return;
+  if(r.inscritos.length>=remCap(r)){say('Remada lotada'+(r.max>12&&!r.reforco?': confirme o reforço para abrir mais vagas.':'.'));return;}
+  const a=aluno(sel.value);r.inscritos.push({alunoId:a.id,pago:false,devolvido:false});
+  say(a.nome+' inscrito(a) na remada. Chave Pix de '+money(r.preco)+' enviada no WhatsApp, vaga aguardando pagamento.');
+};
+/* aprovações */
+H.pasOk=id=>{const p=S.passeios.find(x=>x.id===id);p.estado='aprovado';say('Passeio de '+p.nome+' aprovado. Chave Pix de '+money(p.valor)+' enviada no WhatsApp.');};
+H.pasNo=id=>{const p=S.passeios.find(x=>x.id===id);p.estado='recusado';say('Pedido de '+p.nome+' recusado. Cliente avisado no WhatsApp.');};
+H.pasPay=id=>{const p=S.passeios.find(x=>x.id===id);p.pago=true;say('Pagamento do passeio de '+p.nome+' registrado ('+money(p.valor)+'). Recibo enviado no WhatsApp.');};
+H.aprovCancel=id=>{const a=aluno(id);a.mat='cancelada';a.aCancelar=false;say('Matrícula de '+a.nome+' cancelada: saiu das turmas e das cobranças.');};
+H.jaPagou=id=>{const a=aluno(id);a.aCancelar=false;setPaid(MK_NOW,a,TODAY,'');say('Pagamento de '+a.nome+' registrado. Matrícula mantida e recibo enviado no WhatsApp.');};
+/* Alunos */
+H.niToggle=()=>{ui.ni.open=!ui.ni.open;ui.ni.msg='';ui.fn=ui.ni.open?'#ni-nome':'[data-act="niToggle"]';};
+H.niSubmit=()=>{
+  const f=ui.ni,p=PLANOS[f.plano];
+  if(!f.nome.trim()||!f.whats.trim()){f.msg='Preencha nome e WhatsApp.';return;}
+  if(f.plano==='full'){
+    const l=lotadasFull();
+    if(l.length){f.msg='Plano Full indisponível agora: '+l.map(s=>slotLbl(s)+' (lotada)').join(', ');return;}
+  }else if(f.slots.length!==p.n){f.msg='Escolha '+p.n+(p.n===1?' horário fixo':' horários fixos')+' ('+f.slots.length+' de '+p.n+').';return;}
+  const slots=f.plano==='full'?ALL_SLOTS.slice():f.slots.slice();
+  const dia=Math.min(28,+TODAY.slice(8)+3);
+  S.alunos.push({id:nid('a'),nome:f.nome.trim(),whats:f.whats.trim(),plano:f.plano,slots:slots,venc:dia,mat:'ativa',aCancelar:false,faltas:0});
+  say('Inscrição confirmada: '+f.nome.trim()+' no plano '+p.nome+'. Mensalidade de '+money(p.preco)+' e chave Pix enviadas no WhatsApp.');
+  ui.ni={open:false,nome:'',whats:'',plano:'2x',slots:[],msg:''};
+};
+H.niWait=sid=>{
+  const f=ui.ni;
+  if(!f.nome.trim()||!f.whats.trim()){f.msg='Preencha nome e WhatsApp para entrar na lista de espera.';return;}
+  const k=TODAY_WK+'|'+sid;(S.espera[k]=S.espera[k]||[]).push({nome:f.nome.trim(),whats:f.whats.trim(),plano:f.plano,avisado:false});
+  f.msg='';say(f.nome.trim()+' entrou na lista de espera de '+slotLbl(sid)+' (posição '+S.espera[k].length+').');
+};
+H.mpOpen=id=>{const a=aluno(id);ui.mp={id:id,plano:a.plano,slots:a.plano==='full'?[]:a.slots.slice(),msg:''};ui.fn='#mp-plano';};
+H.mpCancel=()=>{ui.mp=null;};
+H.mpSave=id=>{
+  const f=ui.mp,a=aluno(id),p=PLANOS[f.plano];
+  if(f.plano!=='full'&&f.slots.length!==p.n){f.msg='Escolha '+p.n+(p.n===1?' horário fixo':' horários fixos')+' ('+f.slots.length+' de '+p.n+').';return;}
+  a.plano=f.plano;a.slots=f.plano==='full'?ALL_SLOTS.slice():f.slots.slice();
+  ui.mp=null;say('Plano de '+a.nome+' mudou para '+p.nome+' ('+money(p.preco)+'/mês). O novo valor vale a partir deste mês.');
+};
+H.matAsk=id=>{ui.matConf=id;ui.fn='[data-act="matYes"][data-a="'+id+'"]';};
+H.matNo=id=>{ui.matConf=null;ui.fn='[data-act="matAsk"][data-a="'+id+'"]';};
+H.matYes=id=>{const a=aluno(id);a.mat='cancelada';a.aCancelar=false;ui.matConf=null;if(ui.mp&&ui.mp.id===id)ui.mp=null;say('Matrícula de '+a.nome+' cancelada: saiu das turmas e das cobranças.');ui.fn='[data-act="matReativar"][data-a="'+id+'"]';};
+H.matReativar=id=>{const a=aluno(id);a.mat='ativa';say('Matrícula de '+a.nome+' reativada. Volta às turmas e às cobranças.');};
+/* Pagamentos */
+H.monthNav=a=>{ui.monthOff+=+a;ui.sel={};ui.payForm=null;};
+H.payOpen=id=>{ui.payForm={id:id,data:TODAY,nota:''};ui.fn='#pf-data';};
+H.payCancel=()=>{ui.payForm=null;};
+H.payConfirm=id=>{const a=aluno(id),f=ui.payForm;setPaid(curMk(),a,f.data||TODAY,f.nota);if(a.aCancelar&&curMk()===MK_NOW)a.aCancelar=false;ui.payForm=null;delete ui.sel[id];say('Pagamento de '+a.nome+' registrado em '+dmy(f.data||TODAY)+'. Recibo enviado no WhatsApp.');};
+H.payUndo=id=>{const a=aluno(id),mk=curMk();S.pag[mk+'|'+id]={pago:false};say('Pagamento de '+a.nome+' desfeito: volta para a lista de cobrança.');};
+H.lembrete=id=>{say('Lembrete reenviado para '+aluno(id).nome+' com a chave Pix no WhatsApp.');};
+H.batch=()=>{
+  const ids=Object.keys(ui.sel).filter(k=>ui.sel[k]);
+  ids.forEach(id=>setPaid(curMk(),aluno(id),TODAY,''));
+  ui.sel={};say(ids.length+(ids.length===1?' pagamento registrado':' pagamentos registrados')+'. Recibos enviados no WhatsApp.');
+};
+
+/* ================= eventos ================= */
+function run(act,a,b,c){
+  if(!H[act])return;
+  H[act](a,b,c);
+  save();render();
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');
+  if(!t||t.disabled||t.tagName==='FORM')return;
+  if(t.type==='submit')return;
+  run(t.dataset.act,t.dataset.a,t.dataset.b,t.dataset.c);
+});
+document.addEventListener('submit',e=>{
+  const f=e.target;
+  if(f.id==='rem-form'){e.preventDefault();run('remCreate');}
+  else if(f.id==='ni-form'){e.preventDefault();run('niSubmit');}
+});
+function setPath(path,v){
+  const p=path.split('.');
+  if(p[0]==='exsel'){ui.exsel=ui.exsel||{};ui.exsel[p[1]]=v;return;}
+  if(p[0]==='risel')return;
+  ui[p[0]][p[1]]=v;
+}
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.bind){
+    setPath(t.dataset.bind,t.value);
+    if(t.dataset.live==='max'){const el=document.getElementById('rf-aviso');if(el)el.innerHTML=avisoMax(Number(t.value));}
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.bind)setPath(t.dataset.bind,t.value);
+  const c=t.dataset&&t.dataset.chg;
+  if(!c)return;
+  if(c==='niPlano'){ui.ni.plano=t.value;ui.ni.slots=[];ui.ni.msg='';}
+  else if(c==='mpPlano'){ui.mp.plano=t.value;ui.mp.slots=[];ui.mp.msg='';}
+  else if(c==='niSlot'||c==='mpSlot'){
+    const f=c==='niSlot'?ui.ni:ui.mp,id=t.dataset.a,i=f.slots.indexOf(id);
+    if(t.checked&&i<0)f.slots.push(id);else if(!t.checked&&i>=0)f.slots.splice(i,1);
+    f.msg='';ui.fn='#'+t.id;
+  }
+  else if(c==='selToggle'){ui.sel[t.dataset.a]=t.checked;ui.fn='[data-chg="selToggle"][data-a="'+t.dataset.a+'"]';}
+  save();render();
+});
+
+/* ================= entrada ================= */
+function entrar(){
+  try{sessionStorage.setItem(SS_KEY,'1');}catch(e){}
+  mostrar();
+}
+function mostrar(){
+  let on=false;
+  try{on=sessionStorage.getItem(SS_KEY)==='1';}catch(e){}
+  if(!on&&window.__entrou)on=true;
+  $('#login').hidden=on;
+  $('#app').hidden=!on;
+  document.body.classList.toggle('dark',!on);
+  if(on){if(!S)load();render();}
+}
+$('#login-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  // Ainda não há contas reais: qualquer senha é recusada.
+  const err=$('#login-err');
+  err.textContent='Senha incorreta.';
+  const box=$('#senha');box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');
+  box.setAttribute('aria-invalid','true');box.focus();
+});
+// TODO remover modo teste antes de ir para produção
+$('#modo-teste').addEventListener('click',()=>{window.__entrou=true;entrar();});
+$('#sair').addEventListener('click',()=>{
+  try{sessionStorage.removeItem(SS_KEY);}catch(e){}
+  window.__entrou=false;
+  $('#senha').value='';$('#login-err').textContent='';$('#senha').removeAttribute('aria-invalid');
+  mostrar();window.scrollTo(0,0);
+});
+mostrar();
+})();
+</script>
+</body>
+</html>
