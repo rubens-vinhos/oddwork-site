@@ -86,6 +86,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .sair{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;min-height:44px;padding:6px 14px;font-weight:600;cursor:pointer}
 .sair:hover{background:rgba(255,255,255,.12)}
 .demo{background:#F4E8FF;color:var(--tinta);border-bottom:1px solid #E1CDF1;font-size:.9rem}
+.d-curta{display:none}
+@media (max-width:760px){.d-curta{display:inline}}
 .demo-in{max-width:1120px;margin:0 auto;padding:8px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .demo-in span{flex:1;min-width:220px}
 .demo .btn-g{min-height:36px;font-size:.88rem;padding:4px 6px}
@@ -242,12 +244,51 @@ main{max-width:1120px;margin:0 auto;padding:24px 24px 64px}
 .pg .chk-x{width:22px}
 .pg .nm b{font-weight:600}
 .pg .nm span{display:block;color:var(--tinta-2);font-size:.92rem}
+.pg .nm span.pill{display:inline-flex;color:inherit;font-size:.84rem}
 .pg .ac{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
 .pg .form-p{grid-column:1/-1;background:var(--pedra);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr 2fr;gap:12px}
 .pg .form-p .row{grid-column:1/-1}
 .lote{position:sticky;top:76px;z-index:20;background:var(--tinta);color:#fff;border-radius:14px;padding:10px 10px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .rodape{margin-top:30px;padding:14px 18px;background:var(--pedra);border-radius:14px;color:var(--tinta-2)}
 .rep{text-align:center;margin-top:28px}
+
+
+/* ---------- usabilidade ---------- */
+.btn svg{width:18px;height:18px;flex:none}
+.btn-x{border-color:transparent;background:transparent;color:var(--terra);text-decoration:underline;text-underline-offset:3px;padding:8px 12px}
+.btn-x:hover{background:var(--terra-bg);border-color:transparent}
+.btn-d{background:#A33F0A;border-color:#A33F0A;color:#fff}
+.btn-d:hover{background:#852F05;border-color:#852F05}
+.btn-back{border:2px solid var(--roxo);color:var(--roxo);background:#fff}
+.dz{display:flex;justify-content:flex-end;border-top:1px solid var(--linha);margin-top:6px;padding-top:6px;width:100%;flex:1 1 100%}
+[aria-invalid="true"]{border-color:var(--terra)!important;background:#FFF8F2!important}
+.aula,.rem,.novo,.alunos-l,.mp,.extra-box{scroll-margin-top:84px}
+.bd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--laranja);color:var(--tinta);font-size:.76rem;font-weight:700;margin-left:6px;line-height:1}
+.hoje{background:var(--roxo-fundo);color:#fff;border-radius:18px;padding:16px 18px;margin-bottom:22px}
+.hoje h2{font-size:1.2rem;margin-bottom:10px;color:#fff}
+.hoje-r{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(255,255,255,.18)}
+.hoje-r:first-of-type{border-top:0}
+.hoje-r .h{font-family:var(--f-tit);font-weight:700;font-size:2rem;letter-spacing:-.02em;line-height:1}
+.hoje-r .t{font-weight:600;color:#E6D5F4;margin-left:6px}
+.hoje-r p{margin-top:4px;color:#F1E7F9;font-weight:500}
+.hoje :focus-visible{outline-color:var(--laranja)}
+.busca{margin-bottom:14px;max-width:460px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.chips .btn{border-radius:99px}
+.form-bar{background:#fff}
+dialog#dlg{border:0;padding:0;border-radius:22px;max-width:450px;width:calc(100% - 32px);color:var(--tinta);background:#fff;box-shadow:0 30px 70px -20px rgba(42,11,66,.6)}
+dialog#dlg::backdrop{background:rgba(42,11,66,.62)}
+.dlg-in{padding:24px}
+.dlg-ic{width:52px;height:52px;border-radius:50%;background:var(--terra-bg);color:var(--terra);display:grid;place-items:center;border:1px solid var(--terra-linha)}
+.dlg-ic svg{width:28px;height:28px}
+.dlg-ic.p{background:#F4ECFA;color:var(--roxo);border-color:#E1CDF1}
+dialog#dlg h2{font-size:1.4rem;margin:14px 0 8px}
+dialog#dlg p{font-size:1.05rem;color:var(--tinta)}
+.dlg-btns{display:flex;gap:12px;margin-top:22px}
+.dlg-btns .btn{flex:1;min-height:52px;font-size:1.02rem}
+#toast .t .btn-u{background:transparent;border-color:rgba(255,255,255,.7);color:#fff}
+#toast .t .btn-u:hover{background:rgba(255,255,255,.15)}
+.pg .ac .dz{flex:none;width:auto;border:0;margin:0;padding:0}
 
 /* ---------- telemóvel ---------- */
 @media(max-width:760px){
@@ -292,6 +333,36 @@ main{max-width:1120px;margin:0 auto;padding:24px 24px 64px}
   .tbl tr.exp td{display:block;background:transparent;padding:10px 0}
   .tbl tr.exp td::before{display:none}
 }
+
+@media(max-width:760px){
+  .btn,.btn-s{min-height:48px}
+  .sair{min-height:48px}
+  .demo-in{flex-wrap:nowrap;justify-content:space-between;padding:4px 14px}
+  .demo .btn-g{min-height:44px;white-space:nowrap;padding:0 4px}
+  .d-long{display:none}
+  .row{gap:10px}
+  .al .row,.extra-box .row{gap:10px}
+  .hint,.prazo,.cap,.pg .nm span,.aprov-l .tx span,.tbl td.nome .mut,.espera small,.slot .s-t small,.tbl td::before,.espera .nota,.demo-in{font-size:.95rem}
+  .pill{font-size:.95rem;padding:4px 12px}
+  .field label,.field .lab{font-size:1rem}
+  .ico-btn{width:48px;height:48px}
+  .slot{min-height:58px;padding:10px 12px}
+  .slot input{width:24px;height:24px}
+  .bnav button{font-size:.8rem}
+  .bnav .bd{position:absolute;top:6px;left:calc(50% + 8px);margin:0}
+  .form-bar{position:sticky;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));z-index:15;margin:14px -18px -20px!important;padding:12px 18px;border-top:1px solid var(--linha);box-shadow:0 -10px 18px -14px rgba(59,15,92,.35)}
+  .form-bar .btn{flex:1}
+  .hoje-r .btn{width:100%}
+  dialog#dlg{margin:auto 0 0;width:100%;max-width:none;border-radius:24px 24px 0 0;padding-bottom:env(safe-area-inset-bottom);animation:sheet .25s ease-out}
+  .dlg-btns{flex-direction:column}
+  #toast .t{flex-wrap:wrap}
+  #toast .t p{flex:1 1 100%}
+  #toast .t .btn{flex:1}
+  .tbl .acoes .dz{justify-content:center}
+  .aprov-l .dz{justify-content:center}
+  .chips .btn{flex:1 1 auto}
+}
+@keyframes sheet{from{transform:translateY(40px);opacity:.4}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -329,11 +400,13 @@ main{max-width:1120px;margin:0 auto;padding:24px 24px 64px}
       <button type="button" class="sair" id="sair">Sair</button>
     </div>
   </header>
-  <div class="demo"><div class="demo-in"><span>Modo demonstração: dados de exemplo, nada é enviado no WhatsApp.</span><button type="button" class="btn btn-g" data-act="reset">Repor dados de exemplo</button></div></div>
+  <div class="demo"><div class="demo-in"><span>Modo demonstração<span class="d-long">: dados de exemplo, nada é enviado no WhatsApp</span><span class="d-curta">, nada vai pro WhatsApp</span>.</span><button type="button" class="btn btn-g" data-act="reset">Repor dados<span class="d-long"> de exemplo</span></button></div></div>
   <main id="main" tabindex="-1"></main>
   <nav class="bnav" id="tabs-bot" aria-label="Seções do painel"></nav>
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
 </div>
+
+<dialog id="dlg" aria-modal="true"></dialog>
 
 <script>
 (function(){
@@ -504,12 +577,12 @@ function payState(mk,a){
 function setPaid(mk,a,data,nota){S.pag[mk+'|'+a.id]={pago:true,data:data||TODAY,nota:nota||''};}
 
 /* ================= estado da interface ================= */
-const ui={tab:'semana',weekOff:0,monthOff:0,exp:{},confirm:null,aprovOpen:!matchMedia('(max-width:760px)').matches,toast:'',fn:null,
+const ui={tab:'semana',weekOff:0,monthOff:0,exp:{},confirm:null,aprovOpen:!matchMedia('(max-width:760px)').matches,toast:'',fn:null,sc:null,undo:null,said:false,q:{a:'',p:''},pf:'todos',
   ni:{open:false,nome:'',whats:'',plano:'2x',slots:[],msg:''},
   mp:null, rf:null, remOpen:{}, sel:{}, payForm:null, matConf:null, remConf:null};
 const curWk=()=>wkOf(ui.weekOff);
 const curMk=()=>mkAdd(MK_NOW,ui.monthOff);
-function say(m){ui.toast=m;}
+function say(m){ui.toast=m;ui.said=true;}
 
 /* ================= componentes ================= */
 const ICON={
@@ -521,6 +594,19 @@ const ICON={
   dir:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.500 6l6 6-6 6"/></svg>',
   baixo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9.500l6 6 6-6"/></svg>'
 };
+const SV=(p,w)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(w||2)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+Object.assign(ICON,{
+  users:ICON.alunos,
+  check:SV('<path d="M5 12.5l4.5 4.5L19 7.5"/>',2.4),
+  x:SV('<path d="M6 6l12 12M18 6L6 18"/>',2.2),
+  bell:SV('<path d="M6 16v-5a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/>'),
+  send:SV('<path d="M4 12l16-8-6 16-3-7z"/>'),
+  edit:SV('<path d="M4 20l4-1 11-11-3-3L5 16z"/>'),
+  plus:SV('<path d="M12 5v14M5 12h14"/>',2.2),
+  alerta:SV('<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.200v.01"/>',2)
+});
+const L=(i,t)=>ICON[i]+'<span>'+t+'</span>';
+const norm=t=>String(t).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const TABS=[['semana','Semana'],['remadas','Remadas especiais'],['alunos','Alunos'],['pagamentos','Pagamentos']];
 function btn(act,label,cls,a,b,c,extra){
   return '<button type="button" class="btn '+(cls||'')+'" data-act="'+act+'"'+(a!=null?' data-a="'+esc(a)+'"':'')+(b!=null?' data-b="'+esc(b)+'"':'')+(c!=null?' data-c="'+esc(c)+'"':'')+(extra||'')+'>'+label+'</button>';
@@ -532,26 +618,26 @@ function aprovHTML(){
   const it=[];
   S.passeios.forEach(p=>{
     const desc=p.pessoas+' pessoas · '+fmtDia(p.data)+' às '+p.hora+' · até '+p.destino+' · '+money(p.valor);
-    if(p.estado==='pendente')it.push({tag:pill('Passeio exclusivo','p-px'),t:'Pedido de '+esc(p.nome),d:desc+' · contato '+esc(p.contato),b:btn('pasOk','Aprovar','btn-p btn-s',p.id)+btn('pasNo','Recusar','btn-w btn-s',p.id)});
-    else if(p.estado==='aprovado'&&!p.pago)it.push({tag:pill('Aguardando Pix','p-px'),t:'Passeio exclusivo de '+esc(p.nome),d:desc,b:btn('pasPay','Marcar pago','btn-p btn-s',p.id)});
+    if(p.estado==='pendente')it.push({tag:pill('Passeio exclusivo','p-px'),t:'Pedido de '+esc(p.nome),d:desc+' · contato '+esc(p.contato),b:btn('pasOk',L('check','Aprovar passeio'),'btn-p btn-s',p.id),x:btn('pasNo','Recusar pedido','btn-x btn-s',p.id)});
+    else if(p.estado==='aprovado'&&!p.pago)it.push({tag:pill('Aguardando Pix','p-px'),t:'Passeio exclusivo de '+esc(p.nome),d:desc,b:btn('pasPay',L('check','Marcar pago'),'btn-p btn-s',p.id)});
   });
   S.extras.filter(e=>!e.pago).forEach(e=>{
     const sl=slotOf(e.slot);
-    it.push({tag:pill('Aguardando Pix','p-px'),t:'Aula extra de '+esc(eNome(e)),d:fmtDia(slotDate(e.wk,sl))+' às '+sl.hora+' · '+money(e.valor),b:btn('extraPay','Marcar pago','btn-p btn-s',e.id)});
+    it.push({tag:pill('Aguardando Pix','p-px'),t:'Aula extra de '+esc(eNome(e)),d:fmtDia(slotDate(e.wk,sl))+' às '+sl.hora+' · '+money(e.valor),b:btn('extraPay',L('check','Marcar pago'),'btn-p btn-s',e.id)});
   });
   S.remadas.filter(r=>!r.cancelada).forEach(r=>{
     r.inscritos.filter(i=>!i.pago).forEach(i=>{
-      it.push({tag:pill('Aguardando Pix','p-px'),t:'Inscrição de '+esc(aluno(i.alunoId).nome)+' na remada especial',d:esc(r.nome)+' · '+fmtDia(r.data)+' · '+money(r.preco),b:btn('remPay','Marcar pago','btn-p btn-s',r.id,i.alunoId)});
+      it.push({tag:pill('Aguardando Pix','p-px'),t:'Inscrição de '+esc(aluno(i.alunoId).nome)+' na remada especial',d:esc(r.nome)+' · '+fmtDia(r.data)+' · '+money(r.preco),b:btn('remPay',L('check','Marcar pago'),'btn-p btn-s',r.id,i.alunoId)});
     });
   });
   ativos().filter(a=>a.aCancelar).forEach(a=>{
     const ps=payState(MK_NOW,a);
-    it.push({tag:pill('Matrícula a cancelar','p-at'),t:esc(a.nome)+' · '+planoOf(a).nome+' · '+money(planoOf(a).preco),d:ps.st==='atrasado'?'Atrasado há '+ps.dias+' dias. O sistema avisou que a matrícula está a cancelar por atraso.':'Matrícula marcada para cancelar por atraso.',b:btn('aprovCancel','Cancelar','btn-w btn-s',a.id)+btn('jaPagou','Já pagou','btn-p btn-s',a.id)});
+    it.push({tag:pill('Matrícula a cancelar','p-at'),t:esc(a.nome)+' · '+planoOf(a).nome+' · '+money(planoOf(a).preco),d:ps.st==='atrasado'?'Atrasado há '+ps.dias+' dias. O sistema avisou que a matrícula está a cancelar por atraso.':'Matrícula marcada para cancelar por atraso.',b:btn('jaPagou',L('check','Já pagou'),'btn-p btn-s',a.id),x:btn('aprovCancel','Cancelar matrícula','btn-x btn-s',a.id)});
   });
   const n=it.length;
   let h='<section class="aprov" aria-labelledby="aprov-t"><button type="button" class="aprov-h" data-act="aprovToggle" aria-expanded="'+ui.aprovOpen+'" aria-controls="aprov-b"><h2 id="aprov-t">Aprovações e pendências</h2><span class="n'+(n?'':' z')+'" aria-label="'+n+' pendentes">'+n+'</span>'+ICON.baixo+'</button><div id="aprov-b"'+(ui.aprovOpen?'':' hidden')+'>';
-  if(!n)h+='<p class="aprov-vazio">Nada pendente por aqui.</p>';
-  else h+='<ul class="aprov-l">'+it.map(x=>'<li><div class="tx"><b>'+x.tag+x.t+'</b><span>'+x.d+'</span></div><div class="row">'+x.b+'</div></li>').join('')+'</ul>';
+  if(!n)h+='<p class="aprov-vazio">Nada pendente por aqui. Quando chegar um pedido ou um Pix para conferir, ele aparece neste lugar.</p>';
+  else h+='<ul class="aprov-l">'+it.map(x=>'<li><div class="tx"><b>'+x.tag+x.t+'</b><span>'+x.d+'</span></div><div class="row">'+x.b+'</div>'+(x.x?'<div class="dz">'+x.x+'</div>':'')+'</li>').join('')+'</ul>';
   return h+'</div></section>';
 }
 
@@ -574,7 +660,7 @@ function aulaHTML(wk,sl){
   const cancel=isCancel(wk,sid),ref=isRef(wk,sid),cap=capOf(wk,sid);
   const fx=fixos(sid),ex=extrasOf(wk,sid);
   const c=conf(wk,sid),lot=c>=cap;
-  const nao=fx.filter(a=>attGet(wk,sid,a)==='nao'||attGet(wk,sid,a.id)==='nao').length;
+  const nao=fx.filter(a=>attGet(wk,sid,a.id)==='nao').length;
   const sem=fx.filter(a=>{const v=attGet(wk,sid,a.id);return v===null||v==='lembrado';}).length;
   const total=fx.length+ex.length;
   const selo=cancel?['Cancelada','can']:lot?['Lotada','lot']:ref?['Com reforço','ref']:[c+'/12',''];
@@ -583,7 +669,8 @@ function aulaHTML(wk,sl){
   else capTxt=c>=24?'Lotada: 24 de 24 (com reforço)':'Reforço confirmado: aceita até 24';
   const alerta=(!ref&&c>=12)||(ref&&c>=24);
   const exp=!!ui.exp[key];
-  let h='<article class="card aula'+(cancel?' is-cancel':'')+'" aria-label="'+DIAC[sl.dow]+' '+sl.hora+'"><div class="aula-top"><div><span class="dia">'+DIAC[sl.dow]+' · '+(+date.slice(8))+' '+MES3[+date.slice(5,7)-1]+'</span><span class="hora">'+sl.hora+'</span><span class="tipo">'+sl.tipo+'</span></div><span class="selo '+selo[1]+'">'+selo[0]+'</span></div><div class="aula-b">';
+  const precisaRef=!ref&&c>=12;
+  let h='<article class="card aula'+(cancel?' is-cancel':'')+'" id="aula-'+sid+'" aria-label="'+DIAC[sl.dow]+' '+sl.hora+'"><div class="aula-top"><div><span class="dia">'+DIAC[sl.dow]+' · '+(+date.slice(8))+' '+MES3[+date.slice(5,7)-1]+'</span><span class="hora">'+sl.hora+'</span><span class="tipo">'+sl.tipo+'</span></div><span class="selo '+selo[1]+'">'+selo[0]+'</span></div><div class="aula-b">';
   h+='<p class="prazo">Confirmação até '+DIAS[dowOf(addDays(date,-1))]+' 20:00</p>';
   if(cancel){
     const avis=fx.filter(a=>attGet(wk,sid,a.id)!=='nao').length+ex.length;
@@ -593,34 +680,51 @@ function aulaHTML(wk,sl){
   h+='<p class="cont"><strong>'+c+' de '+total+' confirmaram</strong> · '+nao+' não vem · '+sem+' sem resposta</p>';
   h+='<div class="bar'+(lot?' cheio':'')+(ref?' dois':'')+'" role="img" aria-label="Ocupação: '+c+' de '+cap+'"><i style="width:'+Math.min(100,c/cap*100)+'%"></i></div>';
   h+='<p class="cap'+(alerta?' alerta':'')+'">'+capTxt+'</p>';
-  if(!ref&&c>=12)h+='<div class="row">'+btn('reforco','Confirmei o reforço: abrir até 24','btn-p',sid)+'</div>';
+  if(precisaRef)h+='<div class="row">'+btn('reforco',L('check','Confirmei o reforço: abrir até 24'),'btn-p',sid)+'</div>';
   if(ref)h+='<div class="row">'+btn('reforcoUndo','Reforço confirmado ✓ (desfazer)','btn-s',sid)+'</div>';
   const es=S.espera[key]||[];
   if(es.length){
-    h+='<div class="espera"><h3>Lista de espera</h3><ol>'+es.map((p,i)=>'<li><span><span class="n">'+(i+1)+'</span>'+esc(p.nome)+'<small>'+(p.avisado?'avisado da vaga, aguardando resposta':'na fila')+'</small></span><span class="row">'+(p.avisado?btn('waitOk','Aceitou a vaga','btn-s btn-p',sid,i):'')+btn('waitDel','Tirar da fila','btn-s btn-g',sid,i)+'</span></li>').join('')+'</ol><p class="nota">Se alguém sai da turma ou desiste da vaga, o próximo da fila é avisado na hora no WhatsApp e tem até as 21h da véspera para confirmar.</p></div>';
+    h+='<div class="espera"><h3>Lista de espera</h3><ol>'+es.map((p,i)=>'<li><span><span class="n">'+(i+1)+'</span>'+esc(p.nome)+'<small>'+(p.avisado?'avisado da vaga, aguardando resposta':'na fila')+'</small></span>'+(p.avisado?'<span class="row">'+btn('waitOk',L('check','Aceitou a vaga'),'btn-s btn-p',sid,i)+'</span>':'')+'<span class="dz">'+btn('waitDel','Tirar da fila','btn-x btn-s',sid,i)+'</span></li>').join('')+'</ol><p class="nota">Se alguém sai da turma ou desiste da vaga, o próximo da fila é avisado na hora no WhatsApp e tem até as 21h da véspera para confirmar.</p></div>';
   }
-  h+='<div class="row">'+btn('toggleList',exp?'Esconder':'Ver alunos','btn-s',key)+btn('cancelAsk','Cancelar por mau tempo','btn-w btn-s',sid)+'</div>';
-  if(ui.confirm===key)h+='<div class="confirma" role="alertdialog" aria-label="Confirmar cancelamento"><p>Cancelar '+DIAC[sl.dow]+' '+sl.hora+' por mau tempo? Os alunos são avisados no WhatsApp.</p><div class="row">'+btn('cancelYes','Sim, cancelar','btn-w',sid)+btn('cancelNo','Voltar','',sid)+'</div></div>';
+  h+='<div class="row">'+btn('toggleList',L('users',exp?'Esconder alunos':'Ver alunos'),precisaRef?'btn-s':'btn-r btn-s',key)+'</div>';
   if(exp){
-    h+='<div class="alunos-l">';
+    h+='<div class="alunos-l" id="l-'+sid+'">';
     h+=fx.map(a=>{
       const v=attGet(wk,sid,a.id);
-      return '<div class="al"><div class="al-h"><b>'+esc(a.nome)+'</b>'+attPill(wk,sl,v)+'</div><div class="row">'+btn('vem','Vem','btn-s',sid,a.id)+btn('nao','Não vem','btn-s',sid,a.id)+btn('lembrar','Lembrar no WhatsApp','btn-s',sid,a.id,null,(v==='vem'||v==='nao')?' disabled':'')+'</div></div>';
+      return '<div class="al"><div class="al-h"><b>'+esc(a.nome)+'</b>'+attPill(wk,sl,v)+'</div><div class="row">'+btn('vem',L('check','Vem'),'btn-s',sid,a.id)+btn('nao','Não vem','btn-s',sid,a.id)+btn('lembrar',L('bell','Lembrar no WhatsApp'),'btn-s',sid,a.id,null,(v==='vem'||v==='nao')?' disabled':'')+'</div></div>';
     }).join('');
     h+=ex.map(e=>{
       const tag=e.tipo==='extra'?(e.pago?pill('Extra pago','p-ok'):pill('Aguardando Pix','p-px')):e.tipo==='reposicao'?pill('Reposição','p-ok'):pill('Vaga da lista de espera','p-ok');
-      return '<div class="al"><div class="al-h"><b>'+esc(eNome(e))+' <span class="mut" style="font-weight:400">· fora do plano</span></b>'+tag+'</div><div class="row">'+(e.tipo==='extra'&&!e.pago?btn('extraPay','Marcar pago','btn-s btn-p',e.id):'')+btn('extraDel','Remover vaga','btn-s',e.id)+'</div></div>';
+      return '<div class="al"><div class="al-h"><b>'+esc(eNome(e))+' <span class="mut" style="font-weight:400">· fora do plano</span></b>'+tag+'</div>'+(e.tipo==='extra'&&!e.pago?'<div class="row">'+btn('extraPay',L('check','Marcar pago'),'btn-s btn-p',e.id)+'</div>':'')+'<div class="dz">'+btn('extraDel','Remover vaga','btn-x btn-s',e.id)+'</div></div>';
     }).join('');
     h+='</div>';
-    h+='<div class="extra-box"><h3>Aula extra ou reposição (fora do plano do aluno)</h3><div class="field"><label for="ex-'+sid+'">Aluno</label><select id="ex-'+sid+'" data-bind="exsel.'+sid+'">'+ativos().map(a=>'<option value="'+a.id+'"'+((ui.exsel&&ui.exsel[sid]===a.id)?' selected':'')+'>'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('extraSend','Enviar aula extra ('+money(PRECO_AVULSO)+')','btn-p',sid)+btn('repoSend','Reposição de falta (grátis)','',sid)+'</div></div>';
+    h+='<div class="extra-box"><h3>Aula extra ou reposição (fora do plano do aluno)</h3><div class="field"><label for="ex-'+sid+'">Aluno</label><select id="ex-'+sid+'" data-bind="exsel.'+sid+'">'+ativos().map(a=>'<option value="'+a.id+'"'+((ui.exsel&&ui.exsel[sid]===a.id)?' selected':'')+'>'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('extraSend',L('send','Enviar aula extra ('+money(PRECO_AVULSO)+')'),'btn-p',sid)+btn('repoSend','Reposição de falta (grátis)','',sid)+'</div></div>';
   }
+  h+='<div class="dz">'+btn('cancelYes',L('x','Cancelar por mau tempo'),'btn-x btn-s',sid)+'</div>';
   return h+'</div></article>';
+}
+function hojeHTML(){
+  const now=nowSP().ms,all=[];
+  [0,1].forEach(off=>{const wk=wkOf(off);SLOTS.forEach(sl=>{if(isCancel(wk,sl.id))return;const d=slotDate(wk,sl),hm=sl.hora.split(':');all.push({wk:wk,off:off,sl:sl,d:d,st:iso2ms(d)+(+hm[0])*36e5+(+hm[1])*6e4});});});
+  let l=all.filter(x=>x.d===TODAY),tit;
+  if(l.length)tit='Hoje, '+DIAS[dowOf(TODAY)]+', '+(+TODAY.slice(8))+' de '+MESES[+TODAY.slice(5,7)-1];
+  else{
+    const f=all.filter(x=>x.st>now).sort((a,b)=>a.st-b.st)[0];
+    if(!f)return '';
+    l=[f];tit='Próxima aula, '+DIAS[dowOf(f.d)]+', '+(+f.d.slice(8))+' de '+MESES[+f.d.slice(5,7)-1];
+  }
+  return '<section class="hoje" aria-label="'+esc(tit)+'"><h2>'+esc(tit)+'</h2>'+l.map(x=>{
+    const sid=x.sl.id,c=conf(x.wk,sid),tot=fixos(sid).length+extrasOf(x.wk,sid).length;
+    const sem=fixos(sid).filter(a=>{const v=attGet(x.wk,sid,a.id);return v===null||v==='lembrado';}).length;
+    return '<div class="hoje-r"><div><span class="h">'+x.sl.hora+'</span><span class="t">'+x.sl.tipo+'</span><p>'+c+' de '+tot+' vêm · '+sem+' sem resposta'+(lotada(x.wk,sid)?' · Lotada':'')+'</p></div>'+btn('verAula',L('users','Ver alunos'),'btn-p',sid,x.off)+'</div>';
+  }).join('')+'</section>';
 }
 function tabSemana(){
   const wk=curWk();
   let X=0,Y=0;
   SLOTS.forEach(sl=>{if(isCancel(wk,sl.id))return;X+=conf(wk,sl.id);Y+=fixos(sl.id).length+extrasOf(wk,sl.id).length;});
-  let h='<div class="pg-h"><div><h2>'+semanaTitulo(wk)+'</h2><p class="resumo" role="status"><i></i>'+X+' de '+Y+' presenças confirmadas na semana</p></div><div class="nav2"><button type="button" class="ico-btn" data-act="weekNav" data-a="-1" aria-label="Semana anterior">'+ICON.esq+'</button><span class="lbl">'+(ui.weekOff===0?'Esta semana':ui.weekOff>0?'Daqui a '+ui.weekOff+(ui.weekOff===1?' semana':' semanas'):'Há '+(-ui.weekOff)+(ui.weekOff===-1?' semana':' semanas'))+'</span><button type="button" class="ico-btn" data-act="weekNav" data-a="1" aria-label="Semana seguinte">'+ICON.dir+'</button></div></div>';
+  let h=hojeHTML();
+  h+='<div class="pg-h"><div><h2>'+semanaTitulo(wk)+'</h2><p class="resumo"><i></i>'+X+' de '+Y+' presenças confirmadas na semana</p></div><div class="nav2"><button type="button" class="ico-btn" data-act="weekNav" data-a="-1" aria-label="Semana anterior">'+ICON.esq+'</button><span class="lbl">'+(ui.weekOff===0?'Esta semana':ui.weekOff>0?'Daqui a '+ui.weekOff+(ui.weekOff===1?' semana':' semanas'):'Há '+(-ui.weekOff)+(ui.weekOff===-1?' semana':' semanas'))+'</span><button type="button" class="ico-btn" data-act="weekNav" data-a="1" aria-label="Semana seguinte">'+ICON.dir+'</button></div></div>';
   h+='<div class="aulas">'+SLOTS.map(sl=>aulaHTML(wk,sl)).join('')+'</div>';
   return h;
 }
@@ -631,20 +735,21 @@ function avisoMax(n){
   if(!(n>=1&&n<=24))return '<span class="err">O máximo de pessoas tem que ser entre 1 e 24.</span>';
   return n<=12?'Até 12 pessoas: equipe normal, sem reforço.':'Acima de 12: as inscrições param em 12 até você confirmar que pediu reforço.';
 }
+const bad=(f,v)=>((f.err||f.msg)&&!String(v).trim())?' aria-invalid="true"':'';
 function remFormHTML(){
   const f=ui.rf;
   return '<form class="card novo" id="rem-form" novalidate><h3>Nova remada especial</h3><div class="form-grid">'+
-  '<div class="field full"><label for="rf-nome">Nome da remada</label><input id="rf-nome" data-bind="rf.nome" value="'+esc(f.nome)+'" placeholder="Ex.: Remada de aniversário do clube" autocomplete="off"></div>'+
-  '<div class="field"><label for="rf-data">Data</label><input id="rf-data" type="date" data-bind="rf.data" value="'+esc(f.data)+'"></div>'+
+  '<div class="field full"><label for="rf-nome">Nome da remada</label><input id="rf-nome" data-bind="rf.nome"'+bad(f,f.nome)+' value="'+esc(f.nome)+'" placeholder="Ex.: Remada de aniversário do clube" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-data">Data</label><input id="rf-data" type="date" data-bind="rf.data"'+bad(f,f.data)+' value="'+esc(f.data)+'"></div>'+
   '<div class="field"><label for="rf-hora">Horário de saída</label><input id="rf-hora" type="time" data-bind="rf.hora" value="'+esc(f.hora)+'"></div>'+
-  '<div class="field"><label for="rf-saida">Local de saída</label><input id="rf-saida" data-bind="rf.saida" value="'+esc(f.saida)+'" autocomplete="off"></div>'+
-  '<div class="field"><label for="rf-dest">Até onde vai</label><input id="rf-dest" data-bind="rf.destino" value="'+esc(f.destino)+'" placeholder="Ex.: Praia Brava" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-saida">Local de saída</label><input id="rf-saida" data-bind="rf.saida"'+bad(f,f.saida)+' value="'+esc(f.saida)+'" autocomplete="off"></div>'+
+  '<div class="field"><label for="rf-dest">Até onde vai</label><input id="rf-dest" data-bind="rf.destino"'+bad(f,f.destino)+' value="'+esc(f.destino)+'" placeholder="Ex.: Praia Brava" autocomplete="off"></div>'+
   '<div class="field"><label for="rf-km">Distância (km)</label><input id="rf-km" type="number" min="0" step="0.5" inputmode="decimal" data-bind="rf.km" value="'+esc(f.km)+'"></div>'+
   '<div class="field"><label for="rf-max">Máximo de pessoas (até 24)</label><input id="rf-max" type="number" min="1" max="24" inputmode="numeric" data-bind="rf.max" data-live="max" value="'+esc(f.max)+'" aria-describedby="rf-aviso"></div>'+
   '<div class="field"><label for="rf-preco">Preço por pessoa (R$)</label><input id="rf-preco" type="number" min="0" inputmode="numeric" data-bind="rf.preco" value="'+esc(f.preco)+'"></div>'+
   '<div class="field full"><p id="rf-aviso" class="aviso" aria-live="polite">'+avisoMax(+f.max)+'</p></div>'+
   '<div class="field full"><label for="rf-desc">Descrição</label><textarea id="rf-desc" data-bind="rf.desc" placeholder="O que o aluno precisa saber: ritmo, o que levar, parada…">'+esc(f.desc)+'</textarea></div>'+
-  '</div><p class="err" id="rf-err" role="alert" style="margin-top:12px">'+esc(f.err||'')+'</p><div class="row" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="remCreate">Criar e enviar convite para '+ativos().length+' alunos</button>'+btn('remNew','Cancelar','')+'</div></form>';
+  '</div><p class="err" id="rf-err" role="alert" style="margin-top:12px">'+esc(f.err||'')+'</p><div class="row form-bar" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="remCreate">Criar e enviar convite para '+ativos().length+' alunos</button>'+btn('remNew','Cancelar','')+'</div></form>';
 }
 function remCard(r){
   const cap=remCap(r),n=r.inscritos.length,lot=n>=cap;
@@ -657,7 +762,7 @@ function remCard(r){
   if(r.cancelada){
     const pagos=r.inscritos.filter(i=>i.pago);
     h+='<div class="cancelada-msg"><p><b>Remada cancelada.</b> '+n+' inscritos avisados no WhatsApp.</p>';
-    if(pagos.length){h+='<p>Quem já pagou e precisa receber de volta:</p><div class="inscr">'+pagos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.devolvido?pill('Devolvido','p-ok'):pill('Pago '+money(r.preco),'p-px'))+'</div>'+(i.devolvido?'':'<div>'+btn('remRefund','Marcar devolvido','btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join('')+'</div>';}
+    if(pagos.length){h+='<p>Quem já pagou e precisa receber de volta:</p><div class="inscr">'+pagos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.devolvido?pill('Devolvido','p-ok'):pill('Pago '+money(r.preco),'p-px'))+'</div>'+(i.devolvido?'':'<div>'+btn('remRefund',L('check','Marcar devolvido'),'btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join('')+'</div>';}
     else h+='<p class="mut">Ninguém tinha pago ainda, nada a devolver.</p>';
     return h+'</div></article>';
   }
@@ -667,21 +772,22 @@ function remCard(r){
   if(r.max<=12)refTxt='Equipe normal, sem reforço.';
   else if(r.reforco)refTxt='Reforço confirmado: aceita até '+r.max+'.';
   else refTxt=n>=12?'Inscrições paradas em 12. Confirme o reforço para abrir até '+r.max+'.':'Até 12 pessoas sem reforço. Acima disso, confirme o reforço.';
-  h+='<p class="cap'+((r.max>12&&!r.reforco&&n>=12)?' alerta':'')+'">'+refTxt+'</p>';
-  h+='<div class="row">'+btn('remToggle',open?'Esconder inscritos':'Ver inscritos ('+n+')','btn-s',r.id);
-  if(r.max>12)h+=r.reforco?btn('remRefUndo','Reforço confirmado ✓ (desfazer)','btn-s',r.id):btn('remRef','Confirmei o reforço','btn-s btn-p',r.id);
-  h+=btn('remCancelAsk','Cancelar remada','btn-w btn-s',r.id)+'</div>';
-  if(ui.remConf===r.id)h+='<div class="confirma" role="alertdialog"><p>Cancelar esta remada? Os inscritos são avisados e você vê a lista de quem pagou para devolver.</p><div class="row">'+btn('remCancelYes','Sim, cancelar remada','btn-w',r.id)+btn('remCancelNo','Voltar','',r.id)+'</div></div>';
+  const precisa=r.max>12&&!r.reforco&&n>=12;
+  h+='<p class="cap'+(precisa?' alerta':'')+'">'+refTxt+'</p>';
+  h+='<div class="row">'+btn('remToggle',L('users',open?'Esconder inscritos':'Ver inscritos ('+n+')'),precisa?'btn-s':'btn-r btn-s',r.id);
+  if(r.max>12)h+=r.reforco?btn('remRefUndo','Reforço confirmado ✓ (desfazer)','btn-s',r.id):btn('remRef',L('check','Confirmei o reforço'),(precisa?'btn-p':'')+' btn-s',r.id);
+  h+='</div>';
   if(open){
-    h+='<div class="alunos-l inscr">'+(n?r.inscritos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</div>'+(i.pago?'':'<div>'+btn('remPay','Marcar pago','btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join(''):'<p class="mut" style="padding:8px 0">Ninguém inscrito ainda.</p>');
+    h+='<div class="alunos-l inscr" id="il-'+r.id+'">'+(n?r.inscritos.map(i=>'<div class="al"><div class="al-h"><b>'+esc(aluno(i.alunoId).nome)+'</b>'+(i.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</div>'+(i.pago?'':'<div>'+btn('remPay',L('check','Marcar pago'),'btn-s btn-p',r.id,i.alunoId)+'</div>')+'</div>').join(''):'<p class="mut" style="padding:8px 0">Ninguém inscrito ainda. Use "Inscrever aluno" abaixo ou espere o aluno se inscrever pelo link.</p>');
     const livres=ativos().filter(a=>!r.inscritos.some(i=>i.alunoId===a.id));
     h+='</div>';
-    if(livres.length)h+='<div class="extra-box"><h3>Inscrever aluno</h3><div class="field"><label for="ri-'+r.id+'">Aluno</label><select id="ri-'+r.id+'" data-bind="risel.'+r.id+'">'+livres.map(a=>'<option value="'+a.id+'">'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('remAdd','Inscrever (aguardando Pix)','btn-p',r.id)+'</div></div>';
+    if(livres.length)h+='<div class="extra-box"><h3>Inscrever aluno</h3><div class="field"><label for="ri-'+r.id+'">Aluno</label><select id="ri-'+r.id+'" data-bind="risel.'+r.id+'">'+livres.map(a=>'<option value="'+a.id+'">'+esc(a.nome)+'</option>').join('')+'</select></div><div class="row">'+btn('remAdd',L('plus','Inscrever (aguardando Pix)'),'btn-p',r.id)+'</div></div>';
   }
+  h+='<div class="dz">'+btn('remCancelYes',L('x','Cancelar remada'),'btn-x btn-s',r.id)+'</div>';
   return h+'</article>';
 }
 function tabRemadas(){
-  let h='<div class="pg-h"><div><h2>Remadas especiais</h2><p style="max-width:62ch">Passeios exclusivos e remadas fora da agenda. Ao criar, o convite com a descrição e a chave Pix vai para todos os alunos ativos no WhatsApp. A vaga fica garantida quando você marca o pagamento.</p></div>'+(ui.rf?'':'<button type="button" class="btn btn-p" data-act="remNew">Nova remada especial</button>')+'</div>';
+  let h='<div class="pg-h"><div><h2>Remadas especiais</h2><p style="max-width:62ch">Passeios exclusivos e remadas fora da agenda. Ao criar, o convite com a descrição e a chave Pix vai para todos os alunos ativos no WhatsApp. A vaga fica garantida quando você marca o pagamento.</p></div>'+(ui.rf?'':btn('remNew',L('plus','Nova remada especial'),'btn-p'))+'</div>';
   if(ui.rf)h+=remFormHTML();
   const l=S.remadas.slice().sort((a,b)=>a.data<b.data?-1:1);
   h+=l.length?'<div class="rem-l">'+l.map(remCard).join('')+'</div>':'<div class="vazio"><p>Nenhuma remada especial marcada. Crie a primeira no botão acima.</p></div>';
@@ -728,35 +834,39 @@ function niHTML(){
   const f=ui.ni;
   const fullBlock=f.plano==='full'&&lotadasFull().length>0;
   return '<form class="card novo" id="ni-form" novalidate><h3>Nova inscrição</h3><div class="form-grid">'+
-  '<div class="field"><label for="ni-nome">Nome</label><input id="ni-nome" data-bind="ni.nome" value="'+esc(f.nome)+'" autocomplete="off"></div>'+
-  '<div class="field"><label for="ni-whats">WhatsApp</label><input id="ni-whats" type="tel" inputmode="tel" data-bind="ni.whats" value="'+esc(f.whats)+'" placeholder="(47) 99999-9999" autocomplete="off"></div>'+
+  '<div class="field"><label for="ni-nome">Nome</label><input id="ni-nome" data-bind="ni.nome"'+bad(f,f.nome)+' value="'+esc(f.nome)+'" autocomplete="off"></div>'+
+  '<div class="field"><label for="ni-whats">WhatsApp</label><input id="ni-whats" type="tel" inputmode="tel" data-bind="ni.whats"'+bad(f,f.whats)+' value="'+esc(f.whats)+'" placeholder="(47) 99999-9999" autocomplete="off"></div>'+
   '<div class="field full"><label for="ni-plano">Plano</label><select id="ni-plano" data-bind="ni.plano" data-chg="niPlano">'+planOptions(f.plano)+'</select></div>'+
   '<div class="full">'+slotPicker(f,{pre:'ni',chg:'niSlot',espera:true})+'</div></div>'+
-  '<p class="err" role="alert" id="ni-err" style="margin-top:12px">'+esc(f.msg)+'</p><div class="row" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="niSubmit"'+(fullBlock?' disabled':'')+'>Confirmar inscrição</button>'+btn('niToggle','Cancelar','')+'</div></form>';
+  '<p class="err" role="alert" id="ni-err" style="margin-top:12px">'+esc(f.msg)+'</p><div class="row form-bar" style="margin-top:8px"><button type="submit" class="btn btn-p" data-act="niSubmit"'+(fullBlock?' disabled':'')+'>Confirmar inscrição</button>'+btn('niToggle','Cancelar','')+'</div></form>';
 }
 function mpHTML(a){
   const f=ui.mp;
   const blocked=f.plano==='full'&&SLOTS.some(s=>{const o=seats(TODAY_WK,s.id)-(a.slots.includes(s.id)?1:0);return o>=capOf(TODAY_WK,s.id);});
-  return '<tr class="exp"><td colspan="6"><div class="mp"><h3>Mudar plano de '+esc(a.nome)+'</h3><p>Plano atual: <b>'+planoOf(a).nome+'</b> · '+money(planoOf(a).preco)+'/mês · '+a.slots.map(slotLbl).join(', ')+'</p><div class="field" style="max-width:420px"><label for="mp-plano">Novo plano</label><select id="mp-plano" data-bind="mp.plano" data-chg="mpPlano">'+planOptions(f.plano)+'</select></div>'+slotPicker(f,{pre:'mp',chg:'mpSlot',own:a.slots})+'<p class="hint">O novo valor vale a partir deste mês.</p><p class="err" role="alert">'+esc(f.msg||'')+'</p><div class="row">'+btn('mpSave','Salvar mudança','btn-p',a.id,null,null,blocked?' disabled':'')+btn('mpCancel','Cancelar','')+'</div></div></td></tr>';
+  return '<tr class="exp"><td colspan="6"><div class="mp" id="mp-box"><h3>Mudar plano de '+esc(a.nome)+'</h3><p>Plano atual: <b>'+planoOf(a).nome+'</b> · '+money(planoOf(a).preco)+'/mês · '+a.slots.map(slotLbl).join(', ')+'</p><div class="field" style="max-width:420px"><label for="mp-plano">Novo plano</label><select id="mp-plano" data-bind="mp.plano" data-chg="mpPlano">'+planOptions(f.plano)+'</select></div>'+slotPicker(f,{pre:'mp',chg:'mpSlot',own:a.slots})+'<p class="hint">O novo valor vale a partir deste mês.</p><p class="err" role="alert">'+esc(f.msg||'')+'</p><div class="row">'+btn('mpSave','Salvar mudança','btn-p',a.id,null,null,blocked?' disabled':'')+btn('mpCancel','Cancelar','')+'</div></div></td></tr>';
 }
-function tabAlunos(){
-  const n=ativos().length;
-  let h='<div class="pg-h"><div><h2>Alunos ('+n+' ativos)</h2></div>'+(ui.ni.open?'':'<button type="button" class="btn btn-p" data-act="niToggle">Nova inscrição</button>')+'</div>';
-  if(ui.ni.open)h+=niHTML();
-  h+='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th scope="col">Nome</th><th scope="col">Plano</th><th scope="col">Valor</th><th scope="col">Horários fixos</th><th scope="col">'+MESES[+MK_NOW.slice(5,7)-1][0].toUpperCase()+MESES[+MK_NOW.slice(5,7)-1].slice(1)+'</th><th scope="col">Matrícula</th></tr></thead><tbody>';
-  const lista=S.alunos.slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+function alunosLista(){
+  const q=norm(ui.q.a.trim());
+  const lista=S.alunos.filter(a=>!q||norm(a.nome).includes(q)).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  if(!lista.length)return '<div class="vazio"><p>Nenhum aluno com "'+esc(ui.q.a.trim())+'" no nome.</p><p style="margin-top:12px">'+btn('clearQ','Limpar busca','btn-r')+'</p></div>';
+  const mesNome=MESES[+MK_NOW.slice(5,7)-1];
+  let h='<div class="card tbl-wrap"><table class="tbl"><thead><tr><th scope="col">Nome</th><th scope="col">Plano</th><th scope="col">Valor</th><th scope="col">Horários fixos</th><th scope="col">'+mesNome[0].toUpperCase()+mesNome.slice(1)+'</th><th scope="col">Matrícula</th></tr></thead><tbody>';
   lista.forEach(a=>{
     const ps=payState(MK_NOW,a);
     const st=ps.st==='pago'?pill('Pago','p-ok'):ps.st==='pendente'?pill('Pendente','p-pe'):ps.st==='atrasado'?pill('Atrasado','p-at'):pill('Saiu da turma','p-ca');
     const canc=a.mat==='cancelada';
-    let ac;
-    if(ui.matConf===a.id)ac='<span class="err" style="flex:1 1 100%">Sai das turmas e das cobranças?</span>'+btn('matYes','Sim, cancelar','btn-w btn-s',a.id)+btn('matNo','Voltar','btn-s',a.id);
-    else if(canc)ac=btn('matReativar','Reativar','btn-s btn-p',a.id);
-    else ac=btn('mpOpen','Mudar plano','btn-s',a.id)+btn('matAsk','Cancelar matrícula','btn-w btn-s',a.id);
-    h+='<tr><td class="nome" data-label="Nome"><b>'+esc(a.nome)+'</b><span class="mut">'+esc(a.whats)+(a.faltas?' · '+a.faltas+' falta a repor':'')+'</span></td><td data-label="Plano">'+planoOf(a).nome+'</td><td data-label="Valor">'+money(planoOf(a).preco)+'</td><td data-label="Horários fixos">'+(a.plano==='full'?'Todas as remadas':a.slots.map(slotLbl).join(', '))+'</td><td data-label="'+MESES[+MK_NOW.slice(5,7)-1]+'">'+st+'</td><td class="acoes-td"><div class="acoes">'+ac+'</div></td></tr>';
+    const ac=canc?btn('matReativar',L('check','Reativar matrícula'),'btn-s btn-p',a.id):btn('mpOpen',L('edit','Mudar plano'),'btn-s',a.id)+'<div class="dz">'+btn('matYes','Cancelar matrícula','btn-x btn-s',a.id)+'</div>';
+    h+='<tr><td class="nome" data-label="Nome"><b>'+esc(a.nome)+'</b><span class="mut">'+esc(a.whats)+(a.faltas?' · '+a.faltas+' falta a repor':'')+'</span></td><td data-label="Plano">'+planoOf(a).nome+'</td><td data-label="Valor">'+money(planoOf(a).preco)+'</td><td data-label="Horários fixos">'+(a.plano==='full'?'Todas as remadas':a.slots.map(slotLbl).join(', '))+'</td><td data-label="'+mesNome+'">'+st+'</td><td class="acoes-td"><div class="acoes">'+ac+'</div></td></tr>';
     if(ui.mp&&ui.mp.id===a.id)h+=mpHTML(a);
   });
   return h+'</tbody></table></div>';
+}
+function tabAlunos(){
+  const n=ativos().length;
+  let h='<div class="pg-h"><div><h2>Alunos ('+n+' ativos)</h2></div>'+(ui.ni.open?'':btn('niToggle',L('plus','Nova inscrição'),'btn-p'))+'</div>';
+  if(ui.ni.open)h+=niHTML();
+  h+='<div class="field busca"><label for="q-a">Buscar aluno por nome</label><input id="q-a" type="search" data-bind="q.a" data-live="lista" value="'+esc(ui.q.a)+'" placeholder="Digite o nome" autocomplete="off"></div>';
+  return h+'<div id="lista-alunos">'+alunosLista()+'</div>';
 }
 
 /* ---------- Pagamentos ---------- */
@@ -788,44 +898,74 @@ function pgRow(mk,a,ps){
   else if(ps.st==='atrasado'||ps.st==='pendente'){
     tag=ps.st==='atrasado'?pill('Atrasado há '+ps.dias+(ps.dias===1?' dia':' dias'),'p-at'):pill('Pendente · vence '+dmy(ps.due),'p-pe');
     chk='<input type="checkbox" class="chk" data-chg="selToggle" data-a="'+a.id+'"'+(sel?' checked':'')+' aria-label="Selecionar '+esc(a.nome)+'">';
-    ac=btn('payOpen','Marcar pago','btn-s btn-p',a.id)+btn('lembrete','Reenviar lembrete','btn-s',a.id);
+    ac=btn('payOpen',L('check','Marcar pago'),'btn-s btn-p',a.id)+btn('lembrete',L('send','Reenviar lembrete'),'btn-s',a.id);
   }else{tag=pill('Saiu da turma','p-ca');}
   let h='<div class="pg">'+chk+'<div class="nm"><b>'+esc(a.nome)+'</b><span>'+sub+(ps.st==='pago'&&ps.r&&ps.r.data?' · pago em '+dmy(ps.r.data)+(ps.r.nota?' · '+esc(ps.r.nota):''):'')+'</span><span style="margin-top:4px">'+tag+'</span></div><div class="ac">'+ac+'</div>';
-  if(abre)h+='<div class="form-p"><div class="field"><label for="pf-data">Data do pagamento</label><input id="pf-data" type="date" data-bind="payForm.data" value="'+esc(ui.payForm.data)+'"></div><div class="field"><label for="pf-nota">Nota (opcional)</label><input id="pf-nota" data-bind="payForm.nota" value="'+esc(ui.payForm.nota)+'" placeholder="Ex.: Pix do cônjuge" autocomplete="off"></div><div class="row">'+btn('payConfirm','Confirmar pagamento','btn-p',a.id)+btn('payCancel','Voltar','')+'</div></div>';
+  if(abre)h+='<div class="form-p" id="pf-box"><div class="field"><label for="pf-data">Data do pagamento</label><input id="pf-data" type="date" data-bind="payForm.data" value="'+esc(ui.payForm.data)+'"></div><div class="field"><label for="pf-nota">Nota (opcional)</label><input id="pf-nota" data-bind="payForm.nota" value="'+esc(ui.payForm.nota)+'" placeholder="Ex.: Pix do cônjuge" autocomplete="off"></div><div class="row">'+btn('payConfirm',L('check','Confirmar pagamento'),'btn-p',a.id)+btn('payCancel','Voltar','')+'</div></div>';
   return h+'</div>';
+}
+function pgGroups(mk){const gr={atrasado:[],pendente:[],pago:[],cancelada:[]};S.alunos.forEach(a=>{const ps=payState(mk,a);gr[ps.st].push([a,ps]);});return gr;}
+function pgLista(mk){
+  const gr=pgGroups(mk),q=norm(ui.q.p.trim());
+  const G=[['atrasado','Atrasados'],['pendente','Pendentes'],['pago','Pagos'],['cancelada','Cancelados']];
+  let h='',total=0;
+  G.forEach(g=>{
+    if(ui.pf!=='todos'&&ui.pf!==g[0])return;
+    const l=gr[g[0]].filter(x=>!q||norm(x[0].nome).includes(q));
+    if(!l.length)return;
+    total+=l.length;
+    l.sort((x,y)=>x[0].nome.localeCompare(y[0].nome,'pt-BR'));
+    h+='<section class="grupo" aria-label="'+g[1]+'"><h3>'+g[1]+' <span class="c">'+l.length+'</span></h3>'+l.map(x=>pgRow(mk,x[0],x[1])).join('')+'</section>';
+  });
+  if(ui.pf==='todos'){
+    const ex=extrasMes(mk).filter(x=>!q||norm(x.t).includes(q));
+    if(ex.length||!q){
+      total+=ex.length;
+      h+='<section class="grupo" aria-label="Extras do mês"><h3>Aulas extra, remadas especiais e passeios <span class="c">'+ex.length+'</span></h3>';
+      h+=ex.length?ex.map(x=>'<div class="pg"><span class="chk-x"></span><div class="nm"><b>'+x.t+'</b><span>'+x.d+' · '+money(x.v)+'</span><span style="margin-top:4px">'+(x.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</span></div><div class="ac">'+(x.pago?'':btn(x.act[0],L('check','Marcar pago'),'btn-s btn-p',x.act[1],x.act[2]))+'</div></div>').join(''):'<p class="mut">Nada fora das mensalidades neste mês.</p>';
+      h+='</section>';
+    }
+  }
+  if(!total){
+    const msg=q?'Ninguém com "'+esc(ui.q.p.trim())+'" neste filtro.':ui.pf==='atrasado'?'Nenhum pagamento atrasado neste mês. Tudo em dia.':ui.pf==='pendente'?'Nenhum pagamento pendente neste mês.':'Ainda não há pagamentos recebidos neste mês.';
+    h='<div class="vazio"><p>'+msg+'</p><p style="margin-top:12px">'+(q?btn('clearQ','Limpar busca','btn-r')+' ':'')+(ui.pf!=='todos'?btn('pf','Ver todos','',"todos"):'')+'</p></div>';
+  }
+  return h;
 }
 function tabPagamentos(){
   const mk=curMk();
-  const gr={atrasado:[],pendente:[],pago:[],cancelada:[]};
-  S.alunos.forEach(a=>{const ps=payState(mk,a);gr[ps.st].push([a,ps]);});
+  const gr=pgGroups(mk);
   const ex=extrasMes(mk);
   let prev=0,rec=0;
   [].concat(gr.atrasado,gr.pendente,gr.pago).forEach(x=>{const v=planoOf(x[0]).preco;prev+=v;if(x[1].st==='pago')rec+=v;});
   ex.forEach(x=>{prev+=x.v;if(x.pago)rec+=x.v;});
   const nSel=Object.keys(ui.sel).filter(k=>ui.sel[k]).length;
+  const totSel=Object.keys(ui.sel).filter(k=>ui.sel[k]).reduce((t,id)=>t+planoOf(aluno(id)).preco,0);
   let h='<div class="pg-h"><div><h2>Pagamentos de '+MESES[+mk.slice(5,7)-1]+'</h2><p>Vencimento no dia 10, ou na data combinada com o aluno.</p></div><div class="nav2"><button type="button" class="ico-btn" data-act="monthNav" data-a="-1" aria-label="Mês anterior">'+ICON.esq+'</button><span class="lbl">'+mkLabel(mk)+'</span><button type="button" class="ico-btn" data-act="monthNav" data-a="1" aria-label="Mês seguinte">'+ICON.dir+'</button></div></div>';
   h+='<div class="nums"><div class="num"><span>Previsto no mês</span><b>'+money(prev)+'</b></div><div class="num rec"><span>Recebido</span><b>'+money(rec)+'</b></div><div class="num fal"><span>Falta receber</span><b>'+money(prev-rec)+'</b></div></div>';
-  if(nSel)h+='<div class="lote" role="group" aria-label="Seleção em lote"><span>'+nSel+(nSel===1?' selecionado':' selecionados')+'</span>'+btn('batch','Marcar selecionados como pagos','btn-p')+'</div>';
-  const G=[['atrasado','Atrasados'],['pendente','Pendentes'],['pago','Pagos'],['cancelada','Cancelados']];
-  G.forEach(g=>{
-    const l=gr[g[0]];
-    if(!l.length)return;
-    l.sort((x,y)=>x[0].nome.localeCompare(y[0].nome,'pt-BR'));
-    h+='<section class="grupo" aria-label="'+g[1]+'"><h3>'+g[1]+' <span class="c">'+l.length+'</span></h3>'+l.map(x=>pgRow(mk,x[0],x[1])).join('')+'</section>';
-  });
-  h+='<section class="grupo" aria-label="Extras do mês"><h3>Aulas extra, remadas especiais e passeios <span class="c">'+ex.length+'</span></h3>';
-  h+=ex.length?ex.map(x=>'<div class="pg"><span class="chk-x"></span><div class="nm"><b>'+x.t+'</b><span>'+x.d+' · '+money(x.v)+'</span><span style="margin-top:4px">'+(x.pago?pill('Pago','p-ok'):pill('Aguardando Pix','p-px'))+'</span></div><div class="ac">'+(x.pago?'':btn(x.act[0],'Marcar pago','btn-s btn-p',x.act[1],x.act[2]))+'</div></div>').join(''):'<p class="mut">Nada fora das mensalidades neste mês.</p>';
-  h+='</section><p class="rodape">O aluno recebe a chave Pix no WhatsApp. Quando o dinheiro cair, marque como pago aqui e o aluno recebe o recibo.</p>';
+  h+='<div class="field busca"><label for="q-p">Buscar aluno por nome</label><input id="q-p" type="search" data-bind="q.p" data-live="lista" value="'+esc(ui.q.p)+'" placeholder="Digite o nome" autocomplete="off"></div>';
+  const F=[['todos','Todos',null],['atrasado','Atrasados',gr.atrasado.length],['pendente','Pendentes',gr.pendente.length],['pago','Pagos',gr.pago.length]];
+  h+='<div class="chips" role="group" aria-label="Filtrar pagamentos">'+F.map(f=>btn('pf',f[1]+(f[2]==null?'':' ('+f[2]+')'),ui.pf===f[0]?'btn-r':'',f[0],null,null,' aria-pressed="'+(ui.pf===f[0])+'"')).join('')+'</div>';
+  if(nSel)h+='<div class="lote" role="group" aria-label="Seleção em lote"><span>'+nSel+(nSel===1?' selecionado':' selecionados')+' · '+money(totSel)+'</span>'+btn('batch',L('check','Marcar selecionados como pagos'),'btn-p')+'</div>';
+  h+='<div id="lista-pag">'+pgLista(mk)+'</div>';
+  h+='<p class="rodape">O aluno recebe a chave Pix no WhatsApp. Quando o dinheiro cair, marque como pago aqui e o aluno recebe o recibo.</p>';
   return h;
 }
 
 /* ================= render ================= */
 function renderNav(){
-  const mk=(cls)=>TABS.map(t=>'<button type="button" class="'+cls+'" data-act="tab" data-a="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':'')+'>'+(cls==='tab'?'':ICON[t[0]])+'<span>'+(cls==='tab'?t[1]:(t[0]==='remadas'?'Remadas':t[1]))+'</span></button>').join('');
+  const atr=S.alunos.filter(a=>payState(MK_NOW,a).st==='atrasado').length;
+  const rp=S.remadas.filter(r=>!r.cancelada).reduce((t,r)=>t+r.inscritos.filter(i=>!i.pago).length,0);
+  const cnt={remadas:rp,pagamentos:atr};
+  const bd=k=>cnt[k]?'<span class="bd" aria-label="'+cnt[k]+(k==='pagamentos'?' atrasados':' aguardando Pix')+'">'+cnt[k]+'</span>':'';
+  const mk=(cls)=>TABS.map(t=>'<button type="button" class="'+cls+'" data-act="tab" data-a="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':'')+'>'+(cls==='tab'?'':ICON[t[0]])+'<span>'+(cls==='tab'?t[1]:(t[0]==='remadas'?'Remadas':t[1]))+'</span>'+bd(t[0])+'</button>').join('');
   $('#tabs-top').innerHTML=mk('tab');
   $('#tabs-bot').innerHTML=mk('b');
 }
 const $=(s)=>document.querySelector(s);
+function renderToast(){
+  $('#toast').innerHTML=ui.toast?'<div class="t"><p>'+esc(ui.toast)+'</p>'+(ui.undo?'<button type="button" class="btn btn-u" data-act="undo">Desfazer</button>':'')+'<button type="button" class="btn" data-act="toastOk">Ok</button></div>':'';
+}
 function render(){
   if(!S)return;
   const act=document.activeElement;
@@ -836,7 +976,7 @@ function render(){
   let h=aprovHTML();
   h+=ui.tab==='semana'?tabSemana():ui.tab==='remadas'?tabRemadas():ui.tab==='alunos'?tabAlunos():tabPagamentos();
   $('#main').innerHTML=h;
-  $('#toast').innerHTML=ui.toast?'<div class="t" role="status"><p>'+esc(ui.toast)+'</p><button type="button" class="btn" data-act="toastOk">Ok</button></div>':'<div role="status"></div>';
+  renderToast();
   window.scrollTo(0,sy);
   let el=null;
   if(ui.fn){el=$(ui.fn);ui.fn=null;}
@@ -845,17 +985,24 @@ function render(){
     el=document.querySelector('[data-act="'+fk.act+'"]'+(fk.a!=null?'[data-a="'+CSS.escape(fk.a)+'"]':'')+(fk.b!=null?'[data-b="'+CSS.escape(fk.b)+'"]':''));
   }
   if(el&&el.focus)el.focus({preventScroll:true});
+  if(ui.sc){
+    const t=$(ui.sc);ui.sc=null;
+    if(t)t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});
+  }
 }
 
 /* ================= ações ================= */
 const H={};
 H.tab=a=>{ui.tab=a;ui.confirm=null;ui.matConf=null;ui.remConf=null;window.scrollTo(0,0);};
-H.toastOk=()=>{ui.toast='';};
+H.toastOk=()=>{ui.toast='';ui.undo=null;};
+H.pf=a=>{ui.pf=a;};
+H.clearQ=()=>{ui.q.a='';ui.q.p='';};
+H.verAula=(sid,off)=>{ui.weekOff=+off;ui.exp[curWk()+'|'+sid]=true;ui.sc='#l-'+sid;};
 H.aprovToggle=()=>{ui.aprovOpen=!ui.aprovOpen;};
 H.reset=()=>{S=seed();ui.exp={};ui.confirm=null;ui.rf=null;ui.mp=null;ui.ni={open:false,nome:'',whats:'',plano:'2x',slots:[],msg:''};ui.sel={};ui.payForm=null;ui.matConf=null;ui.remConf=null;ui.weekOff=0;ui.monthOff=0;say('Dados de exemplo repostos.');};
 /* Semana */
 H.weekNav=a=>{ui.weekOff+=+a;ui.confirm=null;};
-H.toggleList=a=>{ui.exp[a]=!ui.exp[a];};
+H.toggleList=a=>{ui.exp[a]=!ui.exp[a];if(ui.exp[a])ui.sc='#l-'+a.split('|')[1];};
 function notifyWait(wk,sid){
   const l=S.espera[wk+'|'+sid]||[];
   if(l.some(p=>p.avisado))return '';
@@ -922,7 +1069,7 @@ H.repoSend=sid=>{
 H.extraPay=id=>{const e=S.extras.find(x=>x.id===id);if(!e)return;e.pago=true;say('Pagamento de '+eNome(e)+' registrado ('+money(e.valor)+'). Recibo enviado no WhatsApp.');};
 H.extraDel=id=>{const i=S.extras.findIndex(x=>x.id===id);if(i<0)return;const e=S.extras.splice(i,1)[0];if(e.tipo==='reposicao'&&e.alunoId)aluno(e.alunoId).faltas++;say('Vaga extra de '+eNome(e)+' removida.');};
 /* Remadas */
-H.remNew=()=>{ui.rf=ui.rf?null:{nome:'',data:'',hora:'07:00',saida:'Av. Min. Victor Konder, Fazenda',destino:'',km:'',max:16,preco:75,desc:'',err:''};ui.fn=ui.rf?'#rf-nome':'[data-act="remNew"]';};
+H.remNew=()=>{ui.rf=ui.rf?null:{nome:'',data:'',hora:'07:00',saida:'Av. Min. Victor Konder, Fazenda',destino:'',km:'',max:16,preco:75,desc:'',err:''};ui.fn=ui.rf?'#rf-nome':'[data-act="remNew"]';if(ui.rf)ui.sc='#rem-form';};
 H.remCreate=()=>{
   const f=ui.rf;
   if(!f.nome.trim()||!f.data||!f.saida.trim()||!f.destino.trim()){f.err='Preencha nome, data, local de saída e até onde vai.';ui.fn='#rf-err';return;}
@@ -932,7 +1079,7 @@ H.remCreate=()=>{
   S.remadas.push({id:nid('r'),nome:f.nome.trim(),data:f.data,hora:f.hora||'07:00',saida:f.saida.trim(),destino:f.destino.trim(),km:f.km,max:m,preco:Number(f.preco)||0,desc:f.desc.trim(),convidados:n,reforco:false,cancelada:false,inscritos:[]});
   ui.rf=null;say('Remada «'+f.nome.trim()+'» criada. Convite enviado para '+n+' alunos no WhatsApp.');
 };
-H.remToggle=id=>{ui.remOpen[id]=!ui.remOpen[id];};
+H.remToggle=id=>{ui.remOpen[id]=!ui.remOpen[id];if(ui.remOpen[id])ui.sc='#il-'+id;};
 H.remRef=id=>{const r=S.remadas.find(x=>x.id===id);r.reforco=true;say('Reforço confirmado: a remada aceita até '+r.max+'.');};
 H.remRefUndo=id=>{const r=S.remadas.find(x=>x.id===id);if(r.inscritos.length>12){say('Não dá para desfazer: já há '+r.inscritos.length+' inscritos.');return;}r.reforco=false;say('Reforço desfeito: as inscrições voltam a parar em 12.');};
 H.remCancelAsk=id=>{ui.remConf=id;ui.fn='[data-act="remCancelYes"][data-a="'+id+'"]';};
@@ -953,7 +1100,7 @@ H.pasPay=id=>{const p=S.passeios.find(x=>x.id===id);p.pago=true;say('Pagamento d
 H.aprovCancel=id=>{const a=aluno(id);a.mat='cancelada';a.aCancelar=false;say('Matrícula de '+a.nome+' cancelada: saiu das turmas e das cobranças.');};
 H.jaPagou=id=>{const a=aluno(id);a.aCancelar=false;setPaid(MK_NOW,a,TODAY,'');say('Pagamento de '+a.nome+' registrado. Matrícula mantida e recibo enviado no WhatsApp.');};
 /* Alunos */
-H.niToggle=()=>{ui.ni.open=!ui.ni.open;ui.ni.msg='';ui.fn=ui.ni.open?'#ni-nome':'[data-act="niToggle"]';};
+H.niToggle=()=>{ui.ni.open=!ui.ni.open;ui.ni.msg='';ui.fn=ui.ni.open?'#ni-nome':'[data-act="niToggle"]';if(ui.ni.open)ui.sc='#ni-form';};
 H.niSubmit=()=>{
   const f=ui.ni,p=PLANOS[f.plano];
   if(!f.nome.trim()||!f.whats.trim()){f.msg='Preencha nome e WhatsApp.';return;}
@@ -973,7 +1120,7 @@ H.niWait=sid=>{
   const k=TODAY_WK+'|'+sid;(S.espera[k]=S.espera[k]||[]).push({nome:f.nome.trim(),whats:f.whats.trim(),plano:f.plano,avisado:false});
   f.msg='';say(f.nome.trim()+' entrou na lista de espera de '+slotLbl(sid)+' (posição '+S.espera[k].length+').');
 };
-H.mpOpen=id=>{const a=aluno(id);ui.mp={id:id,plano:a.plano,slots:a.plano==='full'?[]:a.slots.slice(),msg:''};ui.fn='#mp-plano';};
+H.mpOpen=id=>{const a=aluno(id);ui.mp={id:id,plano:a.plano,slots:a.plano==='full'?[]:a.slots.slice(),msg:''};ui.fn='#mp-plano';ui.sc='#mp-box';};
 H.mpCancel=()=>{ui.mp=null;};
 H.mpSave=id=>{
   const f=ui.mp,a=aluno(id),p=PLANOS[f.plano];
@@ -987,7 +1134,7 @@ H.matYes=id=>{const a=aluno(id);a.mat='cancelada';a.aCancelar=false;ui.matConf=n
 H.matReativar=id=>{const a=aluno(id);a.mat='ativa';say('Matrícula de '+a.nome+' reativada. Volta às turmas e às cobranças.');};
 /* Pagamentos */
 H.monthNav=a=>{ui.monthOff+=+a;ui.sel={};ui.payForm=null;};
-H.payOpen=id=>{ui.payForm={id:id,data:TODAY,nota:''};ui.fn='#pf-data';};
+H.payOpen=id=>{ui.payForm={id:id,data:TODAY,nota:''};ui.fn='#pf-data';ui.sc='#pf-box';};
 H.payCancel=()=>{ui.payForm=null;};
 H.payConfirm=id=>{const a=aluno(id),f=ui.payForm;setPaid(curMk(),a,f.data||TODAY,f.nota);if(a.aCancelar&&curMk()===MK_NOW)a.aCancelar=false;ui.payForm=null;delete ui.sel[id];say('Pagamento de '+a.nome+' registrado em '+dmy(f.data||TODAY)+'. Recibo enviado no WhatsApp.');};
 H.payUndo=id=>{const a=aluno(id),mk=curMk();S.pag[mk+'|'+id]={pago:false};say('Pagamento de '+a.nome+' desfeito: volta para a lista de cobrança.');};
@@ -998,17 +1145,92 @@ H.batch=()=>{
   ui.sel={};say(ids.length+(ids.length===1?' pagamento registrado':' pagamentos registrados')+'. Recibos enviados no WhatsApp.');
 };
 
+/* ================= confirmações ================= */
+const CONFIRM={};
+CONFIRM.cancelYes=sid=>{
+  const wk=curWk();
+  const n=fixos(sid).filter(a=>attGet(wk,sid,a.id)!=='nao').length+extrasOf(wk,sid).length;
+  return {title:'Cancelar '+slotLbl(sid)+' por mau tempo?',body:'Os '+n+' alunos dessa aula recebem aviso no WhatsApp. Você pode desfazer o cancelamento depois.',ok:'Sim, cancelar aula'};
+};
+CONFIRM.remCancelYes=id=>{
+  const r=S.remadas.find(x=>x.id===id),p=r.inscritos.filter(i=>i.pago).length;
+  return {title:'Cancelar a remada "'+r.nome+'"?',body:'Os '+r.inscritos.length+' inscritos recebem aviso no WhatsApp.'+(p?' '+p+' já pagaram e vão aparecer numa lista para você devolver o dinheiro.':' Ninguém pagou ainda.'),ok:'Sim, cancelar remada'};
+};
+CONFIRM.matYes=id=>{const a=aluno(id);return {title:'Cancelar a matrícula de '+a.nome+'?',body:'Sai das turmas e das cobranças. '+a.nome+' recebe uma mensagem no WhatsApp.',ok:'Sim, cancelar matrícula'};};
+CONFIRM.aprovCancel=id=>{const a=aluno(id);return {title:'Cancelar a matrícula de '+a.nome+'?',body:'Por causa do atraso: sai das turmas e das cobranças. '+a.nome+' recebe uma mensagem no WhatsApp.',ok:'Sim, cancelar matrícula'};};
+CONFIRM.pasNo=id=>{const p=S.passeios.find(x=>x.id===id);return {title:'Recusar o passeio de '+p.nome+'?',body:'O cliente recebe um aviso no WhatsApp dizendo que o pedido não foi aceito.',ok:'Sim, recusar pedido'};};
+CONFIRM.waitDel=(sid,i)=>{const p=(S.espera[curWk()+'|'+sid]||[])[+i];if(!p)return null;return {title:'Tirar '+p.nome+' da lista de espera?',body:'Essa pessoa perde a vez na fila de '+slotLbl(sid)+'. Quem está depois sobe uma posição.',ok:'Sim, tirar da fila'};};
+CONFIRM.reforcoUndo=sid=>conf(curWk(),sid)>12?null:({title:'Desfazer o reforço de '+slotLbl(sid)+'?',body:'A aula volta a aceitar só até 12 pessoas.',ok:'Sim, desfazer reforço'});
+CONFIRM.remRefUndo=id=>{const r=S.remadas.find(x=>x.id===id);if(r.inscritos.length>12)return null;return {title:'Desfazer o reforço da remada?',body:'As inscrições voltam a parar em 12 pessoas.',ok:'Sim, desfazer reforço'};};
+CONFIRM.nao=(sid,aid)=>{
+  const wk=curWk(),a=aluno(aid);
+  if(attGet(wk,sid,aid)==='nao')return null;
+  const l=S.espera[wk+'|'+sid]||[];
+  const c2=conf(wk,sid)-(attGet(wk,sid,aid)==='vem'?1:0);
+  const aviso=l[0]&&!l.some(p=>p.avisado)&&c2<capOf(wk,sid);
+  return {title:a.nome+' não vem em '+slotLbl(sid)+'?',body:aviso?'A vaga fica livre e '+l[0].nome+', primeiro(a) da lista de espera, recebe aviso no WhatsApp.':'A vaga fica livre nessa aula.',ok:'Sim, não vem'};
+};
+CONFIRM.batch=()=>{
+  const ids=Object.keys(ui.sel).filter(k=>ui.sel[k]);
+  const tot=ids.reduce((t,id)=>t+planoOf(aluno(id)).preco,0);
+  return {title:'Marcar '+ids.length+(ids.length===1?' pagamento':' pagamentos')+' como '+(ids.length===1?'pago':'pagos')+'?',body:'Total de '+money(tot)+'. Cada aluno recebe o recibo no WhatsApp.',ok:'Sim, marcar '+(ids.length===1?'como pago':ids.length+' como pagos'),tone:'p'};
+};
+CONFIRM.lembrete=id=>{const a=aluno(id);return {title:'Reenviar o lembrete para '+a.nome+'?',body:a.nome+' recebe a chave Pix de novo no WhatsApp.',ok:'Sim, reenviar lembrete',tone:'p'};};
+CONFIRM.reset=()=>({title:'Repor os dados de exemplo?',body:'Tudo o que você mexeu aqui some e o painel volta ao começo.',ok:'Sim, repor dados'});
+
+let dlgOk=null;
+function openDlg(cfg,onOk){
+  const d=$('#dlg');
+  d.innerHTML='<div class="dlg-in"><div class="dlg-ic'+(cfg.tone==='p'?' p':'')+'" aria-hidden="true">'+ICON.alerta+'</div><h2 id="dlg-t">'+esc(cfg.title)+'</h2><p id="dlg-d">'+esc(cfg.body)+'</p><div class="dlg-btns"><button type="button" class="btn btn-back" id="dlg-no">Voltar</button><button type="button" class="btn '+(cfg.tone==='p'?'btn-p':'btn-d')+'" id="dlg-ok">'+esc(cfg.ok)+'</button></div></div>';
+  d.setAttribute('aria-labelledby','dlg-t');d.setAttribute('aria-describedby','dlg-d');
+  dlgOk=onOk;
+  if(!d.open)d.showModal();
+  $('#dlg-no').focus();
+}
+(function(){
+  const d=document.getElementById('dlg');
+  d.addEventListener('click',e=>{
+    if(e.target===d){d.close();return;}
+    if(e.target.closest('#dlg-no')){d.close();return;}
+    const ok=e.target.closest('#dlg-ok');
+    if(ok){ok.disabled=true;const fn=dlgOk;dlgOk=null;d.close();if(fn)fn();}
+  });
+  d.addEventListener('close',()=>{dlgOk=null;});
+})();
+
 /* ================= eventos ================= */
-function run(act,a,b,c){
+const lock={};
+const NOLOCK={tab:1,weekNav:1,monthNav:1,toggleList:1,remToggle:1,aprovToggle:1,toastOk:1,undo:1,pf:1,niToggle:1,remNew:1,mpOpen:1,mpCancel:1,payOpen:1,payCancel:1,verAula:1,clearQ:1};
+function run(act,a,b,c,skip){
+  if(act==='undo'){
+    if(ui.undo){S=JSON.parse(ui.undo.snap);ui.undo=null;ui.toast='Pronto, a última ação foi desfeita.';ui.mp=null;ui.payForm=null;ui.sel={};save();render();}
+    return;
+  }
   if(!H[act])return;
+  if(!skip&&CONFIRM[act]){const cfg=CONFIRM[act](a,b,c);if(cfg){openDlg(cfg,()=>run(act,a,b,c,true));return;}}
+  const before=JSON.stringify(S);
+  ui.said=false;
   H[act](a,b,c);
+  let tok=null;
+  if(ui.said){
+    if(JSON.stringify(S)!==before){tok=Math.random();ui.undo={snap:before,t:tok};}
+    else ui.undo=null;
+  }
+  if(ui.said){const tt=Math.random();ui.tt=tt;setTimeout(()=>{if(ui.tt===tt&&ui.toast){ui.toast='';ui.undo=null;renderToast();}},10000);}
   save();render();
+  if(tok){setTimeout(()=>{if(ui.undo&&ui.undo.t===tok){ui.undo=null;renderToast();}},6000);}
 }
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');
   if(!t||t.disabled||t.tagName==='FORM')return;
   if(t.type==='submit')return;
-  run(t.dataset.act,t.dataset.a,t.dataset.b,t.dataset.c);
+  const act=t.dataset.act;
+  if(!NOLOCK[act]){
+    const k=act+'|'+t.dataset.a+'|'+t.dataset.b,now=Date.now();
+    if(lock[k]&&now-lock[k]<700)return;
+    lock[k]=now;
+  }
+  run(act,t.dataset.a,t.dataset.b,t.dataset.c);
 });
 document.addEventListener('submit',e=>{
   const f=e.target;
@@ -1019,12 +1241,14 @@ function setPath(path,v){
   const p=path.split('.');
   if(p[0]==='exsel'){ui.exsel=ui.exsel||{};ui.exsel[p[1]]=v;return;}
   if(p[0]==='risel')return;
+  if(p[0]==='q'){ui.q[p[1]]=v;return;}
   ui[p[0]][p[1]]=v;
 }
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset&&t.dataset.bind){
     setPath(t.dataset.bind,t.value);
+    if(t.dataset.live==='lista'){const box=ui.tab==='alunos'?document.getElementById('lista-alunos'):document.getElementById('lista-pag');if(box)box.innerHTML=ui.tab==='alunos'?alunosLista():pgLista(curMk());}
     if(t.dataset.live==='max'){const el=document.getElementById('rf-aviso');if(el)el.innerHTML=avisoMax(Number(t.value));}
   }
 });
@@ -1068,12 +1292,13 @@ $('#login-form').addEventListener('submit',e=>{
 });
 // TODO remover modo teste antes de ir para produção
 $('#modo-teste').addEventListener('click',()=>{window.__entrou=true;entrar();});
-$('#sair').addEventListener('click',()=>{
+function doSair(){
   try{sessionStorage.removeItem(SS_KEY);}catch(e){}
   window.__entrou=false;
   $('#senha').value='';$('#login-err').textContent='';$('#senha').removeAttribute('aria-invalid');
   mostrar();window.scrollTo(0,0);
-});
+}
+$('#sair').addEventListener('click',()=>openDlg({title:'Sair do painel?',body:'Você volta para a tela de entrada.',ok:'Sim, sair'},doSair));
 mostrar();
 })();
 </script>
