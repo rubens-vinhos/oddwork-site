@@ -24,6 +24,9 @@ a{color:inherit}
 /* HERO */
 .hero{position:relative;height:100svh;min-height:640px;color:#fff;overflow:hidden;background:#1a1530}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* plano B: imagem fixa do pôr do sol por baixo da animação (aparece se o telemóvel não aguentar) */
+.hero{background:#1a1530 url(poente-pc.webp?v=1) center/cover no-repeat}
+@media (orientation:portrait){ .hero{background-image:url(poente-tel.webp?v=1)} }
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,20,.55) 0%,rgba(10,8,20,0) 38%,rgba(10,8,20,0) 70%,rgba(10,8,20,.5) 100%);pointer-events:none}
 .topo{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding-top:24px}
 .topo img{height:40px}
@@ -396,7 +399,7 @@ html{scroll-behavior:smooth}
   addEventListener("scroll", scroll, { passive: true }); addEventListener("resize", scroll); scroll();
 })();
 </script>
-<script src="oceano.js?v=20261124f"></script>
+<script src="oceano.js?v=20261124g"></script>
 <!-- Painel de teste (só na maquete; no site real o céu segue o tempo de Itajaí sozinho) -->
 <div class="teste" data-teste>
   <button class="teste__abre" type="button" data-teste-abre>Testar tempo</button>

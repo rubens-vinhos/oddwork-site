@@ -3,7 +3,17 @@
 // Para testar: ?tempo=limpo|nublado|chuva|tempestade|agitado e ?hora=18:40 (hora de Itajaí).
 const LAT = -26.915, LON = -48.66;
 const canvas = document.querySelector("[data-oceano]");
-const gl = canvas.getContext("webgl", { antialias: false, alpha: false, premultipliedAlpha: false });
+const gl = canvas.getContext("webgl", { antialias: false, alpha: false, premultipliedAlpha: false, powerPreference: "low-power" });
+// plano B: se o telemóvel não aguentar, fica só a imagem fixa do pôr do sol (fundo do .hero)
+let parado = false;
+function soImagem(motivo){
+  if (parado) return; parado = true;
+  canvas.style.display = "none";
+  canvas.closest(".hero")?.classList.add("hero--imagem");
+  console.info("Animação desligada:", motivo);
+}
+if (!gl) { soImagem("sem WebGL"); throw new Error("Sem WebGL: fica a imagem do pôr do sol"); }
+canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); soImagem("WebGL perdido"); });
 
 const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
 const fs = `
@@ -524,17 +534,27 @@ function programa(comCanoa){
   return pr;
 }
 let prog, temCanoa = true;
-try { if (new URLSearchParams(location.search).has("semcanoa")) throw new Error("teste"); prog = programa(true); } catch (e) { console.warn("Sem canoa:", e.message); temCanoa = false; prog = programa(false); }
-gl.useProgram(prog);
+const pq = new URLSearchParams(location.search);
+try { if (pq.has("semcanoa")) throw new Error("teste"); prog = programa(true); }
+catch (e) { console.warn("Sem canoa:", e.message); temCanoa = false;
+  try { prog = programa(false); } catch (e2) { soImagem("shader não compila"); throw e2; } }
+if (pq.has("soimagem")) { soImagem("teste"); throw new Error("teste: só imagem"); }
 const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
-const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-const U = (n) => gl.getUniformLocation(prog, n);
-const u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX","canoa"].map((n) => [n, U(n)]));
+let u;
+function usa(pr){
+  prog = pr; gl.useProgram(pr);
+  const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX","canoa"].map((n) => [n, gl.getUniformLocation(pr, n)]));
+}
+usa(prog);
+// qualidade automática: 0 normal, 1 resolução menor, 2 sem canoa e resolução ainda menor; depois disso, só imagem
+let nivel = 0;
+const ESCALAS = [1, .62, .45];
 
 let sunX = .22;
 function ajusta(){
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const dpr = Math.min(devicePixelRatio || 1, 1.5)*ESCALAS[nivel];
   const w = canvas.clientWidth, h = canvas.clientHeight;
   canvas.width = Math.round(w*dpr); canvas.height = Math.round(h*dpr);
   gl.viewport(0, 0, canvas.width, canvas.height);
@@ -686,7 +706,32 @@ function canoaPasso(ms, dt, elev){
   gl.uniform4f(u.canoa, can.a, can.s, can.vis, dc);
 }
 
+// mede a velocidade real: janelas de ~2 s depois de 1 s de aquecimento; lento = abaixo de ~28 fps
+const med = { desde: 0, lentas: 0, n: 0, soma: 0, aquece: 0, fim: false };
+const LENTO = pq.has("lento") ? (+pq.get("lento") || 4) : 1;   // só para testar: finge um telemóvel 4x mais lento
+function mede(dt){
+  if (parado || med.fim || document.visibilityState !== "visible" || dt <= 0 || dt > .5) { med.n = 0; med.soma = 0; return; }
+  if (med.aquece < 2) { med.aquece += dt; return; }
+  med.n++; med.soma += dt;
+  if (med.soma < 2) return;
+  const fps = med.n/med.soma; med.n = 0; med.soma = 0;
+  // 22 fps: um telemóvel bom em modo poupança de bateria fica preso a 30 fps e não deve perder nada
+  if (fps >= 22) { med.lentas = 0; if (++med.desde >= 3) med.fim = true; return; }     // aguentou ~6 s: deixa de medir
+  med.desde = 0;
+  if (++med.lentas < 2) return;                    // só baixa com duas medições lentas seguidas (~4 s)
+  med.lentas = 0; med.aquece = 1;
+  if (nivel === 0) { nivel = 1; ajusta(); }
+  else if (nivel === 1) {
+    nivel = 2;
+    if (temCanoa) { try { usa(programa(false)); temCanoa = false; } catch (e) {} }
+    ajusta();
+  }
+  else { soImagem("telemóvel lento (" + fps.toFixed(0) + " fps)"); return; }
+  console.info("Qualidade baixada para o nível", nivel, "a", fps.toFixed(0), "fps");
+}
+
 (function frame(){
+  if (parado) return;
   if (visivel){
     const ms = performance.now();
     const agora = performance.now(), dt = Math.min(.25, (agora - (frame.ult || agora))/1000); frame.ult = agora;
@@ -704,6 +749,7 @@ function canoaPasso(ms, dt, elev){
     canoaPasso(ms, dt, s.elev);
     gl.uniform1f(u.t, (ms - t0)/1000 + 20.);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    mede(dt*LENTO);
   }
   requestAnimationFrame(frame);
 })();
