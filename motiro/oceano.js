@@ -19,7 +19,7 @@ const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }`;
 const fs = `
 precision highp float;
 uniform vec2 res; uniform float t; uniform float pitch; uniform float foco;
-uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float morro; uniform vec3 LUA; uniform float fase; uniform vec2 raioX; uniform vec4 canoa;
+uniform vec3 SOL; uniform float nuvem; uniform float chuva; uniform float mar; uniform float raio; uniform float vento; uniform float tMar; uniform float tNuv; uniform float tCort; uniform float morro; uniform vec3 LUA; uniform float fase; uniform vec2 raioX; uniform vec4 canoa;
 
 float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
 float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
@@ -151,7 +151,7 @@ vec3 ceu(vec3 rd){
     float hs = hash(floor(st));
     float est = step(.994, hs)*smoothstep(.45,.0,length(fract(st)-.5))*(.6+.4*sin(t*2.+hs*40.));
     c += vec3(.9,.92,1.)*est*NOITE*(1.-nuvem)*(1.-chuva)*smoothstep(.02,.12,rd.y)*1.5;
-    vec2 cp = rd.xz/(rd.y+.05)*.85 + vec2(t*(.006 + vento*.02), 0.);
+    vec2 cp = rd.xz/(rd.y+.05)*.85 + vec2(tNuv, 0.);
     float n = fbm(cp*vec2(1.,2.8));
     float cobre = mix(.46, .12, nuvem);
     float nv = smoothstep(cobre, cobre + mix(.34, .45, nuvem), n) * smoothstep(.005,.05,rd.y) * (1.-smoothstep(.3,.65,rd.y)*(1.-nuvem));
@@ -175,7 +175,7 @@ vec3 ceu(vec3 rd){
   // cortinas de chuva ao longe, a andar com o vento
   if (chuva > .01 && rd.y < .22) {
     float an = atan(rd.x, rd.z);
-    float faixa = fbm(vec2(an*6. - t*(.03 + vento*.05), 1.3));
+    float faixa = fbm(vec2(an*6. - tCort, 1.3));
     float fios = noise(vec2(an*380. + rd.y*40.*vento, rd.y*9. + t*2.5));
     float cort = smoothstep(.42, .72, faixa) * (1. - smoothstep(.02, .22, rd.y)) * chuva;
     c = mix(c, c*.72 + paleta(.1)*.18, cort*.65);
@@ -189,9 +189,8 @@ float altura(vec2 p){
   float h = 0., a = mix(.13, .95, mar*mar), f = .2;
   vec2 d = normalize(vec2(.9,.45));
   mat2 r = mat2(.8,-.6,.6,.8);
-  float vel = mix(.55, 1.1, mar);
   for(int i=0;i<6;i++){
-    float x = dot(d,p)*f + t*sqrt(f*9.8)*vel;
+    float x = dot(d,p)*f + tMar*sqrt(f*9.8);
     float w = .5+.5*sin(x + noise(p*f*.7)*2.);
     // ondas reais: cristas afiadas e vales largos, mais afiadas quanto mais agitado
     h += a*pow(w, i < 2 ? mix(2., 3.6, mar) : 2.)*(i < 2 ? 1. : detalhe);
@@ -545,7 +544,7 @@ let u;
 function usa(pr){
   prog = pr; gl.useProgram(pr);
   const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","morro","LUA","fase","raioX","canoa"].map((n) => [n, gl.getUniformLocation(pr, n)]));
+  u = Object.fromEntries(["res","t","pitch","foco","SOL","nuvem","chuva","mar","raio","vento","tMar","tNuv","tCort","morro","LUA","fase","raioX","canoa"].map((n) => [n, gl.getUniformLocation(pr, n)]));
 }
 usa(prog);
 // qualidade automática: 0 normal, 1 resolução menor, 2 sem canoa e resolução ainda menor; depois disso, só imagem
@@ -682,6 +681,8 @@ function relampago(ms){
 }
 
 const t0 = performance.now();
+// fases acumuladas: a velocidade do mar e do vento muda sem "fast-forward" quando o tempo real chega
+const fase3 = { mar: 20*(.55 + .55*atual.mar), nuv: 20*(.006 + atual.vento*.02), cort: 20*(.03 + atual.vento*.05) };
 let visivel = true;
 new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(canvas);
 // ---------- canoas a atravessar: uma de cada vez, com o mar vazio entre elas ----------
@@ -747,6 +748,8 @@ function mede(dt){
     gl.uniform1f(u.fase, faseTeste ?? faseReal(agoraMs()));
     gl.uniform1f(u.mar, atual.mar); gl.uniform1f(u.vento, atual.vento); gl.uniform1f(u.raio, raio); gl.uniform2f(u.raioX, raioPos[0], raioPos[1]);
     canoaPasso(ms, dt, s.elev);
+    fase3.mar += dt*(.55 + .55*atual.mar); fase3.nuv += dt*(.006 + atual.vento*.02); fase3.cort += dt*(.03 + atual.vento*.05);
+    gl.uniform1f(u.tMar, fase3.mar); gl.uniform1f(u.tNuv, fase3.nuv); gl.uniform1f(u.tCort, fase3.cort);
     gl.uniform1f(u.t, (ms - t0)/1000 + 20.);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     mede(dt*LENTO);
